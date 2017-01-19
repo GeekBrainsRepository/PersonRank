@@ -282,10 +282,12 @@ class Window extends JFrame {
 
             }
 
+            generalStatistics.setFont(new Font("Arial", Font.PLAIN, 21));//костыль
+
             /*
             *  проверка на шрифт для выделения жирным
             */
-            if (label==alLabel.get(1) || label==alLabel.get(2)){
+            if (label==alLabel.get(1) | label==alLabel.get(2) | label == generalStatistics){// 3е значение костыль
                 label.setFont(new Font("Arial", Font.BOLD, 21));
             }else {
                 label.setFont(new Font("Arial", Font.BOLD, 16));
