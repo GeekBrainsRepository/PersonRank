@@ -4,16 +4,20 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class Window extends JFrame {
+class Window extends JFrame {
 
     private JPanel leftLinksPanel;
+    static JPanel generalStatisticsPanel = new JPanel();//будет виден только внутри пакета
+
     /*
     *  описание каркаса окна,
     */
 
     protected Window() {
-        setSize(650, 400);
+        setSize(650, 430);
+
         setLocationRelativeTo(null);
+        setResizable(false);
         setTitle("PersonRank");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         initComponents();
@@ -25,6 +29,10 @@ public class Window extends JFrame {
 
     private void initComponents() {
         createLeftLinksPanel();
+
+        GeneralStatisticsPanel.generalStatisticsPanel();
+        add(generalStatisticsPanel, BorderLayout.CENTER);
+
     }
 
     private void createLeftLinksPanel() {
@@ -49,7 +57,7 @@ public class Window extends JFrame {
 
         leftLinksPanel = new JPanel();
         leftLinksPanel.setBorder(new EmptyBorder(0, 0, 0, 10));
-        leftLinksPanel.setBackground(new Color(171, 80, 101));
+ //       leftLinksPanel.setBackground(new Color(171, 80, 101));  //заблокировал цвет левой панели, кому нужно разблокируйте в момент работы, потом опять закоментируйте строку
         this.add(leftLinksPanel, BorderLayout.LINE_START);
         leftLinksPanel.setLayout(new BoxLayout(leftLinksPanel, BoxLayout.Y_AXIS));
 
@@ -66,6 +74,8 @@ public class Window extends JFrame {
         leftLinksPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         leftLinksPanel.add(sites);
         leftLinksPanel.setVisible(true);
-
     }
+
+
+
 }
