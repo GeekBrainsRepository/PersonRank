@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-class GeneralStatisticsPanel extends Window{
+class GeneralStatisticsPanelClass extends Window{
     private static String[] columnNames;
     private static String[][] data;
 
@@ -58,8 +58,6 @@ class GeneralStatisticsPanel extends Window{
         apply.setBounds(280, 5, 90, 30);
         scrollForTable.setBounds(5,40, 369,346);
 
-
-        generalStatisticsPanel.setVisible(true);
     }
 
     private static void setTable(){
