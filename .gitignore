@@ -4,7 +4,8 @@
 *.idea/
 *.iml
 *.class
-
+*.out/
+.mf
 
 #################
 ## Eclipse
