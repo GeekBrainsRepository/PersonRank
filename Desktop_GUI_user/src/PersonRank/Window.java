@@ -9,15 +9,12 @@ import java.util.ArrayList;
 
 class Window extends JFrame {
 
-    private JPanel leftLinksPanel;//меню
-
     static JPanel generalStatisticsPanel = new JPanel();//будет виден только внутри пакета
     static JPanel dailyStatisticsPanel = new JPanel();
     static JPanel personsPanel = new JPanel();
     static JPanel keywordsPanel = new JPanel();
     static JPanel sitesPanel = new JPanel();
-
-
+    private JPanel leftLinksPanel;//меню
     private JLabel generalStatistics;
     private JLabel dailyStatistics;
     private JLabel references;
@@ -25,18 +22,21 @@ class Window extends JFrame {
     private JLabel keywords;
     private JLabel sites;
 
+
     /*
     *  описание каркаса окна,
     */
 
     protected Window() {
-        setSize(650, 430);
+        setSize(700, 430);
 
         setLocationRelativeTo(null);
-        setResizable(false);
+//        setResizable(false);
         setTitle("PersonRank");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        custon_font();
         initComponents();
+
     }
 
     /*
@@ -243,58 +243,59 @@ class Window extends JFrame {
     }
 
     void addDelete(JPanel panel, JLabel label){
-            ArrayList<JPanel> alPanel= new ArrayList<JPanel>();
-                                        alPanel.add(generalStatisticsPanel);
-                                        alPanel.add(dailyStatisticsPanel);
-                                        alPanel.add(personsPanel);
-                                        alPanel.add(keywordsPanel);
-                                        alPanel.add(sitesPanel);
+        ArrayList<JPanel> alPanel= new ArrayList<JPanel>();
+        alPanel.add(generalStatisticsPanel);
+        alPanel.add(dailyStatisticsPanel);
+        alPanel.add(personsPanel);
+        alPanel.add(keywordsPanel);
+        alPanel.add(sitesPanel);
 
-            ArrayList<JLabel> alLabel= new ArrayList<JLabel>();
-                                        alLabel.add(generalStatistics);
-                                        alLabel.add(dailyStatistics);
-                                        alLabel.add(references);
-                                        alLabel.add(persons);
-                                        alLabel.add(keywords);
-                                        alLabel.add(sites);
+        ArrayList<JLabel> alLabel= new ArrayList<JLabel>();
+        alLabel.add(generalStatistics);
+        alLabel.add(dailyStatistics);
+        alLabel.add(references);
+        alLabel.add(persons);
+        alLabel.add(keywords);
+        alLabel.add(sites);
 
             /*
             *  удаляем все панели с JFrame
             */
-            for (int i = 0; i < alPanel.size(); i++) {
-                remove(alPanel.get(i));
-            }
+        for (int i = 0; i < alPanel.size(); i++) {
+            remove(alPanel.get(i));
+        }
             /*
             *  добавляем ту которая нужна
             */
-            add(panel, BorderLayout.CENTER);
-            panel.setVisible(true);
+        add(panel, BorderLayout.CENTER);
+        panel.setVisible(true);
 
             /*
             *  проверка на шрифт для исправления в изначальное положение
             */
-            for (int i = 0; i < alLabel.size(); i++) {
-                if (alLabel.get(i)==alLabel.get(1) || alLabel.get(i)==alLabel.get(2)){
-                    alLabel.get(i).setFont(new Font("Arial", Font.PLAIN, 21));
-                }else {
-                    alLabel.get(i).setFont(new Font("Arial", Font.PLAIN, 16));
-                }
-
+        for (int i = 0; i < alLabel.size(); i++) {
+            if (alLabel.get(i)==alLabel.get(1) || alLabel.get(i)==alLabel.get(2)){
+                alLabel.get(i).setFont(new Font("Arial", Font.PLAIN, 21));
+            }else {
+                alLabel.get(i).setFont(new Font("Arial", Font.PLAIN, 16));
             }
 
-            generalStatistics.setFont(new Font("Arial", Font.PLAIN, 21));//костыль
+        }
+
+        generalStatistics.setFont(new Font("Arial", Font.PLAIN, 21));//костыль
 
             /*
             *  проверка на шрифт для выделения жирным
             */
-            if (label==alLabel.get(1) | label==alLabel.get(2) | label == generalStatistics){// 3е значение костыль
-                label.setFont(new Font("Arial", Font.BOLD, 21));
-            }else {
-                label.setFont(new Font("Arial", Font.BOLD, 16));
-            }
+        if (label==alLabel.get(1) | label==alLabel.get(2) | label == generalStatistics){// 3е значение костыль
+            label.setFont(new Font("Arial", Font.BOLD, 21));
+        }else {
+            label.setFont(new Font("Arial", Font.BOLD, 16));
+        }
 
-            this.repaint();//перерисовка окна
+
+        this.repaint();//перерисовка окна
 
     }
-
+    
 }

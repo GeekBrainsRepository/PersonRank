@@ -12,6 +12,7 @@ class GeneralStatisticsPanelClass extends Window{
         setTable();
         panel();
     }
+
     private static void panel(){
         generalStatisticsPanel.setLayout(null);
 
@@ -53,10 +54,10 @@ class GeneralStatisticsPanelClass extends Window{
         generalStatisticsPanel.add(scrollForTable);
 
 
-        site.setBounds(7,12,size.width,size.height);    //добавил оригинальные размеры для jlabel
-        nameSitesCombo.setBounds(75,5, 195,30);
-        apply.setBounds(280, 5, 90, 30);
-        scrollForTable.setBounds(5,40, 369,346);
+        site.setBounds(27,12,size.width,size.height);    //добавил оригинальные размеры для jlabel
+        nameSitesCombo.setBounds(95,5, 195,30);
+        apply.setBounds(300, 5, 90, 30);
+        scrollForTable.setBounds(25,40, 369,346);
 
     }
 
