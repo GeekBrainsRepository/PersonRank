@@ -1,0 +1,70 @@
+Вообщем примерный вид API будет таким:
+Для статистик 
+
+
+service.addr/stat/getplist
+Возвращает список персон
+
+
+service.addr/stat/getrlist
+возвращает список ресурсов
+
+
+service.addr/stat/daily/{resource_id}/{person_id}/{date}
+возвращает статистику по реурсу resource_id для персоны person_id за дату date
+
+
+service.addr/stat/common/{resource_id}
+возвращает общую статистику по ресурсу resource_id
+
+
+
+
+Администрирование
+
+Получить списки ресурсов и ключевых слов лучше через 
+service.addr/stat/getplist
+service.addr/stat/getrlist
+ибо незачем 2 раза делать одно и то же
+
+@DELETE
+service.addr/admin/person/{id}
+Удаление личности
+
+@PUT
+service.addr/admin/person/{id}
+обновление личности
+
+@POST
+service.addr/admin/person
+Добавление личности
+
+
+
+@DELETE
+service.addr/admin/site/{id}
+Удаление сайта
+
+@PUT
+service.addr/admin/site/{id}
+обновление сайта
+
+@POST
+service.addr/admin/site
+Добавление сайта
+
+@GET
+service.addr/admin/keyword
+Получение списка ключевых слов
+
+@DELETE
+service.addr/admin/keyword/{id}
+Удаление ключевого слова
+
+@PUT
+service.addr/admin/keyword/{id}
+обновление ключевого слова
+
+@POST
+service.addr/admin/keyword
+Добавление ключевого слова
