@@ -31,7 +31,7 @@ class Window extends JFrame {
         setSize(700, 430);
 
         setLocationRelativeTo(null);
-//        setResizable(false);
+        setResizable(false);
         setTitle("PersonRank");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 //        custon_font();
@@ -297,5 +297,5 @@ class Window extends JFrame {
         this.repaint();//перерисовка окна
 
     }
-    
+
 }
