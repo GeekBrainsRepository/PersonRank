@@ -4,10 +4,17 @@
 
 service.addr/stat/getplist
 Возвращает список персон
-
+Предварительный формат данных:
+JSON , пары ключ:значение  (id:person_name)
+Пример:
+{"1":"First","2":"Second"}
 
 service.addr/stat/getrlist
 возвращает список ресурсов
+Предварительный формат данных:
+JSON , пары ключ:значение  (id:url)
+Пример:
+{"1":"First","2":"Second"}
 
 
 service.addr/stat/daily/{resource_id}/{person_id}/{date}
