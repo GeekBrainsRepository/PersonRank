@@ -26,14 +26,18 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         ArrayList<Integer> allRanks1 = new ArrayList<>();
         allRanks1.add(1227);
         allRanks1.add(1820);
+
+
         generalStatisticOnSite.add(new GeneralStatisticOnSite(siteName1, persons1, allRanks1));
         String siteName2 = "komersant.ru";
         ArrayList<String> persons2 = new ArrayList<>();
         persons2.add("Путин");
         persons2.add("Трамп");
+
         ArrayList<Integer> allRanks2 = new ArrayList<>();
-        allRanks2.add(1503);
-        allRanks2.add(1718);
+        allRanks2.add(1227);
+        allRanks2.add(1820);
+
         generalStatisticOnSite.add(new GeneralStatisticOnSite(siteName2, persons2, allRanks2));
         // Конец
     }

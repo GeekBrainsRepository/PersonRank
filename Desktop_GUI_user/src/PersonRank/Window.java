@@ -1,27 +1,21 @@
 package PersonRank;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-class Window extends JFrame {
+import static PersonRank.LeftLinksPanelClass.*;
 
+
+class Window extends JFrame {
+    static JPanel leftLinksPanel = new JPanel();
     static JPanel generalStatisticsPanel = new JPanel();//будет виден только внутри пакета
     static JPanel dailyStatisticsPanel = new JPanel();
     static JPanel personsPanel = new JPanel();
     static JPanel keywordsPanel = new JPanel();
     static JPanel sitesPanel = new JPanel();
-    private JPanel leftLinksPanel;//меню
-    private JLabel generalStatistics;
-    private JLabel dailyStatistics;
-    private JLabel references;
-    private JLabel persons;
-    private JLabel keywords;
-    private JLabel sites;
-
 
     /*
     *  описание каркаса окна,
@@ -34,7 +28,6 @@ class Window extends JFrame {
         setResizable(false);
         setTitle("PersonRank");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        custon_font();
         initComponents();
 
     }
@@ -44,7 +37,8 @@ class Window extends JFrame {
     */
 
     private void initComponents() {
-        createLeftLinksPanel();
+        LeftLinksPanelClass.leftLinksPanel();
+        add(leftLinksPanel, BorderLayout.LINE_START);
         action_menu();
 
         GeneralStatisticsPanelClass.generalStatisticsPanel();
@@ -59,49 +53,7 @@ class Window extends JFrame {
 
         SitesPanelClass.sitesPanel();
     }
-
-    private void createLeftLinksPanel() {
-        String whiteSpace = "          ";
-        generalStatistics = new JLabel("Общая статистика");
-        generalStatistics.setFont(new Font("Arial", Font.BOLD, 21));
-
-        dailyStatistics = new JLabel("Ежедневная статистика");
-        dailyStatistics.setFont(new Font("Arial", Font.PLAIN, 21));
-
-        references = new JLabel("Справочники");
-        references.setFont(new Font("Arial", Font.PLAIN, 21));
-
-        persons = new JLabel(whiteSpace + "Личности");
-        persons.setFont(new Font("Arial", Font.PLAIN, 16));
-
-        keywords = new JLabel(whiteSpace + "Ключевые слова");
-        keywords.setFont(new Font("Arial", Font.PLAIN, 16));
-
-        sites = new JLabel(whiteSpace + "Сайты");
-        sites.setFont(new Font("Arial", Font.PLAIN, 16));
-
-        leftLinksPanel = new JPanel();
-        leftLinksPanel.setBorder(new EmptyBorder(0, 0, 0, 10));
-        leftLinksPanel.setBackground(new Color(171, 80, 101));  //заблокировал цвет левой панели, кому нужно разблокируйте в момент работы, потом опять закоментируйте строку
-        this.add(leftLinksPanel, BorderLayout.LINE_START);
-        leftLinksPanel.setLayout(new BoxLayout(leftLinksPanel, BoxLayout.Y_AXIS));
-
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(20, 20)));
-        leftLinksPanel.add(generalStatistics);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(20, 20)));
-        leftLinksPanel.add(dailyStatistics);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(20, 20)));
-        leftLinksPanel.add(references);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        leftLinksPanel.add(persons);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        leftLinksPanel.add(keywords);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        leftLinksPanel.add(sites);
-        leftLinksPanel.setVisible(true);
-    }
-
-    void action_menu(){
+    private void action_menu(){
         generalStatistics.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -241,8 +193,7 @@ class Window extends JFrame {
             }
         });
     }
-
-    void addDelete(JPanel panel, JLabel label){
+    private void addDelete(JPanel panel, JLabel label){
         ArrayList<JPanel> alPanel= new ArrayList<JPanel>();
         alPanel.add(generalStatisticsPanel);
         alPanel.add(dailyStatisticsPanel);

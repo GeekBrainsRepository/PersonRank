@@ -3,22 +3,18 @@ package PersonRank;
 import PersonRank.data.GeneralStatisticOnSite;
 import PersonRank.data.GeneralStatisticOnSiteRepository;
 import PersonRank.data.GeneralStatisticSpecification;
-import java.util.List;
+
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.table.AbstractTableModel;
+import java.util.List;
 
 class GeneralStatisticsPanelClass extends Window {
 
-    private static String[] columnNames;
-    private static String[][] data;
-
     static void generalStatisticsPanel() {
-        setTable();
         panel();
     }
 
@@ -37,7 +33,6 @@ class GeneralStatisticsPanelClass extends Window {
         apply.setText("Применить");
         font = new Font("Tahoma", Font.PLAIN, 11);
         apply.setFont(font);
-
 
         /*
         *   здесь создается модель таблицы, где все строки и столбцы заблокированны для редактирования
@@ -69,39 +64,7 @@ class GeneralStatisticsPanelClass extends Window {
 
     }
 
-    private static void setTable() {
-        columnNames = new String[]{
-            "Имя",
-            "Количество упоминаний",};
-        data = new String[][]{
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},
-            {"Путин", "200",},
-            {"Медведев", "600",},
-            {"Навальный", "700",},};
-    }
+
 
     static class NamesSitesComboBoxModel extends DefaultComboBoxModel {
 
