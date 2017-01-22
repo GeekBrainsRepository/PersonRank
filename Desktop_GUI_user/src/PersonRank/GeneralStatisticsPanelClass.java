@@ -14,6 +14,12 @@ import java.util.List;
 
 class GeneralStatisticsPanelClass extends Window {
 
+    private static JComboBox namesSitesComboBox;
+    private static JButton apply;
+    private static JTable generalTable;
+    private static GeneralStaticTabelModel generalTableModel;
+    private static JScrollPane scrollForTable;
+
     static void generalStatisticsPanel() {
         panel();
     }
@@ -26,29 +32,29 @@ class GeneralStatisticsPanelClass extends Window {
         Font font = new Font("Arial", Font.PLAIN, 12);
         site.setFont(font);
 
-        final JComboBox namesSitesComboBox = new JComboBox(new NamesSitesComboBoxModel());
+        namesSitesComboBox = new JComboBox(new NamesSitesComboBoxModel());
         namesSitesComboBox.setEditable(false);
 
-        JButton apply = new JButton();
+        apply = new JButton();
         apply.setText("Применить");
         font = new Font("Tahoma", Font.PLAIN, 11);
         apply.setFont(font);
+        apply.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
+            }
+        });
 
         /*
         *   здесь создается модель таблицы, где все строки и столбцы заблокированны для редактирования
          */
-        JTable generalTable;
-        final GeneralStaticTabelModel tableModel = new GeneralStaticTabelModel();     
-        generalTable = new JTable(tableModel);
-
-         apply.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
-            }
-        });
+        generalTableModel = new GeneralStaticTabelModel();
+        generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
+        generalTable = new JTable(generalTableModel);
         
-        JScrollPane scrollForTable = new JScrollPane(generalTable);
+
+        scrollForTable = new JScrollPane(generalTable);
 
         Dimension size = site.getPreferredSize();
 
@@ -64,8 +70,6 @@ class GeneralStatisticsPanelClass extends Window {
 
     }
 
-
-
     static class NamesSitesComboBoxModel extends DefaultComboBoxModel {
 
         NamesSitesComboBoxModel() {
@@ -80,8 +84,8 @@ class GeneralStatisticsPanelClass extends Window {
 
     static class GeneralStaticTabelModel extends AbstractTableModel {
 
-        private ArrayList columnNames; 
-        private ArrayList data; 
+        private ArrayList columnNames;
+        private ArrayList data;
 
         public GeneralStaticTabelModel() {
             columnNames = new ArrayList();
@@ -123,18 +127,19 @@ class GeneralStatisticsPanelClass extends Window {
         }
 
         @Override
-        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {}
-        
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        }
+
         public void setDataSource(String nameSite) {
             data.clear();
-            ArrayList row = null; 
+            ArrayList row = null;
             ArrayList<String> personNames = null;
             ArrayList<Integer> personRank = null;
             List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.
                     getInstance().
                     query(GeneralStatisticSpecification.findStatisticSite(nameSite));
             personNames = (ArrayList<String>) list.get(0).getPersonNames();
-            personRank = (ArrayList<Integer>) list.get(0).getAllPersonRanks();            
+            personRank = (ArrayList<Integer>) list.get(0).getAllPersonRanks();
             for (int i = 0; i < personNames.size(); i++) {
                 row = new ArrayList();
                 row.add(personNames.get(i));
