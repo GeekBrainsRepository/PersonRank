@@ -1,4 +1,10 @@
-package PersonRank;
+package ru.personrank.view;
+
+import ru.personrank.view.admin.KeywordsPanel;
+import ru.personrank.view.admin.PersonsPanel;
+import ru.personrank.view.admin.SitesPanel;
+import ru.personrank.view.user.DailyStatisticsPanel;
+import ru.personrank.view.user.GeneralStatisticsPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,22 +12,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-import static PersonRank.LeftLinksPanelClass.*;
 
-
-class Window extends JFrame {
-    static JPanel leftLinksPanel = new JPanel();
-    static JPanel generalStatisticsPanel = new JPanel();//будет виден только внутри пакета
-    static JPanel dailyStatisticsPanel = new JPanel();
-    static JPanel personsPanel = new JPanel();
-    static JPanel keywordsPanel = new JPanel();
-    static JPanel sitesPanel = new JPanel();
+public class Window extends JFrame {
+    static public JPanel leftLinksPanel = new JPanel();
+    static public JPanel generalStatisticsPanel = new JPanel();//будет виден только внутри пакета
+    static public JPanel dailyStatisticsPanel = new JPanel();
+    static public JPanel personsPanel = new JPanel();
+    static public JPanel keywordsPanel = new JPanel();
+    static public JPanel sitesPanel = new JPanel();
 
     /*
     *  описание каркаса окна,
     */
 
-    protected Window() {
+    public Window() {
         setSize(700, 430);
 
         setLocationRelativeTo(null);
@@ -37,27 +41,27 @@ class Window extends JFrame {
     */
 
     private void initComponents() {
-        LeftLinksPanelClass.leftLinksPanel();
+        LeftLinksPanel.leftLinksPanel();
         add(leftLinksPanel, BorderLayout.LINE_START);
         action_menu();
 
-        GeneralStatisticsPanelClass.generalStatisticsPanel();
+        GeneralStatisticsPanel.generalStatisticsPanel();
         add(generalStatisticsPanel, BorderLayout.CENTER);
         generalStatisticsPanel.setVisible(true);
 
-        DailyStatisticsPanelClass.dailyStatisticsPanel();
+        DailyStatisticsPanel.dailyStatisticsPanel();
 
-        PersonsPanelClass.personsPanel();
+        PersonsPanel.personsPanel();
 
-        KeywordsPanelClass.keywordsPanel();
+        KeywordsPanel.keywordsPanel();
 
-        SitesPanelClass.sitesPanel();
+        SitesPanel.sitesPanel();
     }
     private void action_menu(){
-        generalStatistics.addMouseListener(new MouseListener() {
+        LeftLinksPanel.generalStatistics.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                addDelete(generalStatisticsPanel, generalStatistics);
+                addDelete(generalStatisticsPanel, LeftLinksPanel.generalStatistics);
             }
 
             @Override
@@ -81,38 +85,10 @@ class Window extends JFrame {
             }
         });
 
-        dailyStatistics.addMouseListener(new MouseListener() {
+        LeftLinksPanel.dailyStatistics.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                addDelete(dailyStatisticsPanel, dailyStatistics);
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-
-        persons.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                addDelete(personsPanel, persons);
+                addDelete(dailyStatisticsPanel, LeftLinksPanel.dailyStatistics);
 
             }
 
@@ -137,10 +113,10 @@ class Window extends JFrame {
             }
         });
 
-        keywords.addMouseListener(new MouseListener() {
+        LeftLinksPanel.persons.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                addDelete(keywordsPanel, keywords);
+                addDelete(personsPanel, LeftLinksPanel.persons);
 
             }
 
@@ -165,10 +141,38 @@ class Window extends JFrame {
             }
         });
 
-        sites.addMouseListener(new MouseListener() {
+        LeftLinksPanel.keywords.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                addDelete(sitesPanel, sites);
+                addDelete(keywordsPanel, LeftLinksPanel.keywords);
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        LeftLinksPanel.sites.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                addDelete(sitesPanel, LeftLinksPanel.sites);
 
             }
 
@@ -202,12 +206,12 @@ class Window extends JFrame {
         alPanel.add(sitesPanel);
 
         ArrayList<JLabel> alLabel= new ArrayList<JLabel>();
-        alLabel.add(generalStatistics);
-        alLabel.add(dailyStatistics);
-        alLabel.add(references);
-        alLabel.add(persons);
-        alLabel.add(keywords);
-        alLabel.add(sites);
+        alLabel.add(LeftLinksPanel.generalStatistics);
+        alLabel.add(LeftLinksPanel.dailyStatistics);
+        alLabel.add(LeftLinksPanel.references);
+        alLabel.add(LeftLinksPanel.persons);
+        alLabel.add(LeftLinksPanel.keywords);
+        alLabel.add(LeftLinksPanel.sites);
 
             /*
             *  удаляем все панели с JFrame
@@ -233,12 +237,12 @@ class Window extends JFrame {
 
         }
 
-        generalStatistics.setFont(new Font("Arial", Font.PLAIN, 21));//костыль
+        LeftLinksPanel.generalStatistics.setFont(new Font("Arial", Font.PLAIN, 21));//костыль
 
             /*
             *  проверка на шрифт для выделения жирным
             */
-        if (label==alLabel.get(1) | label==alLabel.get(2) | label == generalStatistics){// 3е значение костыль
+        if (label==alLabel.get(1) | label==alLabel.get(2) | label == LeftLinksPanel.generalStatistics){// 3е значение костыль
             label.setFont(new Font("Arial", Font.BOLD, 21));
         }else {
             label.setFont(new Font("Arial", Font.BOLD, 16));

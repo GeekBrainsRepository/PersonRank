@@ -1,8 +1,9 @@
-package PersonRank;
+package ru.personrank.view.user;
 
-import PersonRank.data.GeneralStatisticOnSite;
-import PersonRank.data.GeneralStatisticOnSiteRepository;
-import PersonRank.data.GeneralStatisticSpecification;
+import ru.personrank.data.GeneralStatisticOnSite;
+import ru.personrank.data.GeneralStatisticOnSiteRepository;
+import ru.personrank.data.GeneralStatisticSpecification;
+import ru.personrank.view.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -12,7 +13,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-class GeneralStatisticsPanelClass extends Window {
+public class GeneralStatisticsPanel extends ru.personrank.view.Window {
 
     private static JComboBox namesSitesComboBox;
     private static JButton apply;
@@ -20,7 +21,7 @@ class GeneralStatisticsPanelClass extends Window {
     private static GeneralStaticTabelModel generalTableModel;
     private static JScrollPane scrollForTable;
 
-    static void generalStatisticsPanel() {
+    static public void generalStatisticsPanel() {
         panel();
     }
 

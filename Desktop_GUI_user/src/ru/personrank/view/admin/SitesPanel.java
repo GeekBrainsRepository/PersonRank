@@ -1,16 +1,18 @@
-package PersonRank;
+package ru.personrank.view.admin;
+
+import ru.personrank.view.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 
-public class SitesPanelClass extends Window{
+public class SitesPanel extends ru.personrank.view.Window {
 
     private static String[] columnNames;
     private static String[][] data;
 
-    static void sitesPanel(){
+    static public void sitesPanel(){
         filltable();
         panel();
     }

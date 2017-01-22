@@ -1,10 +1,10 @@
-package PersonRank;
+package ru.personrank.view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class LeftLinksPanelClass extends Window{
+public class LeftLinksPanel extends Window{
 
     static JLabel generalStatistics;
     static JLabel dailyStatistics;

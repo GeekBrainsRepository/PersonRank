@@ -1,4 +1,6 @@
-package PersonRank;
+package ru.personrank.view.user;
+
+import ru.personrank.view.Window;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -6,7 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DailyStatisticsPanelClass extends Window {
+public class DailyStatisticsPanel extends Window {
 
     private static String[] columnNames = new String[]{
             "Дата",
@@ -29,7 +31,7 @@ public class DailyStatisticsPanelClass extends Window {
     private static JScrollPane scrollPane;
 
 
-    static void dailyStatisticsPanel() {
+    static public void dailyStatisticsPanel() {
         Date date = new Date();
         formattedTextFieldData1.setValue(date);
         formattedTextFieldData2.setValue(date);
