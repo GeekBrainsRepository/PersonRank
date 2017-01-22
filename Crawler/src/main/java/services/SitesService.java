@@ -1,7 +1,7 @@
 package services;
 
 /**
- * Created by Виктор on 20.01.2017.
+ * CRUD service for Sites table
  */
 public class SitesService {
 }

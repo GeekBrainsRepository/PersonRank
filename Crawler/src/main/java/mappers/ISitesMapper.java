@@ -1,7 +1,7 @@
 package mappers;
 
 /**
- * Created by Виктор on 20.01.2017.
+ * mapper for Sites table
  */
 public interface ISitesMapper {
 }
