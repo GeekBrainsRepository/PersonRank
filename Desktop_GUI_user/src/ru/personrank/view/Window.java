@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Window extends JFrame {
     static public JPanel leftLinksPanel = new JPanel();
     static public JPanel generalStatisticsPanel = new JPanel();//будет виден только внутри пакета
-    static public JPanel dailyStatisticsPanel = new JPanel();
+    static public JPanel dailyStatisticsPanel = new DailyStatisticsPanel();
     static public JPanel personsPanel = new JPanel();
     static public JPanel keywordsPanel = new JPanel();
     static public JPanel sitesPanel = new JPanel();
@@ -48,8 +48,6 @@ public class Window extends JFrame {
         GeneralStatisticsPanel.generalStatisticsPanel();
         add(generalStatisticsPanel, BorderLayout.CENTER);
         generalStatisticsPanel.setVisible(true);
-
-        DailyStatisticsPanel.dailyStatisticsPanel();
 
         PersonsPanel.personsPanel();
 

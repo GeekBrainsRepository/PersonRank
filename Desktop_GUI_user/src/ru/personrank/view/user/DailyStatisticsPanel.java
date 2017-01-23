@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import ru.personrank.view.Window;
 
 import javax.swing.*;
 import java.text.DateFormat;
@@ -17,71 +16,49 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import ru.personrank.data.*;
 
-public class DailyStatisticsPanel extends Window {
+public class DailyStatisticsPanel extends JPanel {
 
-    private static DailyStatisticOnSiteRepository dailyStatisticRepository = DailyStatisticOnSiteRepository.getInstance();
-    private static String[] columnNames = new String[]{
-            "Дата",
-            "Количество новых страниц",
-    };
-    private static String[][] data;
+    private  DailyStatisticOnSiteRepository dailyStatisticRepository; 
+    private  JLabel saitLabel;
+    private  JLabel personLabel;
+    private  JComboBox comboSite;
+    private  ComboSiteModel comboSiteModel;
+    private  JComboBox comboPerson;
+    private  ComboPersonModel comboPersonModel;
+    private  JLabel labelPeriod;
+    private  JFormattedTextField formattedTextFieldData1;
+    private  JLabel labelPo;
+    private  JFormattedTextField formattedTextFieldData2;
+    private  JButton buttonSend; 
+    private  JTable table;
+    private  StatisticTabelModel statisticTableModel;
+    private  JScrollPane scrollPane;
 
-    private static DateFormat format = new SimpleDateFormat("DD.MM.YYYY");
-
-    private static JLabel saitLabel = new JLabel();
-    private static JLabel personLabel = new JLabel();
-    private static JComboBox comboSite;
-    private static ComboSiteModel comboSiteModel;
-    private static JComboBox comboPerson;
-    private static ComboPersonModel comboPersonModel;
-    private static JLabel labelPeriod = new JLabel();
-    private static JFormattedTextField formattedTextFieldData1 = new JFormattedTextField(format);
-    private static JLabel labelPo = new JLabel();
-    private static JFormattedTextField formattedTextFieldData2 = new JFormattedTextField(format);
-    private static JButton buttonSend; 
-    private static JTable table;
-    private static StatisticTabelModel statisticTableModel;
-    private static JScrollPane scrollPane;
-
-
-    static public void dailyStatisticsPanel() {
-        
+    public DailyStatisticsPanel () {        
+        dailyStatisticRepository = DailyStatisticOnSiteRepository.getInstance();
+        saitLabel = new JLabel();
+        personLabel = new JLabel();
         comboSiteModel = new ComboSiteModel();       
         comboSite = new JComboBox(comboSiteModel);
-        comboSite.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED) {
-                    comboPersonModel.setDataSource();
-                }
-            }
-        });        
+        comboSite.addItemListener(new ComboSiteItemListener());        
         comboPersonModel = new ComboPersonModel();
         comboPerson = new JComboBox(comboPersonModel);
-        
+        labelPeriod = new JLabel();
+        labelPo = new JLabel();
+        DateFormat format = new SimpleDateFormat("DD.MM.YYYY");
+        formattedTextFieldData1 = new JFormattedTextField(format);
+        formattedTextFieldData2 = new JFormattedTextField(format);
         formattedTextFieldData1.setValue(new GregorianCalendar(2017,Calendar.JANUARY,1).getTime());
-        formattedTextFieldData2.setValue(new GregorianCalendar(2017,Calendar.JANUARY,30).getTime());
-        
+        formattedTextFieldData2.setValue(new GregorianCalendar(2017,Calendar.JANUARY,30).getTime());        
         buttonSend = new JButton();
-        buttonSend.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                statisticTableModel.setDataSource((Date)formattedTextFieldData1.getValue(),(Date)formattedTextFieldData2.getValue());
-            }
-        });
-        
-        // Заполнение таблицы данными
-        fillTable();
-
-        //Создание модели таблицы
+        buttonSend.addActionListener(new ButtonSendActionListener());
         statisticTableModel = new StatisticTabelModel();
         table = new JTable(statisticTableModel);
         scrollPane = new JScrollPane(table);
-
-        panel();
-    }
-
-    private static void panel() {
+        contentPositioning();
+    }      
+    
+    private void contentPositioning() {
 
         saitLabel.setText("\u0421\u0430\u0438\u0442:");
         personLabel.setText("\u041b\u0438\u0447\u043d\u043e\u0441\u0442\u044c:");
@@ -89,8 +66,8 @@ public class DailyStatisticsPanel extends Window {
         labelPo.setText("\u043f\u043e");
         buttonSend.setText("\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c");
 
-        GroupLayout layout = new GroupLayout(dailyStatisticsPanel);
-        dailyStatisticsPanel.setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -144,39 +121,8 @@ public class DailyStatisticsPanel extends Window {
                                 .addGap(13, 13, 13))
         );
     }
-
-    private static void fillTable() {
-
-        data = new String[][]{
-                {"10.01.2017", "12",},
-                {"15.01.2017", "25",},
-                {"11.01.2017", "30",},
-                {"12.01.2017", "40",},
-                {"13.01.2017", "1",},
-                {"10.01.2017", "12",},
-                {"15.01.2017", "25",},
-                {"11.01.2017", "30",},
-                {"12.01.2017", "40",},
-                {"13.01.2017", "1",},
-                {"10.01.2017", "12",},
-                {"15.01.2017", "25",},
-                {"11.01.2017", "30",},
-                {"12.01.2017", "40",},
-                {"13.01.2017", "1",},
-                {"10.01.2017", "12",},
-                {"15.01.2017", "25",},
-                {"11.01.2017", "30",},
-                {"12.01.2017", "40",},
-                {"13.01.2017", "1",},
-                {"10.01.2017", "12",},
-                {"15.01.2017", "25",},
-                {"11.01.2017", "30",},
-                {"12.01.2017", "40",},
-                {"13.01.2017", "1",},
-        };
-    }
     
-    private static class ComboSiteModel extends DefaultComboBoxModel {
+    private class ComboSiteModel extends DefaultComboBoxModel {
 
         ComboSiteModel() {
             removeAllElements();
@@ -188,7 +134,7 @@ public class DailyStatisticsPanel extends Window {
         }
     }
 
-    private static class ComboPersonModel extends DefaultComboBoxModel {
+    private class ComboPersonModel extends DefaultComboBoxModel {
 
         public ComboPersonModel() {
             setDataSource();
@@ -205,7 +151,7 @@ public class DailyStatisticsPanel extends Window {
         }
     }
     
-    static class StatisticTabelModel extends AbstractTableModel {
+    private class StatisticTabelModel extends AbstractTableModel {
 
         private ArrayList columnNames;
         private ArrayList data;
@@ -284,4 +230,25 @@ public class DailyStatisticsPanel extends Window {
         }
 
     }
+    
+    private class ComboSiteItemListener implements ItemListener {
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if(e.getStateChange() == ItemEvent.SELECTED) {
+                    comboPersonModel.setDataSource();
+                }
+        }
+        
+    }
+    
+    private class ButtonSendActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            statisticTableModel.setDataSource((Date)formattedTextFieldData1.getValue(),(Date)formattedTextFieldData2.getValue());
+        }
+        
+    }
+            
 }
