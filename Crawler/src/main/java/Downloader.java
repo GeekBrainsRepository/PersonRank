@@ -1,43 +1,46 @@
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+package geekbrains.internship;
 
+import geekbrains.internship.bithazard_parser.SitemapParser;
+import geekbrains.internship.bithazard_parser.model.Sitemap;
+import geekbrains.internship.bithazard_parser.model.SitemapEntry;
+import geekbrains.internship.sitemaps.UnknownFormatException;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
 
 public class Downloader {
-    //Замаскируемся под браузер Mozilla
+
+    private static ArrayList<String> linksAtUrl = new ArrayList<>();
     private static final String USER_AGENT =
             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
-    private List<String> links = new LinkedList<String>();
-    private Document htmlDocument;
 
-    public List<String> download(String url) {
-        try {
 
-            Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);
-            Document htmlDocument = connection.get();
-            this.htmlDocument = htmlDocument;
-
-            if (connection.response().statusCode() == 200) {
-                System.out.println("\n**Посещаю** Полученную веб-страницу на " + url);
+    public ArrayList<String> download(String url) {
+        //Поиск sitemap
+        SitemapParser p = new SitemapParser();
+        p.setUserAgent(USER_AGENT);
+        Set<String> set = p.getSitemapLocations(url);
+        //Парсим сайтмэп на наличие ссылок и добавляем их в коллекцию.
+        for(String s1 : set){
+            Sitemap sitemap = p.parseSitemap(s1, true);
+            for(SitemapEntry links: sitemap.getSitemapEntries()){
+               linksAtUrl.add(links.getLoc());
             }
-            if (!connection.response().contentType().contains("text/html")) {
-                System.out.println("**Ошибка** Тип страницы отличается от HTML");
-            }
-
-            Elements linksOnPage = htmlDocument.select("a[href]");
-            System.out.println("Найдено (" + linksOnPage.size() + ") ссылок");
-
-            for (Element link : linksOnPage) {
-                this.links.add(link.absUrl("href"));
-            }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
-        return links;
+        return linksAtUrl;
     }
+
+    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, UnknownFormatException {
+        Downloader d = new Downloader();
+        d.download("http://bookflow.ru");
+        for(String l: linksAtUrl){
+            System.out.println(l);
+        }
+    }
+
+
 }
