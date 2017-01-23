@@ -1,8 +1,14 @@
 package infologic.controller;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,5 +44,32 @@ public class StatController {
         return map;
 
     }
+    @RequestMapping("/stat/common/{resource_id}")
+    public Map<String,Integer> getCommonResourceStat(@PathVariable("resource_id") Integer resourceId) {
+        //fake data
+        //TODO replace with DAO request
+        Map<String,Integer> map = new HashMap<>();
+        map.put("Putin",450);
+        map.put("Medvedev",370);
+        map.put("Variable",resourceId);
 
+
+        return map;
+
+    }
+    @RequestMapping("/stat/daily/{resourceId}/{personId}/{dateStart}/{dateEnd}")
+    public Map<LocalDate,Integer> getDailyStat(@PathVariable Integer resourceId,@PathVariable Integer personId,
+                                          @PathVariable String dateStart,@PathVariable String  dateEnd) {
+        Map<LocalDate,Integer> map = new HashMap<>();
+
+        //String parsing example
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd:MM:yyyy");
+        LocalDate dateTime = LocalDate.parse(dateStart, formatter);
+        Date.from(dateTime.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        map.put(dateTime,1000);
+        map.put(dateTime,1001);
+
+        return map;
+    }
 }

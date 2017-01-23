@@ -1,4 +1,5 @@
 package ru.personrank.view.user;
+import org.jdesktop.swingx.JXDatePicker;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,9 +27,9 @@ public class DailyStatisticsPanel extends JPanel {
     private  JComboBox comboPerson;
     private  ComboPersonModel comboPersonModel;
     private  JLabel labelPeriod;
-    private  JFormattedTextField formattedTextFieldData1;
+    private  JXDatePicker formattedTextFieldData1;
     private  JLabel labelPo;
-    private  JFormattedTextField formattedTextFieldData2;
+    private  JXDatePicker formattedTextFieldData2;
     private  JButton buttonSend; 
     private  JTable table;
     private  StatisticTabelModel statisticTableModel;
@@ -46,10 +47,10 @@ public class DailyStatisticsPanel extends JPanel {
         labelPeriod = new JLabel();
         labelPo = new JLabel();
         DateFormat format = new SimpleDateFormat("DD.MM.YYYY");
-        formattedTextFieldData1 = new JFormattedTextField(format);
-        formattedTextFieldData2 = new JFormattedTextField(format);
-        formattedTextFieldData1.setValue(new GregorianCalendar(2017,Calendar.JANUARY,1).getTime());
-        formattedTextFieldData2.setValue(new GregorianCalendar(2017,Calendar.JANUARY,30).getTime());        
+        formattedTextFieldData1 = new JXDatePicker(new GregorianCalendar(2017,Calendar.JANUARY,1).getTime());
+        formattedTextFieldData2 = new JXDatePicker(new GregorianCalendar(2017,Calendar.JANUARY,30).getTime());
+        formattedTextFieldData1.setFormats(format);
+        formattedTextFieldData2.setFormats(format);
         buttonSend = new JButton();
         buttonSend.addActionListener(new ButtonSendListener());
         statisticTableModel = new StatisticTabelModel();
@@ -87,11 +88,11 @@ public class DailyStatisticsPanel extends JPanel {
                                                         .addGroup(layout.createSequentialGroup()
                                                                 .addComponent(labelPeriod, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(18, 18, 18)
-                                                                .addComponent(formattedTextFieldData1, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(formattedTextFieldData1, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(labelPo)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(formattedTextFieldData2, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)))
+                                                                .addComponent(formattedTextFieldData2, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(buttonSend)))
                                 .addGap(27, 27, 27))
@@ -246,7 +247,7 @@ public class DailyStatisticsPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            statisticTableModel.setDataSource((Date)formattedTextFieldData1.getValue(),(Date)formattedTextFieldData2.getValue());
+            statisticTableModel.setDataSource((Date)formattedTextFieldData1.getDate(),(Date)formattedTextFieldData2.getDate());
         }
         
     }
