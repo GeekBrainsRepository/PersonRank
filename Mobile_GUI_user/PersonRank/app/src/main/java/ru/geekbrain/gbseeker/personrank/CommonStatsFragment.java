@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,6 +31,9 @@ public class CommonStatsFragment extends Fragment {
 
             Spinner spinner = (Spinner) v.findViewById(R.id.common_stats_sites);
             spinner.setAdapter(adapter);
+
+            getActivity().setTitle("Общая статистика");
+
 
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override

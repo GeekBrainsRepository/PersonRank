@@ -3,10 +3,10 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/common_stats_menu"
             android:title="@string/navigation_common_stat" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/daily_stats_menu"
             android:title="@string/navigation_daily_stat"/>
     </group>
 
