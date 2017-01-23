@@ -36,16 +36,16 @@ public class DailyStatsFragment extends Fragment {
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataPersons);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner spinner1 = (Spinner) v.findViewById(R.id.daily_stats_person);
-        spinner.setAdapter(adapter);
+        spinner1.setAdapter(adapter);
 
         getActivity().setTitle("Ежедневная статистика");
 
         // адаптер
-        ArrayAdapter<String> adapterKeyWodd = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataKeyWords);
+      /*  ArrayAdapter<String> adapterKeyWord = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataKeyWords);
 
         ListView list= (ListView) v.findViewById(R.id.keyword_list);
         list.setAdapter(adapter);
-
+*/
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
