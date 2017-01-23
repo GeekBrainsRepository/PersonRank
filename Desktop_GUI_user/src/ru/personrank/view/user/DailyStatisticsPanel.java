@@ -1,15 +1,25 @@
 package ru.personrank.view.user;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import ru.personrank.view.Window;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import javax.swing.table.AbstractTableModel;
+import ru.personrank.data.*;
 
 public class DailyStatisticsPanel extends Window {
 
+    private static DailyStatisticOnSiteRepository dailyStatisticRepository = DailyStatisticOnSiteRepository.getInstance();
     private static String[] columnNames = new String[]{
             "Дата",
             "Количество новых страниц",
@@ -20,32 +30,52 @@ public class DailyStatisticsPanel extends Window {
 
     private static JLabel saitLabel = new JLabel();
     private static JLabel personLabel = new JLabel();
-    private static JComboBox comboSite = new JComboBox();
-    private static JComboBox comboPerson = new JComboBox();
+    private static JComboBox comboSite;
+    private static ComboSiteModel comboSiteModel;
+    private static JComboBox comboPerson;
+    private static ComboPersonModel comboPersonModel;
     private static JLabel labelPeriod = new JLabel();
     private static JFormattedTextField formattedTextFieldData1 = new JFormattedTextField(format);
     private static JLabel labelPo = new JLabel();
     private static JFormattedTextField formattedTextFieldData2 = new JFormattedTextField(format);
-    private static JButton buttonSend = new JButton();
+    private static JButton buttonSend; 
     private static JTable table;
+    private static StatisticTabelModel statisticTableModel;
     private static JScrollPane scrollPane;
 
 
     static public void dailyStatisticsPanel() {
-        Date date = new Date();
-        formattedTextFieldData1.setValue(date);
-        formattedTextFieldData2.setValue(date);
-
+        
+        comboSiteModel = new ComboSiteModel();       
+        comboSite = new JComboBox(comboSiteModel);
+        comboSite.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    comboPersonModel.setDataSource();
+                }
+            }
+        });        
+        comboPersonModel = new ComboPersonModel();
+        comboPerson = new JComboBox(comboPersonModel);
+        
+        formattedTextFieldData1.setValue(new GregorianCalendar(2017,Calendar.JANUARY,1).getTime());
+        formattedTextFieldData2.setValue(new GregorianCalendar(2017,Calendar.JANUARY,30).getTime());
+        
+        buttonSend = new JButton();
+        buttonSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                statisticTableModel.setDataSource((Date)formattedTextFieldData1.getValue(),(Date)formattedTextFieldData2.getValue());
+            }
+        });
+        
         // Заполнение таблицы данными
         fillTable();
 
         //Создание модели таблицы
-        DefaultTableModel myTableModel = new DefaultTableModel(data, columnNames);
-        table = new JTable(myTableModel) {
-            public boolean isCellEditable(int rowIndex, int colIndex) {
-                return false; //Disallow the editing of any cell
-            }
-        };
+        statisticTableModel = new StatisticTabelModel();
+        table = new JTable(statisticTableModel);
         scrollPane = new JScrollPane(table);
 
         panel();
@@ -144,5 +174,114 @@ public class DailyStatisticsPanel extends Window {
                 {"12.01.2017", "40",},
                 {"13.01.2017", "1",},
         };
+    }
+    
+    private static class ComboSiteModel extends DefaultComboBoxModel {
+
+        ComboSiteModel() {
+            removeAllElements();
+            List<DailyStatisticOnSite> list = dailyStatisticRepository.
+                    query(DailyStatisticSpecification.getAllStatisticSite());
+            for (DailyStatisticOnSite dsos : list) {
+                addElement(dsos.getSiteName());
+            }            
+        }
+    }
+
+    private static class ComboPersonModel extends DefaultComboBoxModel {
+
+        public ComboPersonModel() {
+            setDataSource();
+        }
+
+        public void setDataSource() {
+            removeAllElements();
+            List<DailyStatisticOnSite> list = dailyStatisticRepository.
+                    query(DailyStatisticSpecification.findStatisticSite(
+                            comboSite.getSelectedItem().toString()));
+            for (DailyStatisticOnSite.Person person : list.get(0).getPersons()) {
+                addElement(person.getName());
+            }            
+        }
+    }
+    
+    static class StatisticTabelModel extends AbstractTableModel {
+
+        private ArrayList columnNames;
+        private ArrayList data;
+
+        public StatisticTabelModel() {
+            columnNames = new ArrayList();
+            columnNames.add("Дата");
+            columnNames.add("Колличество страниц");
+            data = new ArrayList();
+        }
+
+        @Override
+        public int getRowCount() {
+            return data.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.size();
+        }
+
+        @Override
+        public Class getColumnClass(int column) {
+            switch (column) {
+                case (1) :
+                    return Calendar.class;
+                case (2) :
+                    return Integer.class;
+                default : return String.class;
+            }
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return (String) columnNames.get(column);
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            synchronized (data) {
+                return ((ArrayList) data.get(rowIndex)).get(columnIndex);
+            }
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        }
+
+        public void setDataSource(Date startDate, Date stopDate) {
+            data.clear();
+            List<DailyStatisticOnSite> site = dailyStatisticRepository.query(
+                    DailyStatisticSpecification.findStatisticSite(
+                            comboSite.getSelectedItem().toString()));
+            DailyStatisticOnSite.Person person = null;
+            for (DailyStatisticOnSite.Person persons : site.get(0).getPersons()) {
+                if(persons.getName().equals(comboPerson.getSelectedItem().toString())) {
+                    person =  persons;
+                }
+            }
+            ArrayList row = null;
+            for(int i = 0; i < person.getScanDate().size(); i++) {
+                Date date = person.getScanDate().get(i).getTime();
+                if(date.compareTo(startDate) >= 0 && date.compareTo(stopDate) <= 0) {
+                    row = new ArrayList();
+                    row.add(person.getScanDate().get(i).getTime());
+                    row.add(person.getNewPages().get(i));
+                    data.add(row);
+                }
+            }
+            fireTableStructureChanged();
+        }
+
     }
 }
