@@ -13,7 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
-public class KeyWordList extends Fragment {
+public class DailyStatsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,25 +22,29 @@ public class KeyWordList extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.keyword_list,container,false);
+        View v=inflater.inflate(R.layout.daily_stats,container,false);
 
+        String[] dataSites = {"lenta.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru"};
         String[] dataPersons = {"Путин", "Medvedev","Antonov"};
 
-        String[] dataKeyWords = {"Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине"};
         // адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataPersons);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataSites);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        Spinner spinner = (Spinner) v.findViewById(R.id.keyword_person);
+        Spinner spinner = (Spinner) v.findViewById(R.id.daily_stats_site);
+        spinner.setAdapter(adapter);
+        // адаптер
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataPersons);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner spinner1 = (Spinner) v.findViewById(R.id.daily_stats_person);
         spinner.setAdapter(adapter);
 
-        getActivity().setTitle("Справочник - ключевые слова");
+        getActivity().setTitle("Ежедневная статистика");
 
         // адаптер
-        ArrayAdapter<String> adapterKeyWord = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataKeyWords);
+        ArrayAdapter<String> adapterKeyWodd = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataKeyWords);
 
         ListView list= (ListView) v.findViewById(R.id.keyword_list);
-        list.setAdapter(adapterKeyWord);
+        list.setAdapter(adapter);
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -58,6 +62,8 @@ public class KeyWordList extends Fragment {
         return v;
     }
 }
+
+
 
 
 
