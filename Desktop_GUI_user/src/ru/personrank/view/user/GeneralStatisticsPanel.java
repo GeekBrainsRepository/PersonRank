@@ -3,7 +3,6 @@ package ru.personrank.view.user;
 import ru.personrank.data.GeneralStatisticOnSite;
 import ru.personrank.data.GeneralStatisticOnSiteRepository;
 import ru.personrank.data.GeneralStatisticSpecification;
-import ru.personrank.view.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -13,65 +12,44 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GeneralStatisticsPanel extends ru.personrank.view.Window {
+public class GeneralStatisticsPanel extends JPanel {
 
     private static JComboBox namesSitesComboBox;
-    private static JButton apply;
+    private static JButton buttonSend;
+    JLabel labelSite;
     private static JTable generalTable;
     private static GeneralStaticTabelModel generalTableModel;
     private static JScrollPane scrollForTable;
-
-    static public void generalStatisticsPanel() {
-        panel();
-    }
-
-    private static void panel() {
-        generalStatisticsPanel.setLayout(null);
-
-        JLabel site = new JLabel();
-        site.setText("Сайт:");
+    
+    public GeneralStatisticsPanel () {
+        setLayout(null);
+        labelSite = new JLabel();
+        labelSite.setText("Сайт:");
         Font font = new Font("Arial", Font.PLAIN, 12);
-        site.setFont(font);
-
+        labelSite.setFont(font);
         namesSitesComboBox = new JComboBox(new NamesSitesComboBoxModel());
         namesSitesComboBox.setEditable(false);
-
-        apply = new JButton();
-        apply.setText("Применить");
+        buttonSend = new JButton();
+        buttonSend.setText("Применить");
         font = new Font("Tahoma", Font.PLAIN, 11);
-        apply.setFont(font);
-        apply.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
-            }
-        });
-
-        /*
-        *   здесь создается модель таблицы, где все строки и столбцы заблокированны для редактирования
-         */
+        buttonSend.setFont(font);
+        buttonSend.addActionListener(new ButtonSendListener());
         generalTableModel = new GeneralStaticTabelModel();
         generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
         generalTable = new JTable(generalTableModel);
-        
-
         scrollForTable = new JScrollPane(generalTable);
-
-        Dimension size = site.getPreferredSize();
-
-        generalStatisticsPanel.add(site);
-        generalStatisticsPanel.add(namesSitesComboBox);
-        generalStatisticsPanel.add(apply);
-        generalStatisticsPanel.add(scrollForTable);
-
-        site.setBounds(27, 12, size.width, size.height);    //добавил оригинальные размеры для jlabel
+        Dimension size = labelSite.getPreferredSize();
+        add(labelSite);
+        add(namesSitesComboBox);
+        add(buttonSend);
+        add(scrollForTable);
+        labelSite.setBounds(27, 12, size.width, size.height);    //добавил оригинальные размеры для jlabel
         namesSitesComboBox.setBounds(95, 5, 195, 30);
-        apply.setBounds(300, 5, 90, 30);
+        buttonSend.setBounds(300, 5, 90, 30);
         scrollForTable.setBounds(25, 40, 369, 346);
-
     }
 
-    static class NamesSitesComboBoxModel extends DefaultComboBoxModel {
+    class NamesSitesComboBoxModel extends DefaultComboBoxModel {
 
         NamesSitesComboBoxModel() {
             List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.
@@ -83,7 +61,7 @@ public class GeneralStatisticsPanel extends ru.personrank.view.Window {
         }
     }
 
-    static class GeneralStaticTabelModel extends AbstractTableModel {
+    class GeneralStaticTabelModel extends AbstractTableModel {
 
         private ArrayList columnNames;
         private ArrayList data;
@@ -150,5 +128,14 @@ public class GeneralStatisticsPanel extends ru.personrank.view.Window {
             fireTableStructureChanged();
         }
 
+    }
+    
+    class ButtonSendListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
+        }
+        
     }
 }

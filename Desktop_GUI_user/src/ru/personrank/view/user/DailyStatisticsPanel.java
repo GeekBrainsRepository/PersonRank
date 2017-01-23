@@ -51,7 +51,7 @@ public class DailyStatisticsPanel extends JPanel {
         formattedTextFieldData1.setValue(new GregorianCalendar(2017,Calendar.JANUARY,1).getTime());
         formattedTextFieldData2.setValue(new GregorianCalendar(2017,Calendar.JANUARY,30).getTime());        
         buttonSend = new JButton();
-        buttonSend.addActionListener(new ButtonSendActionListener());
+        buttonSend.addActionListener(new ButtonSendListener());
         statisticTableModel = new StatisticTabelModel();
         table = new JTable(statisticTableModel);
         scrollPane = new JScrollPane(table);
@@ -242,7 +242,7 @@ public class DailyStatisticsPanel extends JPanel {
         
     }
     
-    private class ButtonSendActionListener implements ActionListener {
+    private class ButtonSendListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
