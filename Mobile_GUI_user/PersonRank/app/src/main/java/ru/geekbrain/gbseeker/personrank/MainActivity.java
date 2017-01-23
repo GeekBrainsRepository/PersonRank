@@ -97,8 +97,20 @@ public class MainActivity extends AppCompatActivity
                        .replace(R.id.FrameContainer,fragment)
                        .commit();
        } else if (id == R.id.nav_keys) {
+           FragmentManager fm=getSupportFragmentManager();
+           Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
+           fragment=new KeyWordList();
+           fm.beginTransaction()
+                   .replace(R.id.FrameContainer,fragment)
+                   .commit();
 
-       } else if (id == R.id.nav_keys) {
+       } else if (id == R.id.nav_sites) {
+           FragmentManager fm=getSupportFragmentManager();
+           Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
+           fragment=new SiteList();
+           fm.beginTransaction()
+                   .replace(R.id.FrameContainer,fragment)
+                   .commit();
 
        }
 
