@@ -1,25 +1,21 @@
 package ru.personrank.view.admin;
 
-import ru.personrank.view.*;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-
-public class SitesPanel extends ru.personrank.view.Window {
+public class SitesPanel extends JPanel {
 
     private static String[] columnNames;
     private static String[][] data;
 
-    static public void sitesPanel(){
+    public SitesPanel() {
         filltable();
         panel();
     }
 
-    private static void panel(){
-        sitesPanel.setLayout(null);
-
+    private void panel() {
+        setLayout(null);
 
         JLabel sitesLabel = new JLabel();
         sitesLabel.setText("Справочник: \"Сайты\"");
@@ -49,49 +45,45 @@ public class SitesPanel extends ru.personrank.view.Window {
 
         JScrollPane scrollPane = new JScrollPane(siteTable);
 
-
-
-
         sitesLabel.setBounds(27, 12, size.width, size.height);
         scrollPane.setBounds(25, 40, 369, 300);
         addSite.setBounds(100, 355, 90, 30);
         editSite.setBounds(200, 355, 110, 30);
         deleteSite.setBounds(320, 355, 90, 30);
 
-        sitesPanel.add(sitesLabel);
-        sitesPanel.add(scrollPane);
-        sitesPanel.add(addSite);
-        sitesPanel.add(editSite);
-        sitesPanel.add(deleteSite);
+        add(sitesLabel);
+        add(scrollPane);
+        add(addSite);
+        add(editSite);
+        add(deleteSite);
     }
 
-    private static void filltable(){
+    private static void filltable() {
 
         columnNames = new String[]{
-                "Наименование"
+            "Наименование"
         };
 
         data = new String[][]{
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-                {"Lenta.ru"},
-                {"komersant.ru"},
-        };
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},
+            {"Lenta.ru"},
+            {"komersant.ru"},};
     }
 }

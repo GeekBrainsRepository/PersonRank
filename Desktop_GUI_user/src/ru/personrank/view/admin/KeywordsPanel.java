@@ -1,23 +1,22 @@
 package ru.personrank.view.admin;
 
-import ru.personrank.view.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+public class KeywordsPanel extends JPanel {
 
-public class KeywordsPanel extends ru.personrank.view.Window {
     private static String[] columnNames;
     private static String[][] data;
 
-    static public void keywordsPanel(){
+    public KeywordsPanel() {
         filltable();
         panel();
     }
-    private static void panel(){
-        keywordsPanel.setLayout(null);
 
+    private void panel() {
+        setLayout(null);
 
         JLabel keywordsLabel = new JLabel();
         keywordsLabel.setText("Справочник: \"Ключевые слова\"");
@@ -54,7 +53,6 @@ public class KeywordsPanel extends ru.personrank.view.Window {
 
         JComboBox namePersonsCombo = new JComboBox();
 
-
         keywordsLabel.setBounds(27, 12, size.width, size.height);
         personLabel.setBounds(27, 40, sizePersonLabel.width, sizePersonLabel.height);
         namePersonsCombo.setBounds(90, 33, 195, 30);
@@ -63,27 +61,25 @@ public class KeywordsPanel extends ru.personrank.view.Window {
         editKey.setBounds(200, 355, 110, 30);
         deleteKey.setBounds(320, 355, 90, 30);
 
-        keywordsPanel.add(keywordsLabel);
-        keywordsPanel.add(personLabel);
-        keywordsPanel.add(namePersonsCombo);
-        keywordsPanel.add(scrollPane);
-        keywordsPanel.add(addKey);
-        keywordsPanel.add(editKey);
-        keywordsPanel.add(deleteKey);
+        add(keywordsLabel);
+        add(personLabel);
+        add(namePersonsCombo);
+        add(scrollPane);
+        add(addKey);
+        add(editKey);
+        add(deleteKey);
     }
 
-    private static void filltable(){
+    private static void filltable() {
 
         columnNames = new String[]{
-                "Наименование"
+            "Наименование"
         };
 
         data = new String[][]{
-                {"Медведев"},
-                {"Медведевом"},
-                {"Медведевым"},
-                {"Медведеву"},
-
-        };
+            {"Медведев"},
+            {"Медведевом"},
+            {"Медведевым"},
+            {"Медведеву"},};
     }
 }

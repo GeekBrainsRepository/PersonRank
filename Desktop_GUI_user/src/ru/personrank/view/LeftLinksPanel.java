@@ -4,56 +4,94 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class LeftLinksPanel extends Window{
+public class LeftLinksPanel extends JPanel {
 
-    static JLabel generalStatistics;
-    static JLabel dailyStatistics;
-    static JLabel references;
-    static JLabel persons;
-    static JLabel keywords;
-    static JLabel sites;
+    private static final Font MENU_FONT = new Font("Arial", Font.PLAIN, 21);
+    private static final Font SUBMENU_FONT = new Font("Arial", Font.PLAIN, 16);
+    private static final Color MENU_COLOR = Color.BLUE;
+    private static final Color PANEL_COLOR = Color.WHITE;
 
-    static void leftLinksPanel(){
-        createLeftLinksPanel();
-    }
-    private static void createLeftLinksPanel() {
-        String whiteSpace = "          ";
+    private JLabel generalStatistics;
+    private JLabel dailyStatistics;
+    private JLabel persons;
+    private JLabel keywords;
+    private JLabel sites;
+
+    public LeftLinksPanel() {
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
+//        setBackground(PANEL_COLOR);
+        Dimension indent = new Dimension(50, 0);
+
+        Box generalStatisticsBox = Box.createHorizontalBox();
+        generalStatisticsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
+        generalStatisticsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
         generalStatistics = new JLabel("Общая статистика");
-        generalStatistics.setFont(new Font("Arial", Font.BOLD, 21));
+        generalStatistics.setFont(MENU_FONT);
+        generalStatistics.setForeground(MENU_COLOR);
+        generalStatisticsBox.add(generalStatistics);
 
+        Box dailyStatisticsBox = Box.createHorizontalBox();
+        dailyStatisticsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
+        dailyStatisticsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
         dailyStatistics = new JLabel("Ежедневная статистика");
-        dailyStatistics.setFont(new Font("Arial", Font.PLAIN, 21));
+        dailyStatistics.setFont(MENU_FONT);
+        dailyStatistics.setForeground(MENU_COLOR);
+        dailyStatisticsBox.add(dailyStatistics);
 
-        references = new JLabel("Справочники");
-        references.setFont(new Font("Arial", Font.PLAIN, 21));
+        Box referencesBox = Box.createHorizontalBox();
+        referencesBox.setAlignmentX(Box.LEFT_ALIGNMENT);
+        referencesBox.setBorder(new EmptyBorder(0, 0, 10, 0));
+        JLabel references = new JLabel("Справочники:");
+        references.setFont(MENU_FONT);
+        references.setForeground(MENU_COLOR);
+        referencesBox.add(references);
 
-        persons = new JLabel(whiteSpace + "Личности");
-        persons.setFont(new Font("Arial", Font.PLAIN, 16));
+        Box personsBox = Box.createHorizontalBox();
+        personsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
+        personsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
+        persons = new JLabel("Личности");
+        persons.setFont(SUBMENU_FONT);
+        persons.setForeground(MENU_COLOR);
+        personsBox.add(Box.createRigidArea(indent));
+        personsBox.add(persons);
 
-        keywords = new JLabel(whiteSpace + "Ключевые слова");
-        keywords.setFont(new Font("Arial", Font.PLAIN, 16));
+        Box keywordsBox = Box.createHorizontalBox();
+        keywordsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
+        keywordsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
+        keywords = new JLabel("Ключевые слова");
+        keywords.setFont(SUBMENU_FONT);
+        keywords.setForeground(MENU_COLOR);
+        keywordsBox.add(Box.createRigidArea(indent));
+        keywordsBox.add(keywords);
 
-        sites = new JLabel(whiteSpace + "Сайты");
-        sites.setFont(new Font("Arial", Font.PLAIN, 16));
+        Box sitesBox = Box.createHorizontalBox();
+        sitesBox.setAlignmentX(Box.LEFT_ALIGNMENT);
+        sitesBox.setBorder(new EmptyBorder(0, 0, 10, 0));
+        sites = new JLabel("Сайты");
+        sites.setFont(SUBMENU_FONT);
+        sites.setForeground(MENU_COLOR);
+        sitesBox.add(Box.createRigidArea(indent));
+        sitesBox.add(sites);
 
-        leftLinksPanel.setBorder(new EmptyBorder(0, 0, 0, 10));
-        leftLinksPanel.setBackground(new Color(171, 80, 101));  //заблокировал цвет левой панели, кому нужно разблокируйте в момент работы, потом опять закоментируйте строку
+        add(generalStatisticsBox);
+        add(dailyStatisticsBox);
+        add(referencesBox);
+        add(personsBox);
+        add(keywordsBox);
+        add(sitesBox);
 
-        leftLinksPanel.setLayout(new BoxLayout(leftLinksPanel, BoxLayout.Y_AXIS));
+    }
 
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(20, 20)));
-        leftLinksPanel.add(generalStatistics);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(20, 20)));
-        leftLinksPanel.add(dailyStatistics);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(20, 20)));
-        leftLinksPanel.add(references);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        leftLinksPanel.add(persons);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        leftLinksPanel.add(keywords);
-        leftLinksPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        leftLinksPanel.add(sites);
-        leftLinksPanel.setVisible(true);
+    public JLabel[] getLabelLeftMenu() {
+        return new JLabel[]{
+            generalStatistics,
+            dailyStatistics,
+            persons,
+            keywords,
+            sites
+        };
     }
 
 }

@@ -1,24 +1,22 @@
 package ru.personrank.view.admin;
 
-import ru.personrank.view.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-
-public class PersonsPanel extends ru.personrank.view.Window {
+public class PersonsPanel extends JPanel {
 
     private static String[] columnNames;
     private static String[][] data;
 
-    static public void personsPanel(){
+    public PersonsPanel() {
         filltable();
         panel();
     }
-    private static void panel(){
-        personsPanel.setLayout(null);
 
+    private void panel() {
+        setLayout(null);
 
         JLabel personsLabel = new JLabel();
         personsLabel.setText("Справочник: \"Личности\"");
@@ -48,57 +46,52 @@ public class PersonsPanel extends ru.personrank.view.Window {
 
         JScrollPane scrollPane = new JScrollPane(personTable);
 
-
-
-
         personsLabel.setBounds(27, 12, size.width, size.height);
         scrollPane.setBounds(25, 40, 369, 300);
         addPerson.setBounds(100, 355, 90, 30);
         editPerson.setBounds(200, 355, 110, 30);
         deletePerson.setBounds(320, 355, 90, 30);
 
-        personsPanel.add(personsLabel);
-        personsPanel.add(scrollPane);
-        personsPanel.add(addPerson);
-        personsPanel.add(editPerson);
-        personsPanel.add(deletePerson);
+        add(personsLabel);
+        add(scrollPane);
+        add(addPerson);
+        add(editPerson);
+        add(deletePerson);
     }
 
-    private static void filltable(){
+    private static void filltable() {
 
         columnNames = new String[]{
-                "Наименование"
+            "Наименование"
         };
 
         data = new String[][]{
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-                {"Медведев"},
-                {"Путин"},
-        };
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},
+            {"Медведев"},
+            {"Путин"},};
     }
 
 }
-
