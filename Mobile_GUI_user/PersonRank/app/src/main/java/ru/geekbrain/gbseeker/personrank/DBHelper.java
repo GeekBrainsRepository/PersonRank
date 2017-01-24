@@ -368,6 +368,24 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    public void dumpTablePerson() {
+        Cursor cursor = null;
+        try {
+            cursor = getDB().query(DB.TABLES.PERSON, null, null, null, null, null, null, null);
+            Log.d(TAG, "PERSON: read=" + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    int indexID = cursor.getColumnIndex(DB.COLUMNS.PERSON.ID);
+                    int indexPerson = cursor.getColumnIndex(DB.COLUMNS.PERSON.PERSON);
+                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getString(indexPerson));
+                } while (cursor.moveToNext());
+            } else {
+                Log.d(TAG, "empty");
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
 }
 /*    public void deepDeleteChild(int parent_id){
         Cursor cursor = null;
