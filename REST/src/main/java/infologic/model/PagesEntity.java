@@ -8,7 +8,7 @@ import java.util.Collection;
  * Created by Антон Владимирович on 21.01.2017.
  */
 @Entity
-@Table(name = "pages", schema = "gbproj", catalog = "")
+@Table(name = "pages", schema = "personrank", catalog = "")
 public class PagesEntity {
     private int id;
     private String url;

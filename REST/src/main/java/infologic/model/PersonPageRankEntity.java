@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by Антон Владимирович on 21.01.2017.
  */
 @Entity
-@Table(name = "person_page_rank", schema = "gbproj", catalog = "")
+@Table(name = "person_page_rank", schema = "personrank", catalog = "")
 public class PersonPageRankEntity {
     private Integer personId;
     private Integer pageId;
