@@ -15,7 +15,7 @@ public class Window extends JFrame {
 
     private LeftLinksPanel leftLinksPanel = new LeftLinksPanel();
     private JPanel contentPanel = new JPanel(new BorderLayout());
-    JLabel[] labelMenu;
+    private JLabel[] labelMenu;
     private JPanel[] panels = new JPanel[]{
         new GeneralStatisticsPanel(),
         new DailyStatisticsPanel(),
@@ -33,7 +33,9 @@ public class Window extends JFrame {
         setResizable(false);
         setTitle("PersonRank");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        leftLinksPanel.setPreferredSize(new Dimension(230, 430));
         add(leftLinksPanel, BorderLayout.WEST);
+        contentPanel.setPreferredSize(new Dimension(470, 430));
         add(contentPanel, BorderLayout.CENTER);
         contentPanel.add(panels[0]);
         labelMenu = leftLinksPanel.getLabelLeftMenu();
@@ -60,7 +62,7 @@ public class Window extends JFrame {
                 JLabel label = (JLabel)e.getSource();
                 label.setFont(label.getFont().deriveFont(Font.BOLD));
                 contentPanel.removeAll();
-                contentPanel.add(panels[index]);
+                contentPanel.add(panels[index], BorderLayout.CENTER);
                 contentPanel.revalidate();
                 contentPanel.repaint();
             }

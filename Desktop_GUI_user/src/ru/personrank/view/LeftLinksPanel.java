@@ -6,8 +6,8 @@ import java.awt.*;
 
 public class LeftLinksPanel extends JPanel {
 
-    private static final Font MENU_FONT = new Font("Arial", Font.PLAIN, 21);
-    private static final Font SUBMENU_FONT = new Font("Arial", Font.PLAIN, 16);
+    private static final Font MENU_FONT = new Font("Arial", Font.PLAIN, 17);
+    private static final Font SUBMENU_FONT = new Font("Arial", Font.PLAIN, 14);
     private static final Color MENU_COLOR = Color.BLUE;
     private static final Color PANEL_COLOR = Color.WHITE;
 
@@ -26,7 +26,7 @@ public class LeftLinksPanel extends JPanel {
 
         Box generalStatisticsBox = Box.createHorizontalBox();
         generalStatisticsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
-        generalStatisticsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
+        generalStatisticsBox.setBorder(new EmptyBorder(10, 0, 20, 0));
         generalStatistics = new JLabel("Общая статистика");
         generalStatistics.setFont(MENU_FONT);
         generalStatistics.setForeground(MENU_COLOR);
@@ -34,7 +34,7 @@ public class LeftLinksPanel extends JPanel {
 
         Box dailyStatisticsBox = Box.createHorizontalBox();
         dailyStatisticsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
-        dailyStatisticsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
+        dailyStatisticsBox.setBorder(new EmptyBorder(0, 0, 20, 0));
         dailyStatistics = new JLabel("Ежедневная статистика");
         dailyStatistics.setFont(MENU_FONT);
         dailyStatistics.setForeground(MENU_COLOR);

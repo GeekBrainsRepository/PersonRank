@@ -26,7 +26,6 @@ public class Main {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Window().setVisible(true);
-                //new WindowDialog().setVisible(true);
             }
         });
     }
