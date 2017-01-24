@@ -15,7 +15,7 @@ public class Window extends JFrame {
 
     private LeftLinksPanel leftLinksPanel = new LeftLinksPanel();
     private JPanel contentPanel = new JPanel(new BorderLayout());
-
+    JLabel[] labelMenu;
     private JPanel[] panels = new JPanel[]{
         new GeneralStatisticsPanel(),
         new DailyStatisticsPanel(),
@@ -36,7 +36,7 @@ public class Window extends JFrame {
         add(leftLinksPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
         contentPanel.add(panels[0]);
-        JLabel[] labelMenu = leftLinksPanel.getLabelLeftMenu();
+        labelMenu = leftLinksPanel.getLabelLeftMenu();
         for (int i = 0; i < labelMenu.length; i++) {
             labelMenu[i].addMouseListener(new MenuMouseListener(i));
         }
@@ -54,6 +54,11 @@ public class Window extends JFrame {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
+                for(JLabel label : labelMenu) {
+                    label.setFont(label.getFont().deriveFont(Font.PLAIN));
+                }
+                JLabel label = (JLabel)e.getSource();
+                label.setFont(label.getFont().deriveFont(Font.BOLD));
                 contentPanel.removeAll();
                 contentPanel.add(panels[index]);
                 contentPanel.revalidate();
