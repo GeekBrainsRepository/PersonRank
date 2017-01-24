@@ -46,11 +46,11 @@ public class DailyStatisticsPanel extends JPanel {
         comboPerson = new JComboBox(comboPersonModel);
         labelPeriod = new JLabel();
         labelPo = new JLabel();
-        DateFormat format = new SimpleDateFormat("DD.MM.YYYY");
-        formattedTextFieldData1 = new JXDatePicker(new GregorianCalendar(2017,Calendar.JANUARY,1).getTime());
-        formattedTextFieldData2 = new JXDatePicker(new GregorianCalendar(2017,Calendar.JANUARY,30).getTime());
-        formattedTextFieldData1.setFormats(format);
-        formattedTextFieldData2.setFormats(format);
+        //DateFormat format = new SimpleDateFormat("DD.MM.YYYY");
+        formattedTextFieldData1 = new JXDatePicker(new Date());
+        formattedTextFieldData2 = new JXDatePicker(new Date());
+        //formattedTextFieldData1.setFormats(formats); // При включенном форматировани некоректно отображается дата
+        //formattedTextFieldData2.setFormats(format);  // Видимо setFormat работает не корректно
         buttonSend = new JButton();
         buttonSend.addActionListener(new ButtonSendListener());
         statisticTableModel = new StatisticTabelModel();
