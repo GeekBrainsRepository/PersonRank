@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 public class StatController {
 
-    @RequestMapping("/stat/getplist")
+    @RequestMapping("/statistic/getpersonlist")
     public Map<Integer,String> getPersonList() {
 
 
@@ -32,7 +32,7 @@ public class StatController {
         return map;
 
     }
-    @RequestMapping("/stat/getrlist")
+    @RequestMapping("/statistic/getresourcelist")
     public Map<Integer,String> getResourceList() {
 
         //fake data
@@ -44,8 +44,8 @@ public class StatController {
         return map;
 
     }
-    @RequestMapping("/stat/common/{resource_id}")
-    public Map<String,Integer> getCommonResourceStat(@PathVariable("resource_id") Integer resourceId) {
+    @RequestMapping("/statistic/common/{resourceId}")
+    public Map<String,Integer> getCommonResourceStat(@PathVariable("resourceId") Integer resourceId) {
         //fake data
         //TODO replace with DAO request
         Map<String,Integer> map = new HashMap<>();
@@ -57,7 +57,7 @@ public class StatController {
         return map;
 
     }
-    @RequestMapping("/stat/daily/{resourceId}/{personId}/{dateStart}/{dateEnd}")
+    @RequestMapping("/statistic/daily/{resourceId}/{personId}/{dateStart}/{dateEnd}")
     public Map<LocalDate,Integer> getDailyStat(@PathVariable Integer resourceId,@PathVariable Integer personId,
                                           @PathVariable String dateStart,@PathVariable String  dateEnd) {
         Map<LocalDate,Integer> map = new HashMap<>();
