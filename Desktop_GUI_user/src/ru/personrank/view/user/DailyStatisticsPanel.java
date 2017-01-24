@@ -9,7 +9,9 @@ import java.awt.event.ItemListener;
 import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -47,8 +49,15 @@ public class DailyStatisticsPanel extends JPanel {
         labelPeriod = new JLabel();
         labelPo = new JLabel();
         //DateFormat format = new SimpleDateFormat("DD.MM.YYYY");
-        formattedTextFieldData1 = new JXDatePicker(new Date());
-        formattedTextFieldData2 = new JXDatePicker(new Date());
+        GregorianCalendar initDate = (GregorianCalendar) GregorianCalendar.getInstance();
+        formattedTextFieldData1 = new JXDatePicker(new GregorianCalendar(
+                                        initDate.get(Calendar.YEAR),
+                                        initDate.get(Calendar.MONTH),
+                                        initDate.getMinimum(Calendar.DAY_OF_MONTH)).getTime());
+        formattedTextFieldData2 = new JXDatePicker(new GregorianCalendar(
+                                        initDate.get(Calendar.YEAR),
+                                        initDate.get(Calendar.MONTH),
+                                        initDate.getMaximum(Calendar.DAY_OF_MONTH)).getTime());
         //formattedTextFieldData1.setFormats(formats); // При включенном форматировани некоректно отображается дата
         //formattedTextFieldData2.setFormats(format);  // Видимо setFormat работает не корректно
         buttonSend = new JButton();
