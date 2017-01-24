@@ -178,7 +178,7 @@ public class DailyStatisticsPanel extends JPanel {
         public Class getColumnClass(int column) {
             switch (column) {
                 case (1) :
-                    return Calendar.class;
+                    return String.class;
                 case (2) :
                     return Integer.class;
                 default : return String.class;
@@ -218,11 +218,12 @@ public class DailyStatisticsPanel extends JPanel {
                 }
             }
             ArrayList row = null;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("DD.MM.YYYY");
             for(int i = 0; i < person.getScanDate().size(); i++) {
                 Date date = person.getScanDate().get(i).getTime();
                 if(date.compareTo(startDate) >= 0 && date.compareTo(stopDate) <= 0) {
                     row = new ArrayList();
-                    row.add(person.getScanDate().get(i).getTime());
+                    row.add(dateFormat.format(person.getScanDate().get(i).getTime()));
                     row.add(person.getNewPages().get(i));
                     data.add(row);
                 }
