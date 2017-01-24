@@ -21,6 +21,7 @@ public class LeftLinksPanel extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(new EmptyBorder(10, 10, 10, 10));
+        setOpaque(false);
 //        setBackground(PANEL_COLOR);
         Dimension indent = new Dimension(50, 0);
 

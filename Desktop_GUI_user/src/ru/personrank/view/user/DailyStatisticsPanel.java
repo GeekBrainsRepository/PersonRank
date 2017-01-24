@@ -68,6 +68,7 @@ public class DailyStatisticsPanel extends JPanel {
         dailyTable.setRowHeight(30);
         
         scrollPane = new JScrollPane(dailyTable);
+        setOpaque(false);
         contentPositioning();
     }      
     
@@ -237,6 +238,14 @@ public class DailyStatisticsPanel extends JPanel {
                     row = new ArrayList();
                     row.add(dateFormat.format(person.getScanDate().get(i).getTime()));
                     row.add(person.getNewPages().get(i));
+                    data.add(row);
+                }
+            }
+            if(data.size() < 14) {
+                for(int i = 0; i < 14 - data.size(); i++) {
+                    row = new ArrayList();
+                    row.add("");
+                    row.add("");
                     data.add(row);
                 }
             }

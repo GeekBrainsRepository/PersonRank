@@ -12,7 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Window extends JFrame {
-
+    
+    private static final Color WINDOW_BACKGROUND = Color.LIGHT_GRAY;
+    
     private LeftLinksPanel leftLinksPanel = new LeftLinksPanel();
     private JPanel contentPanel = new JPanel(new BorderLayout());
     private JLabel[] labelMenu;
@@ -30,6 +32,8 @@ public class Window extends JFrame {
         setResizable(false);
         setTitle("PersonRank");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setBackground(WINDOW_BACKGROUND);
+        contentPanel.setOpaque(false);
         labelMenu = leftLinksPanel.getLabelLeftMenu();
         for (int i = 0; i < labelMenu.length; i++) {
             labelMenu[i].addMouseListener(new MenuMouseListener(i));

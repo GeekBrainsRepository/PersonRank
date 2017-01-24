@@ -23,7 +23,8 @@ public class GeneralStatisticsPanel extends JPanel {
     
     public GeneralStatisticsPanel () {
         setLayout(new BorderLayout());
-        setBorder(new EmptyBorder(6,0,6,6)); 
+        setBorder(new EmptyBorder(6,6,6,6));
+        setOpaque(false);
         labelSite = new JLabel();
         labelSite.setText("Сайт:");
         Font font = new Font("Arial", Font.PLAIN, 12);
@@ -129,6 +130,14 @@ public class GeneralStatisticsPanel extends JPanel {
                 row.add(personNames.get(i));
                 row.add(personRank.get(i));
                 data.add(row);
+            }
+            if(data.size() < 14) {
+                for(int i = 0; i < 14 - data.size(); i++) {
+                    row = new ArrayList();
+                    row.add("");
+                    row.add("");
+                    data.add(row);
+                }
             }
             fireTableStructureChanged();
         }
