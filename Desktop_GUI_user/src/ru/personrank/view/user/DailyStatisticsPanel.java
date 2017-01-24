@@ -129,7 +129,7 @@ public class DailyStatisticsPanel extends JPanel {
                                         .addComponent(formattedTextFieldData2, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                                .addGap(13, 13, 13))
+                                .addGap(6, 6, 6))
         );
     }
     
