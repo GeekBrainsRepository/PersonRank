@@ -40,6 +40,7 @@ public class GeneralStatisticsPanel extends JPanel {
         generalTableModel = new GeneralStaticTabelModel();
         generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
         generalTable = new JTable(generalTableModel);
+        generalTable.setRowHeight(30);
         Box controlsBox = Box.createHorizontalBox();
         controlsBox.setBorder(new EmptyBorder(0,0,10,0));
         controlsBox.setPreferredSize(new Dimension(430,40));

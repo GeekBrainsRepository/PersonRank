@@ -31,7 +31,7 @@ public class DailyStatisticsPanel extends JPanel {
     private  JLabel labelPo;
     private  JXDatePicker formattedTextFieldData2;
     private  JButton buttonSend; 
-    private  JTable table;
+    private  JTable dailyTable;
     private  StatisticTabelModel statisticTableModel;
     private  JScrollPane scrollPane;
 
@@ -54,8 +54,9 @@ public class DailyStatisticsPanel extends JPanel {
         buttonSend = new JButton();
         buttonSend.addActionListener(new ButtonSendListener());
         statisticTableModel = new StatisticTabelModel();
-        table = new JTable(statisticTableModel);
-        scrollPane = new JScrollPane(table);
+        dailyTable = new JTable(statisticTableModel);
+        dailyTable.setRowHeight(30);
+        scrollPane = new JScrollPane(dailyTable);
         contentPositioning();
     }      
     
