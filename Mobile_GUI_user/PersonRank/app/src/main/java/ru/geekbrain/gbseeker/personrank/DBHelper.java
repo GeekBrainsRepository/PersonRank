@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 
 public class DBHelper extends SQLiteOpenHelper {
-
+    private static final String TAG="DBHelper";
     //DB decriptor
     public interface DB {
         String DB_NAME = "personrank";
@@ -140,20 +141,20 @@ public class DBHelper extends SQLiteOpenHelper {
     public void addPersonWithCheck(String person) {
         Cursor cursor = null;
         try {
-            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "=" + person, null, null, null, null, null);
+            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "='" + person+"'", null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 return;
             } else {
                 addPerson(person);
             }
-        } finally {
+        }finally{
             if (cursor != null) cursor.close();
         }
     }
     public int getPersonID(String person) {
         Cursor cursor = null;
         try {
-            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "=" + person, null, null, null, null, null);
+            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "='" + person+"'", null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 int indexID = cursor.getColumnIndex(DB.COLUMNS.PERSON.ID);
                 int id = cursor.getInt(indexID);
@@ -181,7 +182,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void addSiteWithCheck(String site) {
         Cursor cursor = null;
         try {
-            cursor = getDB().query(DB.TABLES.SITE, null, DB.COLUMNS.SITE.SITE + "=" + site, null, null, null, null, null);
+            cursor = getDB().query(DB.TABLES.SITE, null, DB.COLUMNS.SITE.SITE + "='" + site+"'", null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 return;
             } else {
@@ -194,7 +195,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getSiteID(String site) {
         Cursor cursor = null;
         try {
-            cursor = getDB().query(DB.TABLES.SITE, null, DB.COLUMNS.SITE.SITE + "=" + site, null, null, null, null, null);
+            cursor = getDB().query(DB.TABLES.SITE, null, DB.COLUMNS.SITE.SITE + "='" + site+"'", null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 int indexID = cursor.getColumnIndex(DB.COLUMNS.SITE.ID);
                 int id = cursor.getInt(indexID);
@@ -226,7 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.KEYWORD, null,
-                    DB.COLUMNS.KEYWORD.KEYWORD+ "=" + keyword +" AND "+DB.COLUMNS.KEYWORD.PERSON_REF+"="+person_id,
+                    DB.COLUMNS.KEYWORD.KEYWORD+ "='" + keyword +"' AND "+DB.COLUMNS.KEYWORD.PERSON_REF+"="+person_id,
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 return;
@@ -302,7 +303,7 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             cursor = getDB().query(DB.TABLES.DAILY, null,
                     DB.COLUMNS.DAILY.PERSON_REF + "=" + person_id + " AND " + DB.COLUMNS.DAILY.SITE_REF + "=" + site_id +
-                            " AND " + DB.COLUMNS.DAILY.DATE + "=" + date.toString(),
+                            " AND " + DB.COLUMNS.DAILY.DATE + "='" + date.toString()+"'",
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 int indexID = cursor.getColumnIndex(DB.COLUMNS.DAILY.ID);

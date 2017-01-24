@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DBHelper.createDBHelper(this);
+        DBHelper.getInstance().fillByFakeData();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
