@@ -33,16 +33,16 @@ public class Window extends JFrame {
         setResizable(false);
         setTitle("PersonRank");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        labelMenu = leftLinksPanel.getLabelLeftMenu();
+        for (int i = 0; i < labelMenu.length; i++) {
+            labelMenu[i].addMouseListener(new MenuMouseListener(i));
+        }
         leftLinksPanel.setPreferredSize(new Dimension(230, 430));
         add(leftLinksPanel, BorderLayout.WEST);
         contentPanel.setPreferredSize(new Dimension(470, 430));
         add(contentPanel, BorderLayout.CENTER);
         contentPanel.add(panels[0]);
-        labelMenu = leftLinksPanel.getLabelLeftMenu();
-        for (int i = 0; i < labelMenu.length; i++) {
-            labelMenu[i].addMouseListener(new MenuMouseListener(i));
-        }
-
+        labelMenu[0].setFont(labelMenu[0].getFont().deriveFont(Font.BOLD));       
     }
 
     private class MenuMouseListener extends MouseAdapter {

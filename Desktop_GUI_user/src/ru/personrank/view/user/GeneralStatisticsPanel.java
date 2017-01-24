@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 public class GeneralStatisticsPanel extends JPanel {
 
@@ -19,34 +21,37 @@ public class GeneralStatisticsPanel extends JPanel {
     JLabel labelSite;
     private static JTable generalTable;
     private static GeneralStaticTabelModel generalTableModel;
-    private static JScrollPane scrollForTable;
     
     public GeneralStatisticsPanel () {
-        setLayout(null);
+        setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(6,0,6,6)); 
         labelSite = new JLabel();
         labelSite.setText("Сайт:");
         Font font = new Font("Arial", Font.PLAIN, 12);
         labelSite.setFont(font);
         namesSitesComboBox = new JComboBox(new NamesSitesComboBoxModel());
-        namesSitesComboBox.setEditable(false);
         buttonSend = new JButton();
         buttonSend.setText("Применить");
         font = new Font("Tahoma", Font.PLAIN, 11);
         buttonSend.setFont(font);
+        Dimension bnSendSize = new Dimension(90,30);
+        buttonSend.setMinimumSize(bnSendSize);
+        buttonSend.setMaximumSize(bnSendSize);
         buttonSend.addActionListener(new ButtonSendListener());
         generalTableModel = new GeneralStaticTabelModel();
         generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
         generalTable = new JTable(generalTableModel);
-        scrollForTable = new JScrollPane(generalTable);
-        Dimension size = labelSite.getPreferredSize();
-        add(labelSite);
-        add(namesSitesComboBox);
-        add(buttonSend);
-        add(scrollForTable);
-        labelSite.setBounds(27, 12, size.width, size.height);    //добавил оригинальные размеры для jlabel
-        namesSitesComboBox.setBounds(95, 5, 195, 30);
-        buttonSend.setBounds(300, 5, 90, 30);
-        scrollForTable.setBounds(25, 40, 369, 346);
+        Box controlsBox = Box.createHorizontalBox();
+        controlsBox.setBorder(new EmptyBorder(0,0,10,0));
+        controlsBox.setPreferredSize(new Dimension(430,40));
+        controlsBox.add(labelSite);
+        controlsBox.add(Box.createRigidArea(new Dimension(15,0)));
+        controlsBox.add(namesSitesComboBox);
+        controlsBox.add(Box.createRigidArea(new Dimension(15,0)));
+        controlsBox.add(buttonSend);
+        controlsBox.add(Box.createHorizontalGlue());
+        add(controlsBox, BorderLayout.NORTH);
+        add(new JScrollPane(generalTable), BorderLayout.CENTER);     
     }
 
     class NamesSitesComboBoxModel extends DefaultComboBoxModel {
