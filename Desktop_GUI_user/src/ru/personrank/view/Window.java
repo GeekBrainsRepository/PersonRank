@@ -24,9 +24,6 @@ public class Window extends JFrame {
         new SitesPanel()
     };
 
-    /*
-    *  описание каркаса окна,
-     */
     public Window() {
         setSize(700, 430);
         setLocationRelativeTo(null);

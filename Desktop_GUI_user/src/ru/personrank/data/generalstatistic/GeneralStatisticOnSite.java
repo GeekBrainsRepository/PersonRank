@@ -1,7 +1,7 @@
 /*
  *  
  */
-package ru.personrank.data;
+package ru.personrank.data.generalstatistic;
 
 import java.util.List;
 

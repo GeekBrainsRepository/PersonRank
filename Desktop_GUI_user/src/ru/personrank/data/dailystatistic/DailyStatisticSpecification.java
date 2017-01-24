@@ -1,7 +1,9 @@
 /*
  * 
  */
-package ru.personrank.data;
+package ru.personrank.data.dailystatistic;
+
+import ru.personrank.data.Specification;
 
 /**
  *

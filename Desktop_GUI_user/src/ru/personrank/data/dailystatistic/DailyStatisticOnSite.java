@@ -1,7 +1,7 @@
 /*
  *  
  */
-package ru.personrank.data;
+package ru.personrank.data.dailystatistic;
 
 import java.util.Calendar;
 import java.util.List;

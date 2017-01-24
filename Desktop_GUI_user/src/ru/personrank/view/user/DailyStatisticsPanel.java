@@ -7,19 +7,19 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import ru.personrank.data.*;
+
+import ru.personrank.data.dailystatistic.DailyStatisticOnSite;
+import ru.personrank.data.dailystatistic.DailyStatisticOnSiteRepository;
+import ru.personrank.data.dailystatistic.DailyStatisticSpecification;
 
 public class DailyStatisticsPanel extends JPanel {
 
-    private  DailyStatisticOnSiteRepository dailyStatisticRepository; 
+    private DailyStatisticOnSiteRepository dailyStatisticRepository;
     private  JLabel saitLabel;
     private  JLabel personLabel;
     private  JComboBox comboSite;

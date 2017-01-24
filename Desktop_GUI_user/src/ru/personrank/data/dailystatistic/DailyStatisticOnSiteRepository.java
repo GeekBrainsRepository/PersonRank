@@ -1,9 +1,11 @@
 /*
  *  
  */
-package ru.personrank.data;
+package ru.personrank.data.dailystatistic;
 
-import ru.personrank.data.DailyStatisticOnSite.Person;
+import ru.personrank.data.Repository;
+import ru.personrank.data.Specification;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -33,7 +35,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
                                                     new GregorianCalendar(2017, Calendar.JANUARY, 20),
                                                     new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
                     Arrays.asList(new Integer [] {2,1,3}));
-            DailyStatisticOnSite site1 = new DailyStatisticOnSite("lenta.ru",Arrays.asList(new Person [] {p1,p2}));
+            DailyStatisticOnSite site1 = new DailyStatisticOnSite("lenta.ru",Arrays.asList(new DailyStatisticOnSite.Person[] {p1,p2}));
             dailyStatisticOnSite.add(site1);
             
             DailyStatisticOnSite.Person p3 = new DailyStatisticOnSite.Person("Путин",
@@ -51,7 +53,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
                                                     new GregorianCalendar(2017, Calendar.JANUARY, 19),
                                                     new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
                     Arrays.asList(new Integer [] {4,8,2}));
-            DailyStatisticOnSite site2 = new DailyStatisticOnSite("komersant.ru",Arrays.asList(new Person [] {p3,p4,p5}));
+            DailyStatisticOnSite site2 = new DailyStatisticOnSite("komersant.ru",Arrays.asList(new DailyStatisticOnSite.Person[] {p3,p4,p5}));
             dailyStatisticOnSite.add(site2);
         // Конец
     }

@@ -1,8 +1,8 @@
 package ru.personrank.view.user;
 
-import ru.personrank.data.GeneralStatisticOnSite;
-import ru.personrank.data.GeneralStatisticOnSiteRepository;
-import ru.personrank.data.GeneralStatisticSpecification;
+import ru.personrank.data.generalstatistic.GeneralStatisticOnSite;
+import ru.personrank.data.generalstatistic.GeneralStatisticOnSiteRepository;
+import ru.personrank.data.generalstatistic.GeneralStatisticSpecification;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 public class GeneralStatisticsPanel extends JPanel {

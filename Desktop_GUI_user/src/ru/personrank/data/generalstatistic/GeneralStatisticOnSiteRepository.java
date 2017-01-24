@@ -1,7 +1,10 @@
 /*
  *  
  */
-package ru.personrank.data;
+package ru.personrank.data.generalstatistic;
+
+import ru.personrank.data.Repository;
+import ru.personrank.data.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
