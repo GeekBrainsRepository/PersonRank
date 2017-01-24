@@ -2,14 +2,14 @@
 Для статистик 
 
 
-service.addr/stat/getplist
+service.addr/statistic/getpersonlist
 Возвращает список персон
 Предварительный формат данных:
 JSON , пары ключ:значение  (id:person_name)
 Пример:
 {"1":"First","2":"Second"}
 
-service.addr/stat/getrlist
+service.addr/statistic/getresourcelist
 возвращает список ресурсов
 Предварительный формат данных:
 JSON , пары ключ:значение  (id:url)
@@ -17,21 +17,26 @@ JSON , пары ключ:значение  (id:url)
 {"1":"First","2":"Second"}
 
 
-service.addr/stat/daily/{resource_id}/{person_id}/{date}
+service.addr/stat/daily/{site_id}/{person_id}/{date_start}/{date_end}
 возвращает статистику по реурсу resource_id для персоны person_id за дату date
+service.addr - адрес веб-сервиса
+{site_id} - ID сайта из таблицы Sites
+{person_id} - ID персоны из таблицы Persons
+{date_start} - дата старта выборки статистики ?? в формате long
+{date_end} - дата конца выборки статистики ?? в формате long
 
-
-service.addr/stat/common/{resource_id}
+service.addr/statistic/common/{site_id}
 возвращает общую статистику по ресурсу resource_id
-
+service.addr - адрес веб-сервиса
+{site_id} - ID сайта из таблицы Sites
 
 
 
 Администрирование
 
 Получить списки ресурсов и ключевых слов лучше через 
-service.addr/stat/getplist
-service.addr/stat/getrlist
+service.addr/statistic/getresourcelist
+service.addr/statistic/getresourcelist
 ибо незачем 2 раза делать одно и то же
 
 @DELETE
