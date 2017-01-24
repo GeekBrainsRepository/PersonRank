@@ -63,8 +63,10 @@ public class DailyStatisticsPanel extends JPanel {
         buttonSend = new JButton();
         buttonSend.addActionListener(new ButtonSendListener());
         statisticTableModel = new StatisticTabelModel();
+        statisticTableModel.setDataSource(formattedTextFieldData1.getDate(), formattedTextFieldData2.getDate());
         dailyTable = new JTable(statisticTableModel);
         dailyTable.setRowHeight(30);
+        
         scrollPane = new JScrollPane(dailyTable);
         contentPositioning();
     }      
@@ -129,7 +131,7 @@ public class DailyStatisticsPanel extends JPanel {
                                         .addComponent(formattedTextFieldData2, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                                .addGap(13, 13, 13))
+                                .addGap(6, 6, 6))
         );
     }
     
