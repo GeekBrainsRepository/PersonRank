@@ -227,7 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.KEYWORD, null,
-                    DB.COLUMNS.KEYWORD.KEYWORD+ "='" + keyword +"' AND "+DB.COLUMNS.KEYWORD.PERSON_REF+"="+person_id,
+                    DB.COLUMNS.KEYWORD.KEYWORD+ "=='" + keyword +"' AND "+DB.COLUMNS.KEYWORD.PERSON_REF+"=="+person_id,
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 return;
@@ -323,6 +323,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     void fillByFakeData() {
+        dumpTablePerson();
+        dumpTableSite();
+        dumpTableKeyword();
+        dumpTableCommonStats();
+        dumpTableDailyStats();
+
+
         addPersonWithCheck("Петя");
         addPersonWithCheck("Вася");
         addPersonWithCheck("Оля");
@@ -378,6 +385,84 @@ public class DBHelper extends SQLiteOpenHelper {
                     int indexID = cursor.getColumnIndex(DB.COLUMNS.PERSON.ID);
                     int indexPerson = cursor.getColumnIndex(DB.COLUMNS.PERSON.PERSON);
                     Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getString(indexPerson));
+                } while (cursor.moveToNext());
+            } else {
+                Log.d(TAG, "empty");
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+    public void dumpTableSite() {
+        Cursor cursor = null;
+        try {
+            cursor = getDB().query(DB.TABLES.SITE, null, null, null, null, null, null, null);
+            Log.d(TAG, "SITE: read=" + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    int indexID = cursor.getColumnIndex(DB.COLUMNS.SITE.ID);
+                    int indexSite = cursor.getColumnIndex(DB.COLUMNS.SITE.SITE);
+                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getString(indexSite));
+                } while (cursor.moveToNext());
+            } else {
+                Log.d(TAG, "empty");
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+    public void dumpTableKeyword() {
+        Cursor cursor = null;
+        try {
+            cursor = getDB().query(DB.TABLES.KEYWORD, null, null, null, null, null, null, null);
+            Log.d(TAG, "KEYWORD: read=" + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    int indexID = cursor.getColumnIndex(DB.COLUMNS.KEYWORD.ID);
+                    int indexKeyword = cursor.getColumnIndex(DB.COLUMNS.KEYWORD.KEYWORD);
+                    int indexRef = cursor.getColumnIndex(DB.COLUMNS.KEYWORD.PERSON_REF);
+                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getString(indexKeyword)+ ":" + cursor.getInt(indexRef));
+                } while (cursor.moveToNext());
+            } else {
+                Log.d(TAG, "empty");
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+    public void dumpTableCommonStats() {
+        Cursor cursor = null;
+        try {
+            cursor = getDB().query(DB.TABLES.COMMON, null, null, null, null, null, null, null);
+            Log.d(TAG, "COMMON: read=" + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    int indexID = cursor.getColumnIndex(DB.COLUMNS.COMMON.ID);
+                    int indexStats = cursor.getColumnIndex(DB.COLUMNS.COMMON.STATS);
+                    int indexPersonRef = cursor.getColumnIndex(DB.COLUMNS.COMMON.PERSON_REF);
+                    int indexSiteRef = cursor.getColumnIndex(DB.COLUMNS.COMMON.SITE_REF);
+                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getInt(indexStats)+ ":" + cursor.getInt(indexPersonRef)+ ":" + cursor.getInt(indexSiteRef));
+                } while (cursor.moveToNext());
+            } else {
+                Log.d(TAG, "empty");
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+    public void dumpTableDailyStats() {
+        Cursor cursor = null;
+        try {
+            cursor = getDB().query(DB.TABLES.DAILY, null, null, null, null, null, null, null);
+            Log.d(TAG, "DAILY: read=" + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    int indexID = cursor.getColumnIndex(DB.COLUMNS.DAILY.ID);
+                    int indexStats = cursor.getColumnIndex(DB.COLUMNS.DAILY.STATS);
+                    int indexPersonRef = cursor.getColumnIndex(DB.COLUMNS.DAILY.PERSON_REF);
+                    int indexSiteRef = cursor.getColumnIndex(DB.COLUMNS.DAILY.SITE_REF);
+                    int indexDate = cursor.getColumnIndex(DB.COLUMNS.DAILY.DATE);
+                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getInt(indexDate) + ":" + cursor.getInt(indexStats)+ ":" + cursor.getInt(indexPersonRef)+ ":" + cursor.getInt(indexSiteRef));
                 } while (cursor.moveToNext());
             } else {
                 Log.d(TAG, "empty");
