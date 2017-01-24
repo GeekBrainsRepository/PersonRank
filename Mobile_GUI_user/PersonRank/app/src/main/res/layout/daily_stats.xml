@@ -28,14 +28,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <DatePicker
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/date_from"></DatePicker>
-            <DatePicker
+                android:id="@+id/date_from"></Button>
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/date_to"></DatePicker>
+                android:id="@+id/date_to"></Button>
         </LinearLayout>
         <Button
             android:layout_width="wrap_content"

@@ -88,7 +88,12 @@ public class MainActivity extends AppCompatActivity
                        .replace(R.id.FrameContainer,fragment)
                        .commit();
        } else if (id == R.id.daily_stats_menu) {
-
+           FragmentManager fm=getSupportFragmentManager();
+           Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
+           fragment=new DailyStatsFragment();
+           fm.beginTransaction()
+                   .replace(R.id.FrameContainer,fragment)
+                   .commit();
        } else if (id == R.id.nav_persons) {
            FragmentManager fm=getSupportFragmentManager();
            Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
