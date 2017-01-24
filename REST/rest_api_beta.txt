@@ -17,8 +17,8 @@ JSON , пары ключ:значение  (id:url)
 {"1":"First","2":"Second"}
 
 
-service.addr/stat/daily/{site_id}/{person_id}/{date_start}/{date_end}
-возвращает статистику по реурсу resource_id для персоны person_id за дату date
+service.addr/statistic/daily/{site_id}/{person_id}/{date_start}/{date_end}
+возвращает статистику по реурсу site_id для персоны person_id за дату date
 service.addr - адрес веб-сервиса
 {site_id} - ID сайта из таблицы Sites
 {person_id} - ID персоны из таблицы Persons
@@ -26,7 +26,7 @@ service.addr - адрес веб-сервиса
 {date_end} - дата конца выборки статистики ?? в формате long
 
 service.addr/statistic/common/{site_id}
-возвращает общую статистику по ресурсу resource_id
+возвращает общую статистику по ресурсу site_id
 service.addr - адрес веб-сервиса
 {site_id} - ID сайта из таблицы Sites
 
