@@ -17,7 +17,7 @@ import android.widget.ListView;
 
 import java.util.concurrent.TimeUnit;
 
-public class PersonList extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class PersonList extends Fragment  {
     SimpleCursorAdapter scAdapter;
 
 
@@ -31,13 +31,8 @@ public class PersonList extends Fragment implements LoaderManager.LoaderCallback
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.person_list, container, false);
 
-        String[] data = {"Павел", "Медведев", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин", "Путин"};
-        // адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, data);
-
         getActivity().setTitle("Список персон");
         ListView list = (ListView) v.findViewById(R.id.PersonList);
-//        list.setAdapter(adapter);
 
         // формируем столбцы сопоставления
         String[] from = new String[] { DBHelper.DB.COLUMNS.PERSON.PERSON};
@@ -45,25 +40,12 @@ public class PersonList extends Fragment implements LoaderManager.LoaderCallback
 
         // создаем адаптер и настраиваем список
         scAdapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_list_item_1, null, from, to, 0);
+        getActivity().getSupportLoaderManager().initLoader(0, null,  new GetCursor(getContext(),scAdapter),);
+
         list.setAdapter(scAdapter);
 
         // создаем лоадер для чтения данных
-        getActivity().getSupportLoaderManager().initLoader(0, null, this);
         return v;
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(getContext());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
     }
 
     static class MyCursorLoader extends CursorLoader {
@@ -74,10 +56,11 @@ public class PersonList extends Fragment implements LoaderManager.LoaderCallback
 
         @Override
         public Cursor loadInBackground() {
-            return DBHelper.getInstance().getPerson();
+            return DBHelper.getInstance().getCursorWithPerson();
         }
 
     }
+
 
 }
 

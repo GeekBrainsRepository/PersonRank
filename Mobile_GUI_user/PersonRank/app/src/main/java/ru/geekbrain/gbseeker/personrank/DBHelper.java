@@ -5,15 +5,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String TAG="DBHelper";
+    private static final String TAG = "DBHelper";
+
     //DB decriptor
     public interface DB {
         String DB_NAME = "personrank";
@@ -138,23 +142,25 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.PERSON.PERSON, person);
         getDB().insert(DB.TABLES.PERSON, null, cv);
     }
+
     public void addPersonWithCheck(String person) {
         Cursor cursor = null;
         try {
-            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "='" + person+"'", null, null, null, null, null);
+            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "='" + person + "'", null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 return;
             } else {
                 addPerson(person);
             }
-        }finally{
+        } finally {
             if (cursor != null) cursor.close();
         }
     }
+
     public int getPersonID(String person) {
         Cursor cursor = null;
         try {
-            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "='" + person+"'", null, null, null, null, null);
+            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "='" + person + "'", null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 int indexID = cursor.getColumnIndex(DB.COLUMNS.PERSON.ID);
                 int id = cursor.getInt(indexID);
@@ -166,6 +172,7 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
     }
+
     public int getPersonIDOrCreate(String person) {
         int person_id = getPersonID(person);
         if (person_id == 0) {
@@ -173,9 +180,52 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return getPersonID(person);
     }
-    public Cursor getPerson() {
+
+    public Cursor getCursorWithPerson() {
         return getDB().query(DB.TABLES.PERSON, null, null, null, null, null, null, null);
     }
+ /*   public SimpleCursorAdapter getAdapterWithPerson(Context context, LoaderManager loaderManager){
+
+        String[] from = new String[] { DBHelper.DB.COLUMNS.PERSON.PERSON};
+        int[] to = new int[] {  android.R.id.text1};
+
+        SimpleCursorAdapter scAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
+        loaderManager.initLoader(0, null, this);
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
+        return new MyCursorLoader(getContext());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        scAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+    class MyCursorLoader extends CursorLoader {
+        GetCursor getCursor;
+        public MyCursorLoader(Context context,GetCursor getCursor) {
+            super(context);
+            this.getCursor=getCursor;
+        }
+
+        @Override
+        public Cursor loadInBackground() {
+            return DBHelper.getInstance().getCursor();
+        }
+
+    }
+*/
+
+
+
+
+
 
     public void addSite(String site) {
         ContentValues cv = new ContentValues();
