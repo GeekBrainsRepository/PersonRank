@@ -111,23 +111,23 @@ public class DBHelper extends SQLiteOpenHelper {
         );
         db.execSQL("CREATE TABLE " + DB.TABLES.KEYWORD + "(" +
                 DB.COLUMNS.KEYWORD.ID + " INTEGER PRIMARY KEY," +
-                DB.COLUMNS.KEYWORD.KEYWORD + " TEXT" +
-                DB.COLUMNS.KEYWORD.PERSON_REF + " INTEGER" +
+                DB.COLUMNS.KEYWORD.KEYWORD + " TEXT," +
+                DB.COLUMNS.KEYWORD.PERSON_REF + " INTEGER " +
                 ")"
         );
 
         db.execSQL("CREATE TABLE " + DB.TABLES.COMMON + "(" +
                 DB.COLUMNS.COMMON.ID + " INTEGER PRIMARY KEY," +
-                DB.COLUMNS.COMMON.STATS + " INTEGER" +
-                DB.COLUMNS.COMMON.SITE_REF + " INTEGER" +
+                DB.COLUMNS.COMMON.STATS + " INTEGER," +
+                DB.COLUMNS.COMMON.SITE_REF + " INTEGER," +
                 DB.COLUMNS.COMMON.PERSON_REF + " INTEGER" +
                 ")"
         );
         db.execSQL("CREATE TABLE " + DB.TABLES.DAILY + "(" +
                 DB.COLUMNS.DAILY.ID + " INTEGER PRIMARY KEY," +
-                DB.COLUMNS.DAILY.STATS + " INTEGER" +
-                DB.COLUMNS.DAILY.DATE + " DATE" +
-                DB.COLUMNS.DAILY.PERSON_REF + " INTEGER" +
+                DB.COLUMNS.DAILY.STATS + " INTEGER," +
+                DB.COLUMNS.DAILY.DATE + " DATE," +
+                DB.COLUMNS.DAILY.PERSON_REF + " INTEGER," +
                 DB.COLUMNS.DAILY.SITE_REF + " INTEGER" +
                 ")"
         );
@@ -227,7 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.KEYWORD, null,
-                    DB.COLUMNS.KEYWORD.KEYWORD+ "=='" + keyword +"' AND "+DB.COLUMNS.KEYWORD.PERSON_REF+"=="+person_id,
+                    DB.COLUMNS.KEYWORD.KEYWORD+ "='" + keyword +"' AND "+DB.COLUMNS.KEYWORD.PERSON_REF+"="+person_id,
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 return;
@@ -338,6 +338,12 @@ public class DBHelper extends SQLiteOpenHelper {
         addSiteWithCheck("mail.ru");
         addSiteWithCheck("yandex.ru");
 
+        dumpTablePerson();
+        dumpTableSite();
+        dumpTableKeyword();
+        dumpTableCommonStats();
+        dumpTableDailyStats();
+
         addKeywordWithCheck("Петя", "Петр");
         addKeywordWithCheck("Петя", "Петрович");
         addKeywordWithCheck("Петя", "Петенька");
@@ -345,11 +351,23 @@ public class DBHelper extends SQLiteOpenHelper {
         addKeywordWithCheck("Оля", "Ольга");
         addKeywordWithCheck("Оля", "Оленька");
 
+        dumpTablePerson();
+        dumpTableSite();
+        dumpTableKeyword();
+        dumpTableCommonStats();
+        dumpTableDailyStats();
+
         addOrUpdateCommonStatsWithCheck("lenta.ru", "Оля", 10);
         addOrUpdateCommonStatsWithCheck("mail.ru", "Оля", 20);
         addOrUpdateCommonStatsWithCheck("yandex.ru", "Оля", 30);
         addOrUpdateCommonStatsWithCheck("lenta.ru", "Петя", 100);
         addOrUpdateCommonStatsWithCheck("yandex.ru", "Петя", 1000);
+
+        dumpTablePerson();
+        dumpTableSite();
+        dumpTableKeyword();
+        dumpTableCommonStats();
+        dumpTableDailyStats();
 
         addOrUpdateDailyStatsWithCheck("yandex.ru", "Петя", new Date(2017-1900,1,1),100);
         addOrUpdateDailyStatsWithCheck("yandex.ru", "Петя", new Date(2017-1900,1,2),200);
@@ -373,6 +391,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
         addOrUpdateDailyStatsWithCheck("lenta.ru", "Оля", new Date(2017-1900,1,1),10);
 
+        dumpTablePerson();
+        dumpTableSite();
+        dumpTableKeyword();
+        dumpTableCommonStats();
+        dumpTableDailyStats();
     }
 
     public void dumpTablePerson() {
