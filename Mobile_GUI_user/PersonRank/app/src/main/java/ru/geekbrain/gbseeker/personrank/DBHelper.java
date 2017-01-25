@@ -173,6 +173,9 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return getPersonID(person);
     }
+    public Cursor getPerson() {
+        return getDB().query(DB.TABLES.PERSON, null, null, null, null, null, null, null);
+    }
 
     public void addSite(String site) {
         ContentValues cv = new ContentValues();
