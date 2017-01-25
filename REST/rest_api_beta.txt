@@ -42,10 +42,14 @@ service.addr/statistic/getresourcelist
 @DELETE
 service.addr/admin/person/{id}
 Удаление личности
+{id} - ID личности, int
+
 
 @PUT
 service.addr/admin/person/{id}
 обновление личности
+{id} - ID личности, int
+
 
 @POST
 service.addr/admin/person
@@ -56,10 +60,13 @@ service.addr/admin/person
 @DELETE
 service.addr/admin/site/{id}
 Удаление сайта
+{id} - ID сайта, int
+
 
 @PUT
 service.addr/admin/site/{id}
 обновление сайта
+{id} - ID сайта, int
 
 @POST
 service.addr/admin/site
@@ -72,10 +79,13 @@ service.addr/admin/keyword
 @DELETE
 service.addr/admin/keyword/{id}
 Удаление ключевого слова
+{id} - ID ключевого слова, int
 
 @PUT
 service.addr/admin/keyword/{id}
 обновление ключевого слова
+{id} - ID ключевого слова, int
+
 
 @POST
 service.addr/admin/keyword
