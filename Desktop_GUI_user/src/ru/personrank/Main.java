@@ -1,8 +1,8 @@
 package ru.personrank;
 
 import ru.personrank.view.Window;
-
 import javax.swing.*;
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,7 +25,11 @@ public class Main {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Window().setVisible(true);
+                try {
+                    new Window().setVisible(true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

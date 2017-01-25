@@ -22,9 +22,9 @@ public class GeneralStatisticsPanel extends JPanel {
     private static GeneralStaticTabelModel generalTableModel;
     
     public GeneralStatisticsPanel () {
+        setOpaque(false);
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(6,6,6,6));
-        setOpaque(false);
         labelSite = new JLabel();
         labelSite.setText("Сайт:");
         Font font = new Font("Arial", Font.PLAIN, 12);
@@ -42,6 +42,8 @@ public class GeneralStatisticsPanel extends JPanel {
         generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
         generalTable = new JTable(generalTableModel);
         generalTable.setRowHeight(30);
+
+
         Box controlsBox = Box.createHorizontalBox();
         controlsBox.setBorder(new EmptyBorder(0,0,10,0));
         controlsBox.setPreferredSize(new Dimension(430,40));
@@ -152,4 +154,17 @@ public class GeneralStatisticsPanel extends JPanel {
         }
         
     }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setComposite(AlphaComposite.SrcOver.derive(0.25f));// прозрачность редактировать здесь
+
+        g2d.setColor(getBackground());
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
+    }
+
+
 }

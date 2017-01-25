@@ -17,12 +17,15 @@ public class LeftLinksPanel extends JPanel {
     private JLabel keywords;
     private JLabel sites;
 
-    public LeftLinksPanel() {
 
+    public LeftLinksPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(new EmptyBorder(10, 10, 10, 10));
         setOpaque(false);
+
+//        setBackground( new Color(83, 250, 182, 0 ) );
 //        setBackground(PANEL_COLOR);
+
         Dimension indent = new Dimension(50, 0);
 
         Box generalStatisticsBox = Box.createHorizontalBox();
@@ -33,6 +36,7 @@ public class LeftLinksPanel extends JPanel {
         generalStatistics.setForeground(MENU_COLOR);
         generalStatisticsBox.add(generalStatistics);
 
+
         Box dailyStatisticsBox = Box.createHorizontalBox();
         dailyStatisticsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         dailyStatisticsBox.setBorder(new EmptyBorder(0, 0, 20, 0));
@@ -41,6 +45,7 @@ public class LeftLinksPanel extends JPanel {
         dailyStatistics.setForeground(MENU_COLOR);
         dailyStatisticsBox.add(dailyStatistics);
 
+
         Box referencesBox = Box.createHorizontalBox();
         referencesBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         referencesBox.setBorder(new EmptyBorder(0, 0, 10, 0));
@@ -48,6 +53,7 @@ public class LeftLinksPanel extends JPanel {
         references.setFont(MENU_FONT);
         references.setForeground(MENU_COLOR);
         referencesBox.add(references);
+
 
         Box personsBox = Box.createHorizontalBox();
         personsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
@@ -58,6 +64,7 @@ public class LeftLinksPanel extends JPanel {
         personsBox.add(Box.createRigidArea(indent));
         personsBox.add(persons);
 
+
         Box keywordsBox = Box.createHorizontalBox();
         keywordsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         keywordsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
@@ -67,6 +74,7 @@ public class LeftLinksPanel extends JPanel {
         keywordsBox.add(Box.createRigidArea(indent));
         keywordsBox.add(keywords);
 
+
         Box sitesBox = Box.createHorizontalBox();
         sitesBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         sitesBox.setBorder(new EmptyBorder(0, 0, 10, 0));
@@ -75,6 +83,8 @@ public class LeftLinksPanel extends JPanel {
         sites.setForeground(MENU_COLOR);
         sitesBox.add(Box.createRigidArea(indent));
         sitesBox.add(sites);
+
+
 
         add(generalStatisticsBox);
         add(dailyStatisticsBox);
@@ -87,12 +97,23 @@ public class LeftLinksPanel extends JPanel {
 
     public JLabel[] getLabelLeftMenu() {
         return new JLabel[]{
-            generalStatistics,
-            dailyStatistics,
-            persons,
-            keywords,
-            sites
+                generalStatistics,
+                dailyStatistics,
+                persons,
+                keywords,
+                sites
         };
     }
 
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setComposite(AlphaComposite.SrcOver.derive(0.25f));// прозрачность редактировать здесь
+
+        g2d.setColor(getBackground());
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
+    }
 }

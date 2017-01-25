@@ -1,20 +1,23 @@
 package ru.personrank.view;
 
+import ru.personrank.BackgroundPane;
 import ru.personrank.view.admin.KeywordsPanel;
 import ru.personrank.view.admin.PersonsPanel;
 import ru.personrank.view.admin.SitesPanel;
 import ru.personrank.view.user.DailyStatisticsPanel;
 import ru.personrank.view.user.GeneralStatisticsPanel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Window extends JFrame {
     
     private static final Color WINDOW_BACKGROUND = Color.LIGHT_GRAY;
-    
     private LeftLinksPanel leftLinksPanel = new LeftLinksPanel();
     private JPanel contentPanel = new JPanel(new BorderLayout());
     private JLabel[] labelMenu;
@@ -26,14 +29,20 @@ public class Window extends JFrame {
         new SitesPanel()
     };
 
-    public Window() {
+    private BufferedImage icon = ImageIO.read(getClass().getResource("/ru/resources/image/ico.png"));
+
+    public Window() throws IOException {
         setSize(700, 430);
         setLocationRelativeTo(null);
         setResizable(false);
         setTitle("PersonRank");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setBackground(WINDOW_BACKGROUND);
+        setContentPane(new BackgroundPane()); //устанавливается задний фон в виде панели
+        setLayout(new BorderLayout());
+        setIconImage(icon); //  меняется иконка окна
+
         contentPanel.setOpaque(false);
+        //getContentPane().setBackground(WINDOW_BACKGROUND);
         labelMenu = leftLinksPanel.getLabelLeftMenu();
         for (int i = 0; i < labelMenu.length; i++) {
             labelMenu[i].addMouseListener(new MenuMouseListener(i));
@@ -43,8 +52,11 @@ public class Window extends JFrame {
         contentPanel.setPreferredSize(new Dimension(470, 430));
         add(contentPanel, BorderLayout.CENTER);
         contentPanel.add(panels[0]);
-        labelMenu[0].setFont(labelMenu[0].getFont().deriveFont(Font.BOLD));       
+        labelMenu[0].setFont(labelMenu[0].getFont().deriveFont(Font.BOLD));
+        pack();
     }
+
+
 
     private class MenuMouseListener extends MouseAdapter {
 
@@ -84,4 +96,6 @@ public class Window extends JFrame {
         }
 
     }
+
+
 }

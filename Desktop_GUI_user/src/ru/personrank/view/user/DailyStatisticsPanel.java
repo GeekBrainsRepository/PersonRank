@@ -1,6 +1,7 @@
 package ru.personrank.view.user;
 import org.jdesktop.swingx.JXDatePicker;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -37,7 +38,8 @@ public class DailyStatisticsPanel extends JPanel {
     private  StatisticTabelModel statisticTableModel;
     private  JScrollPane scrollPane;
 
-    public DailyStatisticsPanel () {        
+    public DailyStatisticsPanel () {
+        setOpaque(false);
         dailyStatisticRepository = DailyStatisticOnSiteRepository.getInstance();
         saitLabel = new JLabel();
         personLabel = new JLabel();
@@ -66,9 +68,7 @@ public class DailyStatisticsPanel extends JPanel {
         statisticTableModel.setDataSource(formattedTextFieldData1.getDate(), formattedTextFieldData2.getDate());
         dailyTable = new JTable(statisticTableModel);
         dailyTable.setRowHeight(30);
-        
         scrollPane = new JScrollPane(dailyTable);
-        setOpaque(false);
         contentPositioning();
     }      
     
@@ -273,5 +273,15 @@ public class DailyStatisticsPanel extends JPanel {
         }
         
     }
-            
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setComposite(AlphaComposite.SrcOver.derive(0.25f));// прозрачность редактировать здесь
+
+        g2d.setColor(getBackground());
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
+    }
 }
