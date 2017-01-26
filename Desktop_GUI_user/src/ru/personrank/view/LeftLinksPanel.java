@@ -3,12 +3,14 @@ package ru.personrank.view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
-public class LeftLinksPanel extends JPanel {
-
-    private static final Font MENU_FONT = new Font("Arial", Font.PLAIN, 17);
-    private static final Font SUBMENU_FONT = new Font("Arial", Font.PLAIN, 14);
-    private static final Color MENU_COLOR = Color.BLUE;
+public class LeftLinksPanel extends JPanel{
+    
+    private static Font font;
+    private static Font submenu_font;
+    private static final Color MENU_COLOR = new Color(3, 3, 3);
     private static final Color PANEL_COLOR = Color.WHITE;
 
     private JLabel generalStatistics;
@@ -18,7 +20,16 @@ public class LeftLinksPanel extends JPanel {
     private JLabel sites;
 
 
-    public LeftLinksPanel() {
+    public LeftLinksPanel(){
+        try{
+            font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/fonts/arial.ttf")).deriveFont(Font.PLAIN, 17);
+            submenu_font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/fonts/arial.ttf")).deriveFont(Font.PLAIN, 14);
+        }catch (IOException ex){
+            System.err.println(ex);
+        }catch (FontFormatException ex){
+            System.err.println(ex);
+        }
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(new EmptyBorder(10, 10, 10, 10));
         setOpaque(false);
@@ -32,7 +43,7 @@ public class LeftLinksPanel extends JPanel {
         generalStatisticsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         generalStatisticsBox.setBorder(new EmptyBorder(10, 0, 20, 0));
         generalStatistics = new JLabel("Общая статистика");
-        generalStatistics.setFont(MENU_FONT);
+        generalStatistics.setFont(font);
         generalStatistics.setForeground(MENU_COLOR);
         generalStatisticsBox.add(generalStatistics);
 
@@ -41,7 +52,7 @@ public class LeftLinksPanel extends JPanel {
         dailyStatisticsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         dailyStatisticsBox.setBorder(new EmptyBorder(0, 0, 20, 0));
         dailyStatistics = new JLabel("Ежедневная статистика");
-        dailyStatistics.setFont(MENU_FONT);
+        dailyStatistics.setFont(font);
         dailyStatistics.setForeground(MENU_COLOR);
         dailyStatisticsBox.add(dailyStatistics);
 
@@ -50,7 +61,7 @@ public class LeftLinksPanel extends JPanel {
         referencesBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         referencesBox.setBorder(new EmptyBorder(0, 0, 10, 0));
         JLabel references = new JLabel("Справочники:");
-        references.setFont(MENU_FONT);
+        references.setFont(font);
         references.setForeground(MENU_COLOR);
         referencesBox.add(references);
 
@@ -59,7 +70,7 @@ public class LeftLinksPanel extends JPanel {
         personsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         personsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
         persons = new JLabel("Личности");
-        persons.setFont(SUBMENU_FONT);
+        persons.setFont(submenu_font);
         persons.setForeground(MENU_COLOR);
         personsBox.add(Box.createRigidArea(indent));
         personsBox.add(persons);
@@ -69,7 +80,7 @@ public class LeftLinksPanel extends JPanel {
         keywordsBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         keywordsBox.setBorder(new EmptyBorder(0, 0, 10, 0));
         keywords = new JLabel("Ключевые слова");
-        keywords.setFont(SUBMENU_FONT);
+        keywords.setFont(submenu_font);
         keywords.setForeground(MENU_COLOR);
         keywordsBox.add(Box.createRigidArea(indent));
         keywordsBox.add(keywords);
@@ -79,11 +90,10 @@ public class LeftLinksPanel extends JPanel {
         sitesBox.setAlignmentX(Box.LEFT_ALIGNMENT);
         sitesBox.setBorder(new EmptyBorder(0, 0, 10, 0));
         sites = new JLabel("Сайты");
-        sites.setFont(SUBMENU_FONT);
+        sites.setFont(submenu_font);
         sites.setForeground(MENU_COLOR);
         sitesBox.add(Box.createRigidArea(indent));
         sitesBox.add(sites);
-
 
 
         add(generalStatisticsBox);

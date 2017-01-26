@@ -12,7 +12,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class Window extends JFrame {
     private JButton exit = new JButton();
@@ -22,17 +24,19 @@ public class Window extends JFrame {
     private JPanel contentPanel = new JPanel(new BorderLayout());
     private JLabel[] labelMenu;
     private JPanel[] panels = new JPanel[]{
-        new GeneralStatisticsPanel(),
-        new DailyStatisticsPanel(),
-        new KeywordsPanel(),
-        new PersonsPanel(),
-        new SitesPanel()
+            new GeneralStatisticsPanel(),
+            new DailyStatisticsPanel(),
+            new KeywordsPanel(),
+            new PersonsPanel(),
+            new SitesPanel()
     };
+    private static Font font;
+    private JLabel present = new JLabel();
 
     private BufferedImage icon = ImageIO.read(getClass().getResource("/ru/resources/image/ico.png"));
 
-    public Window() throws IOException {
-        setSize(700, 430);
+    public Window() throws IOException, FontFormatException, URISyntaxException {
+        setSize(750, 430);
         setLocationRelativeTo(null);
         setResizable(false);
         setTitle("PersonRank");
@@ -42,7 +46,7 @@ public class Window extends JFrame {
         setIconImage(icon); //меняется иконка окна
         setUndecorated(true); //удаляем стандартную декорацию
         ownDecoration(); //добавляем свою
-
+        present.setBounds(5, 5, 150, 20);
         contentPanel.setOpaque(false);
         //getContentPane().setBackground(WINDOW_BACKGROUND);
         labelMenu = leftLinksPanel.getLabelLeftMenu();
@@ -58,6 +62,7 @@ public class Window extends JFrame {
         labelMenu[0].setFont(labelMenu[0].getFont().deriveFont(Font.BOLD));
         add(exit);
         add(hide);
+        add(present);
         pack();
     }
 
@@ -72,10 +77,10 @@ public class Window extends JFrame {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                for(JLabel label : labelMenu) {
+                for (JLabel label : labelMenu) {
                     label.setFont(label.getFont().deriveFont(Font.PLAIN));
                 }
-                JLabel label = (JLabel)e.getSource();
+                JLabel label = (JLabel) e.getSource();
                 label.setFont(label.getFont().deriveFont(Font.BOLD));
                 contentPanel.removeAll();
                 contentPanel.add(panels[index], BorderLayout.CENTER);
@@ -100,7 +105,18 @@ public class Window extends JFrame {
 
     }
 
-    private void ownDecoration(){
+    private void ownDecoration() {
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/fonts/cyrillicAdaptation.ttf")).deriveFont(Font.PLAIN, 40);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        present.setText("PersonRank");
+        present.setFont(font);
+        present.setBackground(new Color(120,140,110));
+        present.setForeground(new Color(144, 48, 48));
         /*
         *   этот компонент скругляет углы фрейма
         */
@@ -116,7 +132,7 @@ public class Window extends JFrame {
 
 
         ImageIcon exitIcon = new ImageIcon(getClass().getResource("/ru/resources/image/exit.png"));
-        exit.setBounds(650, 2, 36, 24);
+        exit.setBounds(650, 2, 34, 24);
         exit.setOpaque(false);
         exit.setIcon(exitIcon);
         exit.addActionListener(new ActionListener() {
@@ -128,17 +144,18 @@ public class Window extends JFrame {
         exit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                exit.setBounds(650,4,36,24);
+                exit.setBounds(650, 4, 34, 24);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                exit.setBounds(650, 2, 36, 24);
+                exit.setBounds(650, 2, 34, 24);
             }
         });
 
-        ImageIcon minimazeIcon = new ImageIcon(getClass().getResource("/ru/resources/image/minimize2.png"));
-        hide.setBounds(615, 2, 28, 24);
+
+        ImageIcon minimazeIcon = new ImageIcon(getClass().getResource("/ru/resources/image/minimize.png"));
+        hide.setBounds(615, 2, 32, 32);
         hide.setOpaque(false);
         hide.setIcon(minimazeIcon);
         hide.addActionListener(new ActionListener() {
@@ -150,15 +167,14 @@ public class Window extends JFrame {
         hide.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                hide.setBounds(615, 4, 28, 24);
+                hide.setBounds(615, 4, 32, 32);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                hide.setBounds(615, 2, 28, 24);
+                hide.setBounds(615, 2, 32, 32);
             }
         });
 
     }
-
 }

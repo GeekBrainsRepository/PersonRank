@@ -1,24 +1,21 @@
 package ru.personrank.view.user;
 import org.jdesktop.swingx.JXDatePicker;
+import ru.personrank.data.dailystatistic.DailyStatisticOnSite;
+import ru.personrank.data.dailystatistic.DailyStatisticOnSiteRepository;
+import ru.personrank.data.dailystatistic.DailyStatisticSpecification;
 
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
-import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 import java.util.List;
-import javax.swing.table.AbstractTableModel;
-
-import ru.personrank.data.dailystatistic.DailyStatisticOnSite;
-import ru.personrank.data.dailystatistic.DailyStatisticOnSiteRepository;
-import ru.personrank.data.dailystatistic.DailyStatisticSpecification;
 
 public class DailyStatisticsPanel extends JPanel {
 
@@ -37,8 +34,18 @@ public class DailyStatisticsPanel extends JPanel {
     private  JTable dailyTable;
     private  StatisticTabelModel statisticTableModel;
     private  JScrollPane scrollPane;
+    private static Font font;
 
     public DailyStatisticsPanel () {
+        try{
+            font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/fonts/arial.ttf")).deriveFont(Font.PLAIN, 11);
+        }catch (IOException ex){
+            System.err.println(ex);
+        }catch (FontFormatException ex){
+            System.err.println(ex);
+        }
+
+
         setOpaque(false);
         dailyStatisticRepository = DailyStatisticOnSiteRepository.getInstance();
         saitLabel = new JLabel();
@@ -74,11 +81,16 @@ public class DailyStatisticsPanel extends JPanel {
     
     private void contentPositioning() {
 
-        saitLabel.setText("\u0421\u0430\u0438\u0442:");
-        personLabel.setText("\u041b\u0438\u0447\u043d\u043e\u0441\u0442\u044c:");
-        labelPeriod.setText("\u041fe\u0440\u0438\u043e\u0434 \u0441:");
-        labelPo.setText("\u043f\u043e");
-        buttonSend.setText("\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c");
+        saitLabel.setText("Сайт:");
+        saitLabel.setFont(font);
+        personLabel.setText("Личность:");
+        personLabel.setFont(font);
+        labelPeriod.setText("Пeриод с:");
+        labelPeriod.setFont(font);
+        labelPo.setText("по:");
+        labelPo.setFont(font);
+        buttonSend.setText("Применить");
+        buttonSend.setFont(font);
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);

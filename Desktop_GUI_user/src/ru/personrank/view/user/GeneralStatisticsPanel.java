@@ -5,13 +5,15 @@ import ru.personrank.data.generalstatistic.GeneralStatisticOnSiteRepository;
 import ru.personrank.data.generalstatistic.GeneralStatisticSpecification;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.border.EmptyBorder;
 
 public class GeneralStatisticsPanel extends JPanel {
 
@@ -20,19 +22,28 @@ public class GeneralStatisticsPanel extends JPanel {
     JLabel labelSite;
     private static JTable generalTable;
     private static GeneralStaticTabelModel generalTableModel;
+    private static Font font;
     
     public GeneralStatisticsPanel () {
+        try{
+            font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/fonts/arial.ttf")).deriveFont(Font.PLAIN, 11);
+        }catch (IOException ex){
+            System.err.println(ex);
+        }catch (FontFormatException ex){
+            System.err.println(ex);
+        }
+
         setOpaque(false);
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(6,6,6,6));
         labelSite = new JLabel();
         labelSite.setText("Сайт:");
-        Font font = new Font("Arial", Font.PLAIN, 12);
+//        Font font = new Font("Arial", Font.PLAIN, 12);
         labelSite.setFont(font);
         namesSitesComboBox = new JComboBox(new NamesSitesComboBoxModel());
         buttonSend = new JButton();
         buttonSend.setText("Применить");
-        font = new Font("Tahoma", Font.PLAIN, 11);
+//        font = new Font("Tahoma", Font.PLAIN, 11);
         buttonSend.setFont(font);
         Dimension bnSendSize = new Dimension(90,30);
         buttonSend.setMinimumSize(bnSendSize);
@@ -54,8 +65,9 @@ public class GeneralStatisticsPanel extends JPanel {
         controlsBox.add(buttonSend);
         controlsBox.add(Box.createHorizontalGlue());
         add(controlsBox, BorderLayout.NORTH);
-        add(new JScrollPane(generalTable), BorderLayout.CENTER);     
+        add(new JScrollPane(generalTable), BorderLayout.CENTER);
     }
+
 
     class NamesSitesComboBoxModel extends DefaultComboBoxModel {
 
