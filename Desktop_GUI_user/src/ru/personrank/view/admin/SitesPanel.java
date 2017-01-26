@@ -16,6 +16,7 @@ public class SitesPanel extends JPanel {
 
     private void panel() {
         setLayout(null);
+        setOpaque(false);
 
         JLabel sitesLabel = new JLabel();
         sitesLabel.setText("Справочник: \"Сайты\"");
@@ -85,5 +86,15 @@ public class SitesPanel extends JPanel {
             {"komersant.ru"},
             {"Lenta.ru"},
             {"komersant.ru"},};
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setComposite(AlphaComposite.SrcOver.derive(0.25f));// прозрачность редактировать здесь
+
+        g2d.setColor(getBackground());
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
     }
 }

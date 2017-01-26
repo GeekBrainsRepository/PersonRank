@@ -92,7 +92,6 @@ public class LeftLinksPanel extends JPanel {
         add(personsBox);
         add(keywordsBox);
         add(sitesBox);
-
     }
 
     public JLabel[] getLabelLeftMenu() {

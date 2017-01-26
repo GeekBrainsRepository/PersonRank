@@ -1,4 +1,4 @@
-package ru.personrank;
+package ru.personrank.view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
