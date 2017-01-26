@@ -32,6 +32,7 @@ public class RealUserRepository implements UserRepository {
 				if (temp.after(date))
 					date = temp;
 			}
+			result.put(name, sum);
 		}
 		return new Common(date, result);
 	}
