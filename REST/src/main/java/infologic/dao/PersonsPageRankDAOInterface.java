@@ -6,4 +6,7 @@ import infologic.model.PersonPageRankEntity;
 
 public interface PersonsPageRankDAOInterface {
 	Collection<PersonPageRankEntity> getPersonPageRankByPersonSite(int personId, int siteId);
+	// Collection<PersonPageRankEntity>
+	// getPersonPageRankByPersonSite(PersonEntity person, SiteEntity site);
+
 }
