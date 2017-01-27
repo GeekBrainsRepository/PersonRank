@@ -237,6 +237,21 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return getSiteID(site);
     }
+    public void getSiteList(ArrayList<String> siteList) {
+        siteList.clear();
+        Cursor cursor = null;
+        try {
+            cursor = DBHelper.getInstance().getDB().query(DB.TABLES.SITE, null, null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(DB.COLUMNS.SITE.SITE);
+                do {
+                    siteList.add(cursor.getString(index));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
 
     public void addKeyword(int person_id,String keyword) {
         ContentValues cv = new ContentValues();
@@ -306,6 +321,17 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
     }
+    public Cursor getCursorOfCommonStatsWithSite(String site) {
+        int site_id = DBHelper.getInstance().getSiteID(site);
+
+        String table = " persons as PS inner join common_stats as CS  on PS._id=CS.person_id";
+        String columns[] = {"PS.person as person", "CS.stats as stats", " PS._id as _id"};
+        String selection = "CS.site_id=?";
+        String[] selectionArgs = {"" + site_id};
+        return DBHelper.getInstance().getDB().query(table, columns, selection, selectionArgs, null, null, null);
+    }
+
+
 
     public void addDailyStats(int site_id, int person_id, Date date, int stats) {
         ContentValues cv = new ContentValues();

@@ -11,7 +11,7 @@
 
     <Spinner
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="40dp"
         android:id="@+id/common_stats_sites">
     </Spinner>
 
@@ -24,7 +24,7 @@
             android:padding="5dp">
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Дата"
+                android:text="Персона"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 />
@@ -35,8 +35,16 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 />
         </TableRow>
-        </TableLayout>
-        <ScrollView
+    </TableLayout>
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/common_stats_list">
+
+    </ListView>
+<!--        <ScrollView
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
             <LinearLayout
@@ -357,5 +365,5 @@
             </LinearLayout>
 
         </ScrollView>
-
+-->
 </LinearLayout>
