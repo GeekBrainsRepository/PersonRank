@@ -3,6 +3,7 @@ package ru.geekbrain.gbseeker.personrank;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,18 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import ru.geekbrain.gbseeker.personrank.DB.KeywordListDB;
+
 
 public class KeyWordList extends Fragment {
+    KeywordListDB keywordListDB;
+    SimpleCursorAdapter adapterKeyWord;
+    int selectedPerson=0;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        keywordListDB=new KeywordListDB(getContext());
     }
 
     @Nullable
@@ -24,22 +32,14 @@ public class KeyWordList extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.keyword_list,container,false);
 
-        String[] dataPersons = {"Путин", "Medvedev","Antonov"};
-
-        String[] dataKeyWords = {"Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине","Путин", "Путину","Путине"};
-        // адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataPersons);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        Spinner spinner = (Spinner) v.findViewById(R.id.keyword_person);
-        spinner.setAdapter(adapter);
-
         getActivity().setTitle("Справочник - ключевые слова");
 
-        // адаптер
-        ArrayAdapter<String> adapterKeyWord = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataKeyWords);
+        Spinner spinner = (Spinner) v.findViewById(R.id.keyword_person);
+        spinner.setAdapter(keywordListDB.getAdapterWithPerson());
 
         ListView list= (ListView) v.findViewById(R.id.keyword_list);
+
+        adapterKeyWord = keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(),selectedPerson);
         list.setAdapter(adapterKeyWord);
 
 
@@ -47,8 +47,7 @@ public class KeyWordList extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                // показываем позиция нажатого элемента
-                Toast.makeText(getActivity(), "Position = " + position, Toast.LENGTH_SHORT).show();
+                keywordListDB.setSelectedPerson(position);
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
