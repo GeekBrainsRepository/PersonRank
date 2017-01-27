@@ -5,25 +5,25 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.concurrent.TimeUnit;
+import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
+import ru.geekbrain.gbseeker.personrank.DB.PersonListDB;
 
-public class PersonList extends Fragment  {
+public class PersonList extends Fragment {
     SimpleCursorAdapter scAdapter;
+    PersonListDB personListDB;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        personListDB = new PersonListDB(getContext());
     }
 
     @Nullable
@@ -34,34 +34,11 @@ public class PersonList extends Fragment  {
         getActivity().setTitle("Список персон");
         ListView list = (ListView) v.findViewById(R.id.PersonList);
 
-        // формируем столбцы сопоставления
-        String[] from = new String[] { DBHelper.DB.COLUMNS.PERSON.PERSON};
-        int[] to = new int[] {  android.R.id.text1};
-
-        // создаем адаптер и настраиваем список
-        scAdapter = new SimpleCursorAdapter(getContext(), android.R.layout.simple_list_item_1, null, from, to, 0);
-        getActivity().getSupportLoaderManager().initLoader(0, null,  new GetCursor(getContext(),scAdapter),);
-
+        scAdapter = personListDB.getAdapterWithPerson(getActivity().getSupportLoaderManager());
         list.setAdapter(scAdapter);
 
-        // создаем лоадер для чтения данных
         return v;
     }
-
-    static class MyCursorLoader extends CursorLoader {
-
-        public MyCursorLoader(Context context) {
-            super(context);
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            return DBHelper.getInstance().getCursorWithPerson();
-        }
-
-    }
-
-
 }
 
 

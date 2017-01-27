@@ -1,15 +1,10 @@
-package ru.geekbrain.gbseeker.personrank;
+package ru.geekbrain.gbseeker.personrank.DB;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 
 import java.util.Date;
@@ -177,13 +172,12 @@ public class DBHelper extends SQLiteOpenHelper {
         int person_id = getPersonID(person);
         if (person_id == 0) {
             addPerson(person);
+            return getPersonID(person);
+        }else {
+            return person_id;
         }
-        return getPersonID(person);
     }
 
-    public Cursor getCursorWithPerson() {
-        return getDB().query(DB.TABLES.PERSON, null, null, null, null, null, null, null);
-    }
  /*   public SimpleCursorAdapter getAdapterWithPerson(Context context, LoaderManager loaderManager){
 
         String[] from = new String[] { DBHelper.DB.COLUMNS.PERSON.PERSON};
@@ -208,8 +202,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     class MyCursorLoader extends CursorLoader {
-        GetCursor getCursor;
-        public MyCursorLoader(Context context,GetCursor getCursor) {
+        PersonListDB getCursor;
+        public MyCursorLoader(Context context,PersonListDB getCursor) {
             super(context);
             this.getCursor=getCursor;
         }
@@ -375,7 +369,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    void fillByFakeData() {
+    public void fillByFakeData() {
         dumpTablePerson();
         dumpTableSite();
         dumpTableKeyword();
