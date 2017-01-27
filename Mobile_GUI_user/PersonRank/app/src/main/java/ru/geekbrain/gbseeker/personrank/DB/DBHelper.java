@@ -178,45 +178,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
- /*   public SimpleCursorAdapter getAdapterWithPerson(Context context, LoaderManager loaderManager){
-
-        String[] from = new String[] { DBHelper.DB.COLUMNS.PERSON.PERSON};
-        int[] to = new int[] {  android.R.id.text1};
-
-        SimpleCursorAdapter scAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
-        loaderManager.initLoader(0, null, this);
-
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(getContext());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
-
-    class MyCursorLoader extends CursorLoader {
-        PersonListDB getCursor;
-        public MyCursorLoader(Context context,PersonListDB getCursor) {
-            super(context);
-            this.getCursor=getCursor;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            return DBHelper.getInstance().getCursor();
-        }
-
-    }
-*/
-
-
 
 
 
