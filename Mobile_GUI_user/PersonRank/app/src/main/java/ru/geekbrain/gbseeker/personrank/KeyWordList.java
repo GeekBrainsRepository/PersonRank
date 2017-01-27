@@ -8,18 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import ru.geekbrain.gbseeker.personrank.DB.KeywordListDB;
 
 
 public class KeyWordList extends Fragment {
     KeywordListDB keywordListDB;
-    SimpleCursorAdapter adapterKeyWord;
-    int selectedPerson=0;
+    int selectedPersonPosition = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,8 +35,7 @@ public class KeyWordList extends Fragment {
         spinner.setAdapter(keywordListDB.getAdapterWithPerson());
 
         ListView list= (ListView) v.findViewById(R.id.keyword_list);
-
-        adapterKeyWord = keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(),selectedPerson);
+        SimpleCursorAdapter adapterKeyWord = keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(), selectedPersonPosition);
         list.setAdapter(adapterKeyWord);
 
 
@@ -47,7 +43,7 @@ public class KeyWordList extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                keywordListDB.setSelectedPerson(position);
+                keywordListDB.setSelectedPersonPosition(position);
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {

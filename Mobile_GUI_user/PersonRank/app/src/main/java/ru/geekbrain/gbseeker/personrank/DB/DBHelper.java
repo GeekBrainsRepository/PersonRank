@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -178,7 +179,21 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-
+    public void getPersonList(ArrayList<String> personList) {
+        personList.clear();
+        Cursor cursor = null;
+        try {
+            cursor = DBHelper.getInstance().getDB().query(DBHelper.DB.TABLES.PERSON, null, null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(DBHelper.DB.COLUMNS.PERSON.PERSON);
+                do {
+                    personList.add(cursor.getString(index));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
 
 
 
@@ -246,7 +261,12 @@ public class DBHelper extends SQLiteOpenHelper {
             if(cursor!=null)cursor.close();
         }
     }
-
+    public Cursor getCursorOfKeywordWithPerson(String person){
+        int person_id=DBHelper.getInstance().getPersonID(person);
+        return DBHelper.getInstance().getDB().query(DBHelper.DB.TABLES.KEYWORD, null,
+                DBHelper.DB.COLUMNS.KEYWORD.PERSON_REF+"="+person_id,
+                null, null, null, null, null);
+    }
 
     public void addCommonStats(int site_id,int person_id,int stats) {
         ContentValues cv = new ContentValues();
