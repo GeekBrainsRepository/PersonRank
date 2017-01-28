@@ -1,4 +1,4 @@
-package geekbrains.internship;
+/*package geekbrains.internship;
 
 import geekbrains.internship.bithazard_parser.SitemapParser;
 import geekbrains.internship.bithazard_parser.model.Sitemap;
@@ -42,5 +42,5 @@ public class Downloader {
         }
     }
 
-
 }
+*/
