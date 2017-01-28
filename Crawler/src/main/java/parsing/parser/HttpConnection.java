@@ -1,4 +1,4 @@
-package otherclasses.parser;
+package parsing.parser;
 
 
 import otherclasses.parser.model.InvalidSitemapUrlException;
@@ -55,9 +55,9 @@ class HttpConnection implements Closeable {
                 sslContext.init(null, trustManagers, new java.security.SecureRandom());
                 TRUST_ALL_SSL_SOCKET_FACTORY = sslContext.getSocketFactory();
             } catch (NoSuchAlgorithmException e) {
-                throw new UrlConnectionException("Error getting SSL context instance to allow insecure SSL connections.", e);
+                throw new parsing.parser.model.UrlConnectionException("Error getting SSL context instance to allow insecure SSL connections.", e);
             } catch (KeyManagementException e) {
-                throw new UrlConnectionException("Error initializing SSL context to allow insecure SSL connections.", e);
+                throw new parsing.parser.model.UrlConnectionException("Error initializing SSL context to allow insecure SSL connections.", e);
             }
         }
     }
@@ -113,7 +113,7 @@ class HttpConnection implements Closeable {
             }
             return inputStream;
         } catch (IOException e) {
-            throw new UrlConnectionException(e.getMessage());
+            throw new parsing.parser.model.UrlConnectionException(e.getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ class HttpConnection implements Closeable {
         try {
             return httpURLConnection.getResponseCode();
         } catch (IOException e) {
-            throw new UrlConnectionException(e.getMessage());
+            throw new parsing.parser.model.UrlConnectionException(e.getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ class HttpConnection implements Closeable {
         try {
             return new URL(url);
         } catch (MalformedURLException e) {
-            throw new UrlConnectionException(e.getMessage());
+            throw new parsing.parser.model.UrlConnectionException(e.getMessage());
         }
     }
 
@@ -152,13 +152,13 @@ class HttpConnection implements Closeable {
         try {
             return new URL(url.getProtocol(), url.getHost(), url.getPort(), "/robots.txt");
         } catch (MalformedURLException e) {
-            throw new UrlConnectionException(e.getMessage());
+            throw new parsing.parser.model.UrlConnectionException(e.getMessage());
         }
     }
 
     private void validateProtocol(URL url) {
         if (!"http".equals(url.getProtocol()) && !"https".equals(url.getProtocol())) {
-            throw new InvalidSitemapUrlException("Only protocols HTTP and HTTPS are supported.");
+            throw new parsing.parser.model.InvalidSitemapUrlException("Only protocols HTTP and HTTPS are supported.");
         }
     }
 
@@ -167,7 +167,7 @@ class HttpConnection implements Closeable {
             try {
                 httpURLConnection = (HttpURLConnection) url.openConnection();
             } catch (IOException e) {
-                throw new UrlConnectionException(e.getMessage());
+                throw new parsing.parser.model.UrlConnectionException(e.getMessage());
             }
             httpURLConnection.setReadTimeout(timeout);
             httpURLConnection.setConnectTimeout(timeout);

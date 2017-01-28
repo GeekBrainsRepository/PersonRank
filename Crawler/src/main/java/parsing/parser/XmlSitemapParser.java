@@ -1,6 +1,9 @@
-package otherclasses.parser;
+package parsing.parser;
 
 
+import otherclasses.parser.*;
+import otherclasses.parser.ISitemapParser;
+import otherclasses.parser.InvalidXmlException;
 import otherclasses.parser.model.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -19,7 +22,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 
-class XmlSitemapParser implements ISitemapParser {
+class XmlSitemapParser implements otherclasses.parser.ISitemapParser {
     private final InputStream inputStream;
     private final String urlPrefix;
     private final boolean continueOnErrors;
@@ -118,7 +121,7 @@ class XmlSitemapParser implements ISitemapParser {
                 } else if (qNameLowerCase.equals("urlset")) {
                     sitemapType = Sitemap.SitemapType.XML;
                 } else {
-                    throw new InvalidXmlException("Sitemap must be encapsulated in either urlset or sitemapindex.");
+                    throw new otherclasses.parser.InvalidXmlException("Sitemap must be encapsulated in either urlset or sitemapindex.");
                 }
             }
             if (qNameLowerCase.equals("sitemap")) {
@@ -215,7 +218,7 @@ class XmlSitemapParser implements ISitemapParser {
         @Override
         public void fatalError(SAXParseException e) throws SAXException {
             if (nodeNameStack.isEmpty()) {
-                throw new InvalidXmlException(e);
+                throw new otherclasses.parser.InvalidXmlException(e);
             }
             throw e;
         }

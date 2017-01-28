@@ -1,4 +1,7 @@
-package otherclasses.parser.model;
+package parsing.parser.model;
+
+import otherclasses.parser.model.*;
+import otherclasses.parser.model.SitemapEntry;
 
 import java.util.*;
 
@@ -9,7 +12,7 @@ import java.util.*;
  */
 public final class Sitemap {
     private final Set<SitemapIndex> sitemapIndexes;
-    private final Set<SitemapEntry> sitemapEntries;
+    private final Set<otherclasses.parser.model.SitemapEntry> sitemapEntries;
     private final SitemapType sitemapType;
 
     /**
@@ -19,7 +22,7 @@ public final class Sitemap {
      * @param sitemapType       The type of the sitemap. Must not be null
      * @see otherclasses.parser.model.Sitemap.SitemapType
      */
-    public Sitemap(Set<SitemapIndex> sitemapIndexes, Set<SitemapEntry> sitemapEntries, SitemapType sitemapType) {
+    public Sitemap(Set<SitemapIndex> sitemapIndexes, Set<otherclasses.parser.model.SitemapEntry> sitemapEntries, SitemapType sitemapType) {
         this.sitemapIndexes = Collections.unmodifiableSet(new LinkedHashSet<>(sitemapIndexes));
         this.sitemapEntries = Collections.unmodifiableSet(new LinkedHashSet<>(sitemapEntries));
         if (sitemapType == null) {
@@ -61,7 +64,7 @@ public final class Sitemap {
      * @return a Set which contains a SitemapEntry object for each entry from a parsed sitemap. When parsing a sitemap
      * index, all entries from all referenced sitemaps are returned.
      */
-    public Set<SitemapEntry> getSitemapEntries() {
+    public Set<otherclasses.parser.model.SitemapEntry> getSitemapEntries() {
         return sitemapEntries;
     }
 
@@ -82,8 +85,8 @@ public final class Sitemap {
      */
     public otherclasses.parser.model.Sitemap getSitemapMatchingUrl(String url) {
         String urlLowerCase = url.toLowerCase(Locale.ENGLISH);
-        Set<SitemapEntry> sitemapEntriesMatchingUrl = new LinkedHashSet<>();
-        for (SitemapEntry sitemapEntry : sitemapEntries) {
+        Set<otherclasses.parser.model.SitemapEntry> sitemapEntriesMatchingUrl = new LinkedHashSet<>();
+        for (otherclasses.parser.model.SitemapEntry sitemapEntry : sitemapEntries) {
             if (sitemapEntry.getLoc().toLowerCase(Locale.ENGLISH).startsWith(urlLowerCase)) {
                 sitemapEntriesMatchingUrl.add(sitemapEntry);
             }
@@ -105,8 +108,8 @@ public final class Sitemap {
                 sitemapIndexesModifiedAfter.add(sitemapIndex);
             }
         }
-        Set<SitemapEntry> sitemapEntriesModifiedAfter = new LinkedHashSet<>();
-        for (SitemapEntry sitemapEntry : sitemapEntries) {
+        Set<otherclasses.parser.model.SitemapEntry> sitemapEntriesModifiedAfter = new LinkedHashSet<>();
+        for (otherclasses.parser.model.SitemapEntry sitemapEntry : sitemapEntries) {
             if (sitemapEntry.getLastMod() != null && sitemapEntry.getLastMod().after(minLastMod)) {
                 sitemapEntriesModifiedAfter.add(sitemapEntry);
             }
@@ -121,9 +124,9 @@ public final class Sitemap {
      * @return a copy of this sitemap containing only sitemap entries whose change frequency is one of the passed
      * change frequencies.
      */
-    public otherclasses.parser.model.Sitemap getSitemapWithChangeFreq(EnumSet<SitemapEntry.ChangeFreq> changeFrequencies) {
-        Set<SitemapEntry> sitemapEntriesChangeFreq = new LinkedHashSet<>();
-        for (SitemapEntry sitemapEntry : sitemapEntries) {
+    public otherclasses.parser.model.Sitemap getSitemapWithChangeFreq(EnumSet<otherclasses.parser.model.SitemapEntry.ChangeFreq> changeFrequencies) {
+        Set<otherclasses.parser.model.SitemapEntry> sitemapEntriesChangeFreq = new LinkedHashSet<>();
+        for (otherclasses.parser.model.SitemapEntry sitemapEntry : sitemapEntries) {
             if (changeFrequencies.contains(sitemapEntry.getChangeFreq())) {
                 sitemapEntriesChangeFreq.add(sitemapEntry);
             }
@@ -137,7 +140,7 @@ public final class Sitemap {
      * @return a copy of this sitemap containing only sitemap entries with at least the passed priority.
      */
     public otherclasses.parser.model.Sitemap getSitemapWithMinPriority(double priority) {
-        Set<SitemapEntry> sitemapEntriesMinPriority = new LinkedHashSet<>();
+        Set<otherclasses.parser.model.SitemapEntry> sitemapEntriesMinPriority = new LinkedHashSet<>();
         for (SitemapEntry sitemapEntry : sitemapEntries) {
             if (sitemapEntry.getPriority() != null && sitemapEntry.getPriority() >= priority) {
                 sitemapEntriesMinPriority.add(sitemapEntry);

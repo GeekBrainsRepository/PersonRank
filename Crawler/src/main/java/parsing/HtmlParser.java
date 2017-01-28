@@ -1,4 +1,4 @@
-package otherclasses;
+package parsing;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

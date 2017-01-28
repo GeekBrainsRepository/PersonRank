@@ -1,6 +1,12 @@
-package otherclasses.parser;
+package parsing.parser;
 
 
+import otherclasses.parser.*;
+import otherclasses.parser.HttpConnection;
+import otherclasses.parser.ISitemapParser;
+import otherclasses.parser.InvalidXmlException;
+import otherclasses.parser.PlaintextSitemapParser;
+import otherclasses.parser.XmlSitemapParser;
 import otherclasses.parser.model.*;
 
 import java.io.*;
@@ -117,13 +123,13 @@ public class SitemapParser {
      *               hostname part of the URL is used and 'robots.txt' is appended as path. So any URL from a web server
      *               can be passed
      * @return a Set of Strings containing the URL or URLs of the sitemap or sitemaps
-     * @throws InvalidSitemapUrlException when either no robots.txt file was found or the file does not have a sitemap
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when either no robots.txt file was found or the file does not have a sitemap
      * specification
-     * @throws UrlConnectionException when there was an exception retrieving the robots.txt file or the passed URL was
+     * @throws otherclasses.parser.model.UrlConnectionException when there was an exception retrieving the robots.txt file or the passed URL was
      * invalid
      */
     public Set<String> getSitemapLocations(String url) {
-        return getSitemapLocations(HttpConnection.newUrl(url));
+        return getSitemapLocations(parsing.parser.HttpConnection.newUrl(url));
     }
 
     /**
@@ -133,13 +139,13 @@ public class SitemapParser {
      *               hostname part of the URL is used and 'robots.txt' is appended as path. So any URL from a web server
      *               can be passed
      * @return a Set of Strings containing the URL or URLs of the sitemap or sitemaps
-     * @throws InvalidSitemapUrlException when either no robots.txt file was found or the file does not have a sitemap
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when either no robots.txt file was found or the file does not have a sitemap
      * specification
-     * @throws UrlConnectionException when there was an exception retrieving the robots.txt file
+     * @throws otherclasses.parser.model.UrlConnectionException when there was an exception retrieving the robots.txt file
      */
     public Set<String> getSitemapLocations(URL url) {
-        URL robotsTxtUrl = HttpConnection.getRobotsTxtUrl(url);
-        try (HttpConnection httpConnection = new HttpConnection(robotsTxtUrl, userAgent, timeout, ignoreTlsCertificates)) {
+        URL robotsTxtUrl = otherclasses.parser.HttpConnection.getRobotsTxtUrl(url);
+        try (otherclasses.parser.HttpConnection httpConnection = new otherclasses.parser.HttpConnection(robotsTxtUrl, userAgent, timeout, ignoreTlsCertificates)) {
             int responseCode = httpConnection.getResponseCode();
             if (responseCode < 200 || responseCode >= 300) {
                 throw new InvalidSitemapUrlException("Sitemap locations could not be found. Robots.txt returned HTTP status code "
@@ -169,9 +175,9 @@ public class SitemapParser {
      * @param url    the URL to retrieve the sitemap from. When this is the URL of a sitemap index, all referenced
      *               sitemaps are also retrieved
      * @return the parsed sitemap from the passed URL
-     * @throws InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
-     * @throws SitemapParseException when the sitemap could not be parsed
-     * @throws UrlConnectionException when the passed URL is invalid
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.UrlConnectionException when the passed URL is invalid
      */
     public Sitemap parseSitemap(String url) {
         return parseSitemap(url, true, null);
@@ -183,9 +189,9 @@ public class SitemapParser {
      * @param url          the URL to retrieve the sitemap from
      * @param recursive    whether all referenced sitemaps in a sitemap index should also be retrieved
      * @return the parsed sitemap from the passed URL
-     * @throws InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
-     * @throws SitemapParseException when the sitemap could not be parsed
-     * @throws UrlConnectionException when the passed URL is invalid
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.UrlConnectionException when the passed URL is invalid
      */
     public Sitemap parseSitemap(String url, boolean recursive) {
         return parseSitemap(url, recursive, null);
@@ -200,9 +206,9 @@ public class SitemapParser {
      * @param minLastMod    the minimal lastMod date that a sitemap entry or sitemap index entry must have to be
      *                      considered. The date must be equal or after the passed date
      * @return the sitemap from the passed URL containing only entries after the passed minLastMod date
-     * @throws InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
-     * @throws SitemapParseException when the sitemap could not be parsed
-     * @throws UrlConnectionException when the passed URL is invalid
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.UrlConnectionException when the passed URL is invalid
      */
     public Sitemap parseSitemap(String url, Date minLastMod) {
         return parseSitemap(url, true, minLastMod);
@@ -213,8 +219,8 @@ public class SitemapParser {
      * @param url    the URL to retrieve the sitemap from. When this is the URL of a sitemap index, all referenced
      *               sitemaps are also retrieved
      * @return the parsed sitemap from the passed URL
-     * @throws InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
-     * @throws SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
      */
     public Sitemap parseSitemap(URL url) {
         return parseSitemap(url, true, null);
@@ -226,8 +232,8 @@ public class SitemapParser {
      * @param url          the URL to retrieve the sitemap from
      * @param recursive    whether all referenced sitemaps in a sitemap index should also be retrieved
      * @return the parsed sitemap from the passed URL
-     * @throws InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
-     * @throws SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
      */
     public Sitemap parseSitemap(URL url, boolean recursive) {
         return parseSitemap(url, recursive, null);
@@ -242,8 +248,8 @@ public class SitemapParser {
      * @param minLastMod    the minimal lastMod date that a sitemap entry or sitemap index entry must have to be
      *                      considered. The date must be equal or after the passed date
      * @return the sitemap from the passed URL containing only entries after the passed minLastMod date
-     * @throws InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
-     * @throws SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap could not be retrieved from the passed URL
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
      */
     public Sitemap parseSitemap(URL url, Date minLastMod) {
         return parseSitemap(url, true, minLastMod);
@@ -255,9 +261,9 @@ public class SitemapParser {
      * @param url            the URL that the passed inputStream belongs to. This does not have to be the actual URL as
      *                       this URL is only used to determine whether an entry is allowed in the sitemap
      * @return the parsed sitemap from the passed inputStream
-     * @throws InvalidSitemapUrlException when the sitemap from the passed inputStream is of type INDEX and one of the
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap from the passed inputStream is of type INDEX and one of the
      * referenced sitemaps could not be retrieved
-     * @throws SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
      */
     public Sitemap parseSitemap(InputStream inputStream, URL url) {
         return parseSitemap(inputStream, url, true, null);
@@ -272,9 +278,9 @@ public class SitemapParser {
      *                       this URL is only used to determine whether an entry is allowed in the sitemap
      * @param recursive      whether all referenced sitemaps in a sitemap index should also be retrieved
      * @return the parsed sitemap from the passed inputStream
-     * @throws InvalidSitemapUrlException when the sitemap from the passed inputStream is of type INDEX and one of the
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap from the passed inputStream is of type INDEX and one of the
      * referenced sitemaps could not be retrieved
-     * @throws SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
      */
     public Sitemap parseSitemap(InputStream inputStream, URL url, boolean recursive) {
         return parseSitemap(inputStream, url, recursive, null);
@@ -292,20 +298,20 @@ public class SitemapParser {
      * @param minLastMod     the minimal lastMod date that a sitemap entry or sitemap index entry must have to be
      *                       considered. The date must be equal or after the passed date
      * @return the sitemap from the passed URL containing only entries after the passed minLastMod date
-     * @throws InvalidSitemapUrlException when the sitemap from the passed inputStream is of type INDEX and one of the
+     * @throws otherclasses.parser.model.InvalidSitemapUrlException when the sitemap from the passed inputStream is of type INDEX and one of the
      * referenced sitemaps could not be retrieved
-     * @throws SitemapParseException when the sitemap could not be parsed
+     * @throws otherclasses.parser.model.SitemapParseException when the sitemap could not be parsed
      */
     public Sitemap parseSitemap(InputStream inputStream, URL url, Date minLastMod) {
         return parseSitemap(inputStream, url, true, minLastMod);
     }
 
     private Sitemap parseSitemap(String url, boolean recursive, Date minLastMod) {
-        return parseSitemap(HttpConnection.newUrl(url), recursive, minLastMod);
+        return parseSitemap(otherclasses.parser.HttpConnection.newUrl(url), recursive, minLastMod);
     }
 
     private Sitemap parseSitemap(URL url, boolean recursive, Date minLastMod) {
-        try (HttpConnection httpConnection = new HttpConnection(url, userAgent, timeout, ignoreTlsCertificates)) {
+        try (otherclasses.parser.HttpConnection httpConnection = new otherclasses.parser.HttpConnection(url, userAgent, timeout, ignoreTlsCertificates)) {
             int responseCode = httpConnection.getResponseCode();
             if (responseCode < 200 || responseCode >= 300) {
                 throw new InvalidSitemapUrlException("Sitemap URL " + url + " could not be loaded. HTTP status code "
@@ -316,7 +322,7 @@ public class SitemapParser {
     }
 
     private Sitemap parseSitemap(InputStream inputStream, URL url, boolean recursive, Date minLastMod) {
-        ISitemapParser sitemapParser = parseSitemapFlat(inputStream, url, minLastMod);
+        otherclasses.parser.ISitemapParser sitemapParser = parseSitemapFlat(inputStream, url, minLastMod);
         if (sitemapParser.getSitemapType() == Sitemap.SitemapType.TEXT || sitemapParser.getSitemapType() == Sitemap.SitemapType.XML
                 || (sitemapParser.getSitemapType() == Sitemap.SitemapType.INDEX && !recursive)) {
             return new Sitemap(sitemapParser.getSitemapIndexes(), sitemapParser.getSitemapEntries(), sitemapParser.getSitemapType());
@@ -326,8 +332,8 @@ public class SitemapParser {
             if (minLastMod != null && sitemapIndex.getLastMod() != null && sitemapIndex.getLastMod().before(minLastMod)) {
                 continue;
             }
-            URL sitemapUrl = HttpConnection.newUrl(sitemapIndex.getLoc());
-            try (HttpConnection httpConnection = new HttpConnection(sitemapUrl, userAgent, timeout, ignoreTlsCertificates)) {
+            URL sitemapUrl = otherclasses.parser.HttpConnection.newUrl(sitemapIndex.getLoc());
+            try (otherclasses.parser.HttpConnection httpConnection = new otherclasses.parser.HttpConnection(sitemapUrl, userAgent, timeout, ignoreTlsCertificates)) {
                 int responseCode = httpConnection.getResponseCode();
                 if (responseCode < 200 || responseCode >= 300) {
                     throw new InvalidSitemapUrlException("Sitemap URL " + sitemapUrl + " could not be loaded. HTTP status code "
@@ -343,15 +349,15 @@ public class SitemapParser {
         return new Sitemap(sitemapParser.getSitemapIndexes(), sitemapEntries, Sitemap.SitemapType.INDEX);
     }
 
-    private ISitemapParser parseSitemapFlat(InputStream inputStream, URL url, Date minLastMod) {
+    private otherclasses.parser.ISitemapParser parseSitemapFlat(InputStream inputStream, URL url, Date minLastMod) {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
         bufferedInputStream.mark(1024);
         String urlPrefix = getUrlPrefix(url);
-        ISitemapParser sitemapParser = new XmlSitemapParser(bufferedInputStream, urlPrefix, continueOnErrors, minLastMod);
+        otherclasses.parser.ISitemapParser sitemapParser = new otherclasses.parser.XmlSitemapParser(bufferedInputStream, urlPrefix, continueOnErrors, minLastMod);
         try {
             sitemapParser.parse();
-        } catch (InvalidXmlException e) {
-            sitemapParser = new PlaintextSitemapParser(urlPrefix, bufferedInputStream);
+        } catch (otherclasses.parser.InvalidXmlException e) {
+            sitemapParser = new otherclasses.parser.PlaintextSitemapParser(urlPrefix, bufferedInputStream);
             try {
                 bufferedInputStream.reset();
             } catch (IOException e1) {

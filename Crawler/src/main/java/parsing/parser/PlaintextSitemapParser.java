@@ -1,7 +1,15 @@
-package otherclasses.parser;
+package parsing.parser;
 
 
+import otherclasses.parser.*;
+import otherclasses.parser.ISitemapParser;
 import otherclasses.parser.model.*;
+import otherclasses.parser.model.Sitemap;
+import otherclasses.parser.model.SitemapEntry;
+import otherclasses.parser.model.SitemapIndex;
+import otherclasses.parser.model.SitemapParseException;
+import otherclasses.parser.model.UrlConnectionException;
+import parsing.parser.model.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,12 +21,12 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 
-class PlaintextSitemapParser implements ISitemapParser {
+class PlaintextSitemapParser implements otherclasses.parser.ISitemapParser {
     private static final Pattern URL_PATTERN = Pattern.compile("https?://[A-Za-z0-9\\-\\._~:/\\?#\\[\\]@!\\$&'\\(\\)\\*\\+,;=%]+");
     private static final int INVALID_LINES_ALLOWED = 3;
     private final String urlPrefix;
     private final InputStream inputStream;
-    private Set<SitemapEntry> sitemapEntries;
+    private Set<parsing.parser.model.SitemapEntry> sitemapEntries;
     private boolean validUrlFound = false;
 
     public PlaintextSitemapParser(String urlPrefix, InputStream inputStream) {
@@ -43,15 +51,15 @@ class PlaintextSitemapParser implements ISitemapParser {
                     if (isUrl(line)) {
                         validUrlFound = true;
                     } else if (lineCount >= INVALID_LINES_ALLOWED) {
-                        throw new SitemapParseException("Sitemap seems to be invalid. Please make sure that this is a valid sitemap.");
+                        throw new parsing.parser.model.SitemapParseException("Sitemap seems to be invalid. Please make sure that this is a valid sitemap.");
                     }
                 }
                 if (line.startsWith(urlPrefix)) {
-                    sitemapEntries.add(new SitemapEntry(line));
+                    sitemapEntries.add(new parsing.parser.model.SitemapEntry(line));
                 }
             }
         } catch (IOException e) {
-            throw new UrlConnectionException(e.getMessage());
+            throw new parsing.parser.model.UrlConnectionException(e.getMessage());
         }
     }
 
@@ -60,17 +68,17 @@ class PlaintextSitemapParser implements ISitemapParser {
     }
 
     @Override
-    public Set<SitemapIndex> getSitemapIndexes() {
+    public Set<parsing.parser.model.SitemapIndex> getSitemapIndexes() {
         return new LinkedHashSet<>(0);
     }
 
     @Override
-    public Set<SitemapEntry> getSitemapEntries() {
+    public Set<parsing.parser.model.SitemapEntry> getSitemapEntries() {
         return sitemapEntries;
     }
 
     @Override
-    public Sitemap.SitemapType getSitemapType() {
-        return Sitemap.SitemapType.TEXT;
+    public parsing.parser.model.Sitemap.SitemapType getSitemapType() {
+        return parsing.parser.model.Sitemap.SitemapType.TEXT;
     }
 }

@@ -1,4 +1,6 @@
-package otherclasses.parser.model;
+package parsing.parser.model;
+
+import otherclasses.parser.model.Link;
 
 import java.util.Collections;
 import java.util.Date;

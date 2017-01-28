@@ -1,4 +1,4 @@
-package otherclasses.parser.model;
+package parsing.parser.model;
 
 /**
  * A link to (usually) alternative language versions of a URL.
@@ -63,7 +63,7 @@ public final class Link {
             return false;
         }
 
-        otherclasses.parser.model.Link link = (otherclasses.parser.model.Link) obj;
+        Link link = (Link) obj;
         if (!href.equals(link.href)) {
             return false;
         }

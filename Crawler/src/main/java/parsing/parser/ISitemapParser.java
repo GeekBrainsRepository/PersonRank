@@ -1,4 +1,4 @@
-package otherclasses.parser;
+package parsing.parser;
 
 import otherclasses.parser.model.Sitemap;
 import otherclasses.parser.model.SitemapEntry;

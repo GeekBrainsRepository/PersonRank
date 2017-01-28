@@ -1,4 +1,4 @@
-package otherclasses.parser.model;
+package parsing.parser.model;
 
 /**
  * An exception that indicates that there was a problem parsing the sitemap.

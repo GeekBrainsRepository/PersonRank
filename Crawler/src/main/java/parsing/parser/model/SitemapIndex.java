@@ -1,4 +1,4 @@
-package otherclasses.parser.model;
+package parsing.parser.model;
 
 import java.util.Date;
 
@@ -68,7 +68,7 @@ public final class SitemapIndex {
             return false;
         }
 
-        otherclasses.parser.model.SitemapIndex that = (otherclasses.parser.model.SitemapIndex) obj;
+        SitemapIndex that = (SitemapIndex) obj;
         return loc.equals(that.loc);
     }
 
