@@ -1,4 +1,4 @@
-/*package geekbrains.internship;
+package otherclasses;/*package geekbrains.internship;
 
 import geekbrains.internship.bithazard_parser.SitemapParser;
 import geekbrains.internship.bithazard_parser.model.Sitemap;
