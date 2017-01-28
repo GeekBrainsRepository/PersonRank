@@ -37,7 +37,7 @@ public final class Sitemap {
          */
         TEXT,
         /**
-         * Sitemap of type XML. A file that contains an XML structure which holds, aside from the URL, other information
+         * Sitemap of type XML. A file that contains an XML structure which holds, aside from the URL, otherclasses information
          * like the last modified date of the URL.
          */
         XML,
