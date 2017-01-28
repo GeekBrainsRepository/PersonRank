@@ -2,9 +2,6 @@ package infologic.model;
 
 import javax.persistence.*;
 
-/**
- * Created by Антон Владимирович on 21.01.2017.
- */
 @Entity
 @Table(name = "keywords", schema = "personrank", catalog = "")
 public class KeywordsEntity {
@@ -34,7 +31,7 @@ public class KeywordsEntity {
     }
 
     @Basic
-    @Column(name = "person_id")
+    @Column(name = "person_id", insertable = false, updatable = false)
     public int getPersonId() {
         return personId;
     }

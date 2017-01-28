@@ -4,9 +4,6 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
 
-/**
- * Created by Антон Владимирович on 21.01.2017.
- */
 @Entity
 @Table(name = "pages", schema = "personrank", catalog = "")
 public class PagesEntity {
@@ -39,7 +36,7 @@ public class PagesEntity {
     }
 
     @Basic
-    @Column(name = "site_id")
+    @Column(name = "site_id", insertable = false, updatable = false)
     public int getSiteId() {
         return siteId;
     }

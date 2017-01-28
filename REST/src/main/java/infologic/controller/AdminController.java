@@ -3,9 +3,6 @@ package infologic.controller;
 import infologic.model.PersonsEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Created by Антон Владимирович on 23.01.2017.
- */
 @RestController
 public class AdminController {
 

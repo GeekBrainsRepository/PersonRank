@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+﻿-- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
 -- Host: localhost    Database: PersonRankDB
 -- ------------------------------------------------------
@@ -61,13 +61,16 @@ DROP TABLE IF EXISTS `PersonPageRank`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PersonPageRank` (
-  `PersonID` int(11) DEFAULT NULL COMMENT 'Идентификатор личности, \nкоторой соответствует данное ключевое слово. \n\nЯвляется внешним ключом к таблице Persons.',
-  `PageID` int(11) DEFAULT NULL COMMENT 'Идентификатор страницы сайта, \nна которой найдены упоминания о персонах. \n\nЯвляется внешним ключом к таблице Pages\n',
-  `Rank` int(11) DEFAULT NULL COMMENT 'Количество упоминаний личности на странице ',
-  KEY `PersonPersonsPageRankFK_IDx` (`PersonID`),
-  KEY `PagePersonPageRankFK_IDx` (`PageID`),
-  CONSTRAINT `PagePersonPageRankFK` FOREIGN KEY (`PageID`) REFERENCES `Pages` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `PersonPersonsPageRankFK` FOREIGN KEY (`PersonID`) REFERENCES `Persons` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  `rank_id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Количество упоминаний личности на странице ' ,
+  `person_id` int(11) DEFAULT NULL COMMENT 'Идентификатор личности, \nкоторой соответствует данное ключевое слово. \n\nЯвляется внешним ключом к таблице Persons.',
+  `page_id` int(11) DEFAULT NULL COMMENT 'Идентификатор страницы сайта, \nна которой найдены упоминания о персонах. \n\nЯвляется внешним ключом к таблице Pages\n',
+  
+  KEY `PersonPersonsPageRankFK_IDx` (`person_id`),
+  KEY `PagePersonPageRankFK_IDx` (`page_id`),
+  ADD PRIMARY KEY (`rank_id`),
+ADD UNIQUE INDEX `rank_id_UNIQUE` (`rank_id` ASC);
+  CONSTRAINT `PagePersonPageRankFK` FOREIGN KEY (`page_id`) REFERENCES `Pages` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `PersonPersonsPageRankFK` FOREIGN KEY (`person_id`) REFERENCES `Persons` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

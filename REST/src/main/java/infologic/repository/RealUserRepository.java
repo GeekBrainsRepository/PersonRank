@@ -1,15 +1,15 @@
 package infologic.repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import infologic.dao.PagesDAOInterface;
 import infologic.dao.PersonsDAOInterface;
 import infologic.dao.PersonsPageRankDAOInterface;
 import infologic.model.PersonPageRankEntity;
 import infologic.model.PersonsEntity;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RealUserRepository implements UserRepository {
 
@@ -27,7 +27,7 @@ public class RealUserRepository implements UserRepository {
 			ArrayList<PersonPageRankEntity> rankList = new ArrayList<>(personsPageRank.getPersonPageRankByPersonSite(o.getId(), siteId));
 			int sum = 0;
 			for (PersonPageRankEntity ppr : rankList) {
-				sum += ppr.getRank();
+				sum += ppr.getRankId();
 				Date temp = pages.getById(ppr.getPageId()).getLastScanDate();
 				if (temp.after(date))
 					date = temp;

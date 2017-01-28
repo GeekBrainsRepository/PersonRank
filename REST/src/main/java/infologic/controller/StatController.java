@@ -1,20 +1,16 @@
 package infologic.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import infologic.repository.Common;
 import infologic.repository.Daily;
 import infologic.repository.FakeUserRepository;
 import infologic.repository.UserRepository;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created by Антон Владимирович on 21.01.2017.
- */
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class StatController {
 

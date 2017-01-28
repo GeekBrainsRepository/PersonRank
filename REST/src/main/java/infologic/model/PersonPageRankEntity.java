@@ -2,20 +2,23 @@ package infologic.model;
 
 import javax.persistence.*;
 
-/**
- * Created by Антон Владимирович on 21.01.2017.
- */
 @Entity
 @Table(name = "person_page_rank", schema = "personrank", catalog = "")
 public class PersonPageRankEntity {
     private Integer personId;
     private Integer pageId;
-    private Integer rank;
+    private Integer rankId;
     private PersonsEntity personsByPersonId;
     private PagesEntity pagesByPageId;
 
+    @Id
+    @Column(name = "rank_id")
+    public Integer getRankId() {
+        return rankId;
+    }
+
     @Basic
-    @Column(name = "person_id")
+    @Column(name = "person_id", insertable = false, updatable = false)
     public Integer getPersonId() {
         return personId;
     }
@@ -25,7 +28,7 @@ public class PersonPageRankEntity {
     }
 
     @Basic
-    @Column(name = "page_id")
+    @Column(name = "page_id", insertable = false, updatable = false)
     public Integer getPageId() {
         return pageId;
     }
@@ -34,14 +37,8 @@ public class PersonPageRankEntity {
         this.pageId = pageId;
     }
 
-    @Basic
-    @Column(name = "rank")
-    public Integer getRank() {
-        return rank;
-    }
-
-    public void setRank(Integer rank) {
-        this.rank = rank;
+    public void setRankId(Integer rank) {
+        this.rankId = rankId;
     }
 
     @Override
@@ -53,7 +50,7 @@ public class PersonPageRankEntity {
 
         if (personId != null ? !personId.equals(that.personId) : that.personId != null) return false;
         if (pageId != null ? !pageId.equals(that.pageId) : that.pageId != null) return false;
-        if (rank != null ? !rank.equals(that.rank) : that.rank != null) return false;
+        if (rankId != null ? !rankId.equals(that.rankId) : that.rankId != null) return false;
 
         return true;
     }
@@ -62,7 +59,7 @@ public class PersonPageRankEntity {
     public int hashCode() {
         int result = personId != null ? personId.hashCode() : 0;
         result = 31 * result + (pageId != null ? pageId.hashCode() : 0);
-        result = 31 * result + (rank != null ? rank.hashCode() : 0);
+        result = 31 * result + (rankId != null ? rankId.hashCode() : 0);
         return result;
     }
 
