@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class LeftLinksPanel extends JPanel{
-    
+
     private static Font font;
     private static Font submenu_font;
     private static final Color MENU_COLOR = new Color(3, 3, 3);
