@@ -7,26 +7,36 @@ import javax.persistence.*;
 public class PersonPageRankEntity {
     private Integer personId;
     private Integer pageId;
-    private Integer rankId;
+    private Integer id;
+    private Integer rank;
     private PersonsEntity personsByPersonId;
     private PagesEntity pagesByPageId;
 
     @Id
-    @Column(name = "rank_id")
+    @Column(name = "id")
     public Integer getRankId() {
-        return rankId;
+        return id;
     }
 
     @Basic
     @Column(name = "person_id", insertable = false, updatable = false)
     public Integer getPersonId() {
         return personId;
+
     }
 
     public void setPersonId(Integer personId) {
         this.personId = personId;
     }
+    @Basic
+    @Column(name = "rank")
+    public Integer getRank() {
+        return rank;
+    }
 
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
     @Basic
     @Column(name = "page_id", insertable = false, updatable = false)
     public Integer getPageId() {
@@ -38,7 +48,7 @@ public class PersonPageRankEntity {
     }
 
     public void setRankId(Integer rank) {
-        this.rankId = rankId;
+        this.id = id;
     }
 
     @Override
@@ -50,7 +60,7 @@ public class PersonPageRankEntity {
 
         if (personId != null ? !personId.equals(that.personId) : that.personId != null) return false;
         if (pageId != null ? !pageId.equals(that.pageId) : that.pageId != null) return false;
-        if (rankId != null ? !rankId.equals(that.rankId) : that.rankId != null) return false;
+        if (rank != null ? !rank.equals(that.rank) : that.rank != null) return false;
 
         return true;
     }
@@ -59,7 +69,7 @@ public class PersonPageRankEntity {
     public int hashCode() {
         int result = personId != null ? personId.hashCode() : 0;
         result = 31 * result + (pageId != null ? pageId.hashCode() : 0);
-        result = 31 * result + (rankId != null ? rankId.hashCode() : 0);
+        result = 31 * result + (rank != null ? rank.hashCode() : 0);
         return result;
     }
 
