@@ -28,13 +28,27 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
             DailyStatisticOnSite.Person p1 = new DailyStatisticOnSite.Person("Путин",
                     Arrays.asList(new Calendar[] {new GregorianCalendar(2017, Calendar.JANUARY, 17),
                                                     new GregorianCalendar(2017, Calendar.JANUARY, 19),
-                                                    new GregorianCalendar(2017, Calendar.JANUARY, 20)}),
-                    Arrays.asList(new Integer [] {4,2,1}));
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 21),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 22),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 23),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 24),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 25),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 26),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 27),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 29)}),
+                    Arrays.asList(new Integer [] {4,2,1,3,5,8,6,7,1,9}));
             DailyStatisticOnSite.Person p2 = new DailyStatisticOnSite.Person("Трамп",
                     Arrays.asList(new Calendar[] {new GregorianCalendar(2017, Calendar.JANUARY, 18),
                                                     new GregorianCalendar(2017, Calendar.JANUARY, 20),
-                                                    new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
-                    Arrays.asList(new Integer [] {2,1,3}));
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 21),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 22),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 23),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 24),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 25),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 26),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 27),
+                                                    new GregorianCalendar(2017, Calendar.JANUARY, 28)}),
+                    Arrays.asList(new Integer [] {2,1,3,7,5,9,7,2,1,4}));
             DailyStatisticOnSite site1 = new DailyStatisticOnSite("lenta.ru",Arrays.asList(new DailyStatisticOnSite.Person[] {p1,p2}));
             dailyStatisticOnSite.add(site1);
             
