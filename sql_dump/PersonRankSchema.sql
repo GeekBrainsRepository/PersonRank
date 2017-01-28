@@ -61,14 +61,15 @@ DROP TABLE IF EXISTS `PersonPageRank`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PersonPageRank` (
-  `rank_id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Количество упоминаний личности на странице ' ,
+  `id` INT(11) NOT NULL AUTO_INCREMENT
   `person_id` int(11) DEFAULT NULL COMMENT 'Идентификатор личности, \nкоторой соответствует данное ключевое слово. \n\nЯвляется внешним ключом к таблице Persons.',
   `page_id` int(11) DEFAULT NULL COMMENT 'Идентификатор страницы сайта, \nна которой найдены упоминания о персонах. \n\nЯвляется внешним ключом к таблице Pages\n',
-  
+  `rank` INT(30) DEFAULT NULL COMMENT 'Количество упоминаний личности на странице ' ,
+
   KEY `PersonPersonsPageRankFK_IDx` (`person_id`),
   KEY `PagePersonPageRankFK_IDx` (`page_id`),
-  ADD PRIMARY KEY (`rank_id`),
-ADD UNIQUE INDEX `rank_id_UNIQUE` (`rank_id` ASC);
+  ADD PRIMARY KEY (`id`),
+ADD UNIQUE INDEX `rank_id_UNIQUE` (`id` ASC);
   CONSTRAINT `PagePersonPageRankFK` FOREIGN KEY (`page_id`) REFERENCES `Pages` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `PersonPersonsPageRankFK` FOREIGN KEY (`person_id`) REFERENCES `Persons` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
