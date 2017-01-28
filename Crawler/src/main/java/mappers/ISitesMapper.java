@@ -1,18 +1,7 @@
-package mappers;
-
-import beans.Sites;
-import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
+package geekbrains.internship.project_full.Crawler.src.main.java.mappers;
 
 /**
- * mapper for Sites table
+ * Created by Виктор on 20.01.2017.
  */
 public interface ISitesMapper {
-
-    String SELECT_SITES = "SELECT id, name FROM sites";
-
-    @Select(SELECT_SITES)
-    List<Sites> getSites();
-
 }

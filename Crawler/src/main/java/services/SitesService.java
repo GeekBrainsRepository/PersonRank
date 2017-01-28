@@ -1,22 +1,7 @@
-package services;
-
-import beans.Sites;
-import mappers.ISitesMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+package geekbrains.internship.project_full.Crawler.src.main.java.services;
 
 /**
- * CRUD service for Sites table
+ * Created by Виктор on 20.01.2017.
  */
-@Service
-public class SitesService implements ISitesMapper {
-    @Autowired
-    private ISitesMapper iSitesMapper;
-
-    @Override
-    public List<Sites> getSites() {
-        return iSitesMapper.getSites();
-    }
+public class SitesService {
 }

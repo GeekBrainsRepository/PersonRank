@@ -1,26 +1,7 @@
-package beans;
+package geekbrains.internship.project_full.Crawler.src.main.java.beans;
 
 /**
- * bean for table Sites
+ * Created by Виктор on 20.01.2017.
  */
 public class Sites {
-
-    private int id;
-    private String name;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
