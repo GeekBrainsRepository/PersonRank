@@ -52,7 +52,7 @@ public class CommonStatDB implements LoaderManager.LoaderCallbacks<Cursor> {
         this.selectedSite=selectedSite;
 
 
-        scAdapter = new SimpleCursorAdapter(context, R.layout.common_stats_item, null, from, to, 0);
+        scAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
         loaderManager.initLoader(LOADER_ID, null, this);
 
         return scAdapter;

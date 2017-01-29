@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm=getSupportFragmentManager();
         Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
         if(fragment==null){
-            fragment=new CommonStatsFragment();
+            fragment=new DailyStatsFragment();
             fm.beginTransaction()
                     .add(R.id.FrameContainer,fragment)
                     .commit();

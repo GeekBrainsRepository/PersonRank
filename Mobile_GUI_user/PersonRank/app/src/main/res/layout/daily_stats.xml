@@ -12,13 +12,14 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:id="@+id/daily_stats_site">
+        android:id="@+id/daily_stats_sites">
     </Spinner>
+
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:id="@+id/daily_stats_person">
+        android:id="@+id/daily_stats_persons">
     </Spinner>
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,6 +65,13 @@
                 />
         </TableRow>
     </TableLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/daily_stats_list">
+    </ListView>
+<!--
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
@@ -386,6 +394,6 @@
 
     </ScrollView>
 
-
+-->
 
 </LinearLayout>

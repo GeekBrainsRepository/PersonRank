@@ -4,19 +4,20 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Date;
+
+import ru.geekbrain.gbseeker.personrank.DB.DailyStatsDB;
 
 
 public class DailyStatsFragment extends Fragment {
@@ -29,9 +30,14 @@ public class DailyStatsFragment extends Fragment {
     Button butFrom;
     Button butTo;
 
+    DailyStatsDB dailyStatsDB;
+    int selectedSitePosition = 0;
+    int selectedPersonPosition = 0;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dailyStatsDB=new DailyStatsDB(getContext());
     }
 
     @Nullable
@@ -39,23 +45,17 @@ public class DailyStatsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.daily_stats, container, false);
 
-        String[] dataSites = {"lenta.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru", "mail.ru"};
-        String[] dataPersons = {"Путин", "Medvedev", "Antonov"};
-
-        // адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataSites);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = (Spinner) v.findViewById(R.id.daily_stats_site);
-        spinner.setAdapter(adapter);
-
-        // адаптер
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataPersons);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner1 = (Spinner) v.findViewById(R.id.daily_stats_person);
-        spinner1.setAdapter(adapter1);
-
         getActivity().setTitle("Ежедневная статистика");
 
+        Spinner spinnerSite = (Spinner) v.findViewById(R.id.daily_stats_sites);
+        spinnerSite.setAdapter(dailyStatsDB.getAdapterWithSite());
+
+        Spinner spinnerPersonOnSite = (Spinner) v.findViewById(R.id.daily_stats_persons);
+        spinnerPersonOnSite.setAdapter(dailyStatsDB.getAdapterWithPersonOnSite());
+
+        ListView list= (ListView) v.findViewById(R.id.daily_stats_list);
+        SimpleCursorAdapter adapterStats = dailyStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), selectedSitePosition,selectedPersonPosition);
+        list.setAdapter(adapterStats);
 
         butFrom = (Button) v.findViewById(R.id.date_from);
         butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(myYear-1900,myMonth,myDay)));
@@ -97,30 +97,23 @@ public class DailyStatsFragment extends Fragment {
         });
 
 
-        // адаптер
-      /*  ArrayAdapter<String> adapterKeyWord = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataKeyWords);
-
-        ListView list= (ListView) v.findViewById(R.id.keyword_list);
-        list.setAdapter(adapter);
-*/
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerSite.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 // показываем позиция нажатого элемента
-                Toast.makeText(getActivity(), "Position = " + position, Toast.LENGTH_SHORT).show();
+                dailyStatsDB.setSelectedSitePosition(position);
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerPersonOnSite.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 // показываем позиция нажатого элемента
-                Toast.makeText(getActivity(), "Position = " + position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "person = " + position, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {

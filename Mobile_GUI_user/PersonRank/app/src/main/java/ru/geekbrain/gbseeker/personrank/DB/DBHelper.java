@@ -138,7 +138,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.PERSON.PERSON, person);
         getDB().insert(DB.TABLES.PERSON, null, cv);
     }
-
     public void addPersonWithCheck(String person) {
         Cursor cursor = null;
         try {
@@ -152,7 +151,6 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
     }
-
     public int getPersonID(String person) {
         Cursor cursor = null;
         try {
@@ -168,7 +166,6 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
     }
-
     public int getPersonIDOrCreate(String person) {
         int person_id = getPersonID(person);
         if (person_id == 0) {
@@ -178,12 +175,38 @@ public class DBHelper extends SQLiteOpenHelper {
             return person_id;
         }
     }
-
     public void getPersonList(ArrayList<String> personList) {
         personList.clear();
         Cursor cursor = null;
         try {
             cursor = DBHelper.getInstance().getDB().query(DBHelper.DB.TABLES.PERSON, null, null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(DBHelper.DB.COLUMNS.PERSON.PERSON);
+                do {
+                    personList.add(cursor.getString(index));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+    public void getPersonListOnSite(ArrayList<String> personList,String site) {
+        personList.clear();
+        int site_id=getSiteID(site);
+
+        dumpTablePerson();
+        dumpTableSite();
+        dumpTableDailyStats();
+
+        String table = DB.TABLES.PERSON+" as PS inner join "+DB.TABLES.DAILY+" as DS " +
+                " on PS."+DB.COLUMNS.PERSON.ID+"=DS."+DB.COLUMNS.DAILY.PERSON_REF;
+        String columns[] = {"PS.person as person", " PS._id as _id"};
+        String selection = "DS.site_id=?";
+        String[] selectionArgs = {"" + site_id};
+
+        Cursor cursor = null;
+        try {
+            cursor = DBHelper.getInstance().getDB().query(true,table, columns, selection, selectionArgs,null,null,null,null);
             if (cursor.moveToFirst()) {
                 int index = cursor.getColumnIndex(DBHelper.DB.COLUMNS.PERSON.PERSON);
                 do {
@@ -375,7 +398,14 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
     }
+    public Cursor getCursorOfDailyStatsWithSite(String site,String person) {
+        int site_id = DBHelper.getInstance().getSiteID(site);
+        int person_id = DBHelper.getInstance().getPersonID(person);
 
+        return DBHelper.getInstance().getDB().query(DB.TABLES.DAILY, null,
+                DB.COLUMNS.DAILY.PERSON_REF+'='+person_id+" and "+DB.COLUMNS.DAILY.SITE_REF+'='+site_id,
+                null, null, null, null);
+    }
     public void fillByFakeData() {
         dumpTablePerson();
         dumpTableSite();
