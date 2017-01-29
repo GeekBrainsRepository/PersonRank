@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import ru.geekbrain.gbseeker.personrank.DB.DailyStatsDB;
@@ -33,6 +34,8 @@ public class DailyStatsFragment extends Fragment {
     DailyStatsDB dailyStatsDB;
     int selectedSitePosition = 0;
     int selectedPersonPosition = 0;
+
+    ArrayList<String> dates=new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,8 +60,10 @@ public class DailyStatsFragment extends Fragment {
         SimpleCursorAdapter adapterStats = dailyStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), selectedSitePosition,selectedPersonPosition);
         list.setAdapter(adapterStats);
 
+        dates=dailyStatsDB.getMinMaxDate(selectedSitePosition,selectedPersonPosition);
+
         butFrom = (Button) v.findViewById(R.id.date_from);
-        butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(myYear-1900,myMonth,myDay)));
+        butFrom.setText("c " + android.text.format.DateFormat.format("dd.MM.yyyy", new Date(myYear-1900,myMonth,myDay)));
 
         butFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +77,12 @@ public class DailyStatsFragment extends Fragment {
                                 butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(myYear-1900,myMonth,myDay)));                            }
                         },
                         myYear, myMonth, myDay);
+                String t=dates.get(0);
+                t=dates.get(dates.size()-1);
+                Date minDay=new Date(dates.get(0));
+                Date maxDay=new Date(dates.get(dates.size()-1));
+                tpd.getDatePicker().setMinDate(minDay.getTime());
+                tpd.getDatePicker().setMaxDate(maxDay.getTime());
                 tpd.show();
             }
         });

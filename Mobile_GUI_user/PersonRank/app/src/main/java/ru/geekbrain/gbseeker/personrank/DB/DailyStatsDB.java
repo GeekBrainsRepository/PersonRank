@@ -10,6 +10,9 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 import ru.geekbrain.gbseeker.personrank.R;
 
 public class DailyStatsDB implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -66,7 +69,25 @@ public class DailyStatsDB implements LoaderManager.LoaderCallbacks<Cursor> {
 
         return scAdapter;
     }
+    public ArrayList<String> getMinMaxDate(int selectedSite,int selectedPerson) {
+        ArrayList<String> dates=new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = DBHelper.getInstance().getCursorOfDailyStatsWithSite(siteList.get(selectedSite), personList.get(selectedPerson));
+            if (cursor.moveToFirst()) {
+                int indexID = cursor.getColumnIndex(DBHelper.DB.COLUMNS.DAILY.DATE);
+                do {
+                    dates.add(cursor.getString(indexID));
+                } while (cursor.moveToNext());
+                Collections.sort(dates);
+            }
 
+        }
+        finally {
+            cursor.close();
+        }
+        return dates;
+    }
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
         return new DailyStatsCursorLoader(context,siteList.get(selectedSite),personList.get(selectedPerson));

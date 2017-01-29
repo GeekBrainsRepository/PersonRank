@@ -362,7 +362,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.DAILY.PERSON_REF, person_id);
         cv.put(DB.COLUMNS.DAILY.SITE_REF, site_id);
         cv.put(DB.COLUMNS.DAILY.STATS, stats);
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        //SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         cv.put(DB.COLUMNS.DAILY.DATE, format.format(date));
         getDB().insert(DB.TABLES.DAILY, null, cv);
     }
