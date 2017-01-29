@@ -27,7 +27,7 @@ public class RealUserRepository implements UserRepository {
 			ArrayList<PersonPageRankEntity> rankList = new ArrayList<>(personsPageRank.getPersonPageRankByPersonSite(o.getId(), siteId));
 			int sum = 0;
 			for (PersonPageRankEntity ppr : rankList) {
-				sum += ppr.getRankId();
+				sum += ppr.getId();
 				Date temp = pages.getById(ppr.getPageId()).getLastScanDate();
 				if (temp.after(date))
 					date = temp;

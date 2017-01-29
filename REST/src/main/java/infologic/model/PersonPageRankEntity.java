@@ -14,8 +14,11 @@ public class PersonPageRankEntity {
 
     @Id
     @Column(name = "ID")
-    public Integer getRankId() {
+    public Integer getId() {
         return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Basic
@@ -24,32 +27,29 @@ public class PersonPageRankEntity {
         return personId;
 
     }
-
     public void setPersonId(Integer personId) {
         this.personId = personId;
     }
+
     @Basic
     @Column(name = "Rank")
     public Integer getRank() {
         return rank;
     }
-
     public void setRank(Integer rank) {
         this.rank = rank;
     }
+
     @Basic
     @Column(name = "PageID", insertable = false, updatable = false)
     public Integer getPageId() {
         return pageId;
     }
-
     public void setPageId(Integer pageId) {
         this.pageId = pageId;
     }
 
-    public void setRankId(Integer rank) {
-        this.id = id;
-    }
+
 
     @Override
     public boolean equals(Object o) {
