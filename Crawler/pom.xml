@@ -12,6 +12,8 @@
     <properties>
         <spring.version>4.1.4.RELEASE</spring.version>
         <jdk.version>1.8</jdk.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
