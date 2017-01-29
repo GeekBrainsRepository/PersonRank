@@ -35,7 +35,7 @@ CREATE TABLE `Keywords` (
   UNIQUE KEY `ID_UNIQUE` (`ID`),
   KEY `KeywordsPersonFK_IDx` (`PersonID`),
   CONSTRAINT `KeywordsPersonFK` FOREIGN KEY (`PersonID`) REFERENCES `Persons` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -55,7 +55,7 @@ CREATE TABLE `Pages` (
   UNIQUE KEY `ID_UNIQUE` (`ID`),
   KEY `PagesSitesFK_IDx` (`SiteID`),
   CONSTRAINT `PagesSiteFK` FOREIGN KEY (`SiteID`) REFERENCES `Sites` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,7 +88,7 @@ CREATE TABLE `Persons` (
   `Name` varchar(2048) NOT NULL COMMENT 'Наименование личности',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +103,7 @@ CREATE TABLE `Sites` (
   `Name` varchar(2048) NOT NULL COMMENT 'Наименование сайта',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
