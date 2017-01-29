@@ -3,7 +3,7 @@ package infologic.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "person_page_rank", schema = "personrank", catalog = "")
+@Table(name = "PersonPageRank", schema = "personrank", catalog = "")
 public class PersonPageRankEntity {
     private Integer personId;
     private Integer pageId;
@@ -13,13 +13,13 @@ public class PersonPageRankEntity {
     private PagesEntity pagesByPageId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     public Integer getRankId() {
         return id;
     }
 
     @Basic
-    @Column(name = "person_id", insertable = false, updatable = false)
+    @Column(name = "PersonID", insertable = false, updatable = false)
     public Integer getPersonId() {
         return personId;
 
@@ -29,7 +29,7 @@ public class PersonPageRankEntity {
         this.personId = personId;
     }
     @Basic
-    @Column(name = "rank")
+    @Column(name = "Rank")
     public Integer getRank() {
         return rank;
     }
@@ -38,7 +38,7 @@ public class PersonPageRankEntity {
         this.rank = rank;
     }
     @Basic
-    @Column(name = "page_id", insertable = false, updatable = false)
+    @Column(name = "PageID", insertable = false, updatable = false)
     public Integer getPageId() {
         return pageId;
     }
@@ -74,7 +74,7 @@ public class PersonPageRankEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    @JoinColumn(name = "PersonID", referencedColumnName = "ID")
     public PersonsEntity getPersonsByPersonId() {
         return personsByPersonId;
     }
@@ -84,7 +84,7 @@ public class PersonPageRankEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "page_id", referencedColumnName = "id")
+    @JoinColumn(name = "PageID", referencedColumnName = "ID")
     public PagesEntity getPagesByPageId() {
         return pagesByPageId;
     }
