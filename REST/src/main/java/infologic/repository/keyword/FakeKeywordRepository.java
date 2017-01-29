@@ -58,6 +58,14 @@ public class FakeKeywordRepository implements Repository<KeywordsEntity> {
 
     @Override
     public List<KeywordsEntity> query(Specification specification) {
-        return null;
+        List<KeywordsEntity> list = new ArrayList<>();
+        for (KeywordsEntity entity :
+                repo) {
+            if (specification.specified(entity)){
+                list.add(entity);
+            }
+        }
+
+        return list;
     }
 }
