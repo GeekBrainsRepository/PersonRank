@@ -1,15 +1,7 @@
 package parsing.parser;
 
 
-import otherclasses.parser.*;
-import otherclasses.parser.ISitemapParser;
-import otherclasses.parser.model.*;
-import otherclasses.parser.model.Sitemap;
-import otherclasses.parser.model.SitemapEntry;
-import otherclasses.parser.model.SitemapIndex;
-import otherclasses.parser.model.SitemapParseException;
-import otherclasses.parser.model.UrlConnectionException;
-import parsing.parser.model.*;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +13,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 
-class PlaintextSitemapParser implements otherclasses.parser.ISitemapParser {
+class PlaintextSitemapParser implements ISitemapParser {
     private static final Pattern URL_PATTERN = Pattern.compile("https?://[A-Za-z0-9\\-\\._~:/\\?#\\[\\]@!\\$&'\\(\\)\\*\\+,;=%]+");
     private static final int INVALID_LINES_ALLOWED = 3;
     private final String urlPrefix;

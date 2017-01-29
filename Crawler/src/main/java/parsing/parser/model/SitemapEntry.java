@@ -1,6 +1,6 @@
 package parsing.parser.model;
 
-import otherclasses.parser.model.Link;
+
 
 import java.util.Collections;
 import java.util.Date;
@@ -161,7 +161,7 @@ public final class SitemapEntry {
             return false;
         }
 
-        otherclasses.parser.model.SitemapEntry that = (otherclasses.parser.model.SitemapEntry) obj;
+        SitemapEntry that = (SitemapEntry) obj;
         return loc.equals(that.loc);
     }
 

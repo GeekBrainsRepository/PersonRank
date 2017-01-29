@@ -1,8 +1,8 @@
 package parsing.parser;
 
-import otherclasses.parser.model.Sitemap;
-import otherclasses.parser.model.SitemapEntry;
-import otherclasses.parser.model.SitemapIndex;
+import parsing.parser.model.Sitemap;
+import parsing.parser.model.SitemapEntry;
+import parsing.parser.model.SitemapIndex;
 
 import java.util.Set;
 

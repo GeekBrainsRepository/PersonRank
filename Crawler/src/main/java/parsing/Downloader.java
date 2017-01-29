@@ -1,10 +1,9 @@
-package parsing;/*package geekbrains.internship;
+package parsing;
 
-import geekbrains.internship.bithazard_parser.SitemapParser;
-import geekbrains.internship.bithazard_parser.model.Sitemap;
-import geekbrains.internship.bithazard_parser.model.SitemapEntry;
-import geekbrains.internship.sitemaps.UnknownFormatException;
 import org.xml.sax.SAXException;
+import parsing.parser.SitemapParser;
+import parsing.parser.model.Sitemap;
+import parsing.parser.model.SitemapEntry;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -19,7 +18,7 @@ public class Downloader {
             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
 
 
-    public ArrayList<String> download(String url) {
+    private ArrayList<String> download(String url) {
         //Поиск sitemap
         SitemapParser p = new SitemapParser();
         p.setUserAgent(USER_AGENT);
@@ -34,7 +33,7 @@ public class Downloader {
         return linksAtUrl;
     }
 
-    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException, UnknownFormatException {
+    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, TransformerException {
         Downloader d = new Downloader();
         d.download("http://bookflow.ru");
         for(String l: linksAtUrl){
@@ -43,4 +42,3 @@ public class Downloader {
     }
 
 }
-*/

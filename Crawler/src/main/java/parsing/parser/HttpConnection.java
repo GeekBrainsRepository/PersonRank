@@ -1,8 +1,6 @@
 package parsing.parser;
 
 
-import otherclasses.parser.model.InvalidSitemapUrlException;
-import otherclasses.parser.model.UrlConnectionException;
 
 import javax.net.ssl.*;
 import java.io.Closeable;
