@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -361,7 +362,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.DAILY.PERSON_REF, person_id);
         cv.put(DB.COLUMNS.DAILY.SITE_REF, site_id);
         cv.put(DB.COLUMNS.DAILY.STATS, stats);
-        cv.put(DB.COLUMNS.DAILY.DATE, date.toString());
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        cv.put(DB.COLUMNS.DAILY.DATE, format.format(date));
         getDB().insert(DB.TABLES.DAILY, null, cv);
     }
     public void updateDailyStats(int dailyStatsID,int site_id,int person_id,Date date,int stats) {
