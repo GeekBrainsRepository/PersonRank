@@ -28,8 +28,8 @@ public class PersonList extends Fragment {
         View v = inflater.inflate(R.layout.person_list, container, false);
 
         getActivity().setTitle("Список персон");
-        ListView list = (ListView) v.findViewById(R.id.PersonList);
 
+        ListView list = (ListView) v.findViewById(R.id.PersonList);
         scAdapter = personListDB.getAdapterWithPerson(getActivity().getSupportLoaderManager());
         list.setAdapter(scAdapter);
 

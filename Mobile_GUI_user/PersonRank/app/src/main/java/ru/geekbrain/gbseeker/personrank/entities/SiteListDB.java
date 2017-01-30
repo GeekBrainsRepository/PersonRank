@@ -12,7 +12,7 @@ import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 
 public class SiteListDB {
     Context context;
-    SimpleCursorAdapter scAdapter;
+    SimpleCursorAdapter scSiteAdapter;
 
     public SiteListDB(Context context) {
         this.context = context;
@@ -23,11 +23,16 @@ public class SiteListDB {
         String[] from = new String[]{DBHelper.DB.COLUMNS.SITE.SITE};
         int[] to = new int[]{android.R.id.text1};
 
-        scAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
+        scSiteAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_SITES.ordinal(), null,
-                new SiteListCursorLoaderManager(context,scAdapter));
+                new SiteListCursorLoaderManager(context, scSiteAdapter));
 
-        return scAdapter;
+        return scSiteAdapter;
+    }
+
+    public void update(){
+        scSiteAdapter.swapCursor(DBHelper.getInstance().getCursorWithSites());
+        scSiteAdapter.notifyDataSetChanged();
     }
 }
 

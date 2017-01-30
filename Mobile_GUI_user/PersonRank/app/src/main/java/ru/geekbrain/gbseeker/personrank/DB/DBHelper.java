@@ -218,6 +218,9 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
     }
+    public Cursor getCursorWithPersons(){
+        return DBHelper.getInstance().getDB().query(DB.TABLES.PERSON, null,null,null, null, null, null, null);
+    }
 
     public void addSite(String site) {
         ContentValues cv = new ContentValues();
@@ -359,8 +362,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return DBHelper.getInstance().getDB().query(table, columns, selection, selectionArgs, null, null, null);
     }
 
-
-
     public void addDailyStats(int site_id, int person_id, Date date, int stats) {
         ContentValues cv = new ContentValues();
         cv.put(DB.COLUMNS.DAILY.PERSON_REF, person_id);
@@ -413,6 +414,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 DB.COLUMNS.DAILY.PERSON_REF+'='+person_id+" and "+DB.COLUMNS.DAILY.SITE_REF+'='+site_id,
                 null, null, null, null);
     }
+
     public void fillByFakeData() {
         dumpTablePerson();
         dumpTableSite();

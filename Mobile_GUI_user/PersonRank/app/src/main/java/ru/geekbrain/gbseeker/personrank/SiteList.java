@@ -12,7 +12,7 @@ import android.widget.ListView;
 import ru.geekbrain.gbseeker.personrank.entities.SiteListDB;
 
 public class SiteList extends Fragment {
-    SimpleCursorAdapter scAdapter;
+    SimpleCursorAdapter scSiteAdapter;
     SiteListDB siteListDB;
 
     @Override
@@ -27,9 +27,10 @@ public class SiteList extends Fragment {
         View v = inflater.inflate(R.layout.site_list, container, false);
 
         getActivity().setTitle("Список сайтов");
+
         ListView list = (ListView) v.findViewById(R.id.SiteList);
-        scAdapter = siteListDB.getAdapterWithSite(getActivity().getSupportLoaderManager());
-        list.setAdapter(scAdapter);
+        scSiteAdapter = siteListDB.getAdapterWithSite(getActivity().getSupportLoaderManager());
+        list.setAdapter(scSiteAdapter);
 
         return v;
     }

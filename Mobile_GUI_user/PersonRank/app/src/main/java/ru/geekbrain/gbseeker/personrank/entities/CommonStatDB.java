@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
 
-public class CommonStatDB implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CommonStatDB {
     Context context;
-    ArrayList<String> siteList=new ArrayList<>();
+    ArrayList<String> siteList= new ArrayList<>();
+    int selectedSite = 0;
+    ArrayAdapter<String> siteListAdapter;
 
-    SimpleCursorAdapter scAdapter;
-    int selectedSite=0;
-    private final static int LOADER_ID=5;
+    SimpleCursorAdapter scCommonStatsAdapter;
 
     public CommonStatDB(Context context) {
         this.context = context;
@@ -30,38 +30,61 @@ public class CommonStatDB implements LoaderManager.LoaderCallbacks<Cursor> {
         DBHelper.getInstance().getSiteList(siteList);
         return siteList;
     }
+
     public ArrayAdapter<String> getAdapterWithSite() {
-        ArrayAdapter<String> siteListAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, getSiteList());
+        siteListAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSiteList());
         siteListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return siteListAdapter;
     }
 
+    public void update(){
+        String site=siteList.get(selectedSite);
 
+        getSiteList();
 
-    public void setSelectedSitePosition(int id){
-        selectedSite=id;
-        String curSite=siteList.get(id);
-        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfCommonStatsWithSite(curSite));
-        scAdapter.notifyDataSetChanged();
+        selectedSite=siteList.indexOf(site);
+        if(selectedSite<0) selectedSite=0;
+
+        siteListAdapter.notifyDataSetChanged();
+        setSelectedSitePosition(selectedSite);
     }
 
-    public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager,int selectedSite) {
+    public void setSelectedSitePosition(int id) {
+        selectedSite = id;
+        scCommonStatsAdapter.swapCursor(DBHelper.getInstance().getCursorOfCommonStatsWithSite(siteList.get(id)));
+        scCommonStatsAdapter.notifyDataSetChanged();
+    }
+
+    public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager, int selectedSite) {
 
         String[] from = new String[]{DBHelper.DB.COLUMNS.PERSON.PERSON, DBHelper.DB.COLUMNS.COMMON.STATS};
-        int[] to = new int[]{R.id.text1,R.id.text2};
+        int[] to = new int[]{R.id.text1, R.id.text2};
 
-        this.selectedSite=selectedSite;
+        this.selectedSite = selectedSite;
+
+        scCommonStatsAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
+        loaderManager.initLoader(LOADER_IDS.LOADER_COMMON_STATS.ordinal(), null,
+                new CommonStatsCursorLoaderManager(context, scCommonStatsAdapter, siteList.get(selectedSite)));
+
+        return scCommonStatsAdapter;
+    }
+}
 
 
-        scAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
-        loaderManager.initLoader(LOADER_ID, null, this);
+class CommonStatsCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor> {
+    Context context;
+    SimpleCursorAdapter scAdapter;
+    String site;
 
-        return scAdapter;
+    public CommonStatsCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter, String site) {
+        this.context = context;
+        this.scAdapter = scAdapter;
+        this.site = site;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new CommonStatsCursorLoader(context,siteList.get(selectedSite));
+        return new CommonStatsCursorLoader(context,site);
 
     }
 
@@ -74,20 +97,20 @@ public class CommonStatDB implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    static class CommonStatsCursorLoader extends CursorLoader {
-        String site;
-        public CommonStatsCursorLoader(Context context,String site) {
-            super(context);
-            this.site=site;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            return DBHelper.getInstance().getCursorOfCommonStatsWithSite(site);
-        }
-    }
 
 }
 
 
+class CommonStatsCursorLoader extends CursorLoader {
+    String site;
+    public CommonStatsCursorLoader(Context context,String site) {
+        super(context);
+        this.site=site;
+    }
+
+    @Override
+    public Cursor loadInBackground() {
+        return DBHelper.getInstance().getCursorOfCommonStatsWithSite(site);
+    }
+}
 

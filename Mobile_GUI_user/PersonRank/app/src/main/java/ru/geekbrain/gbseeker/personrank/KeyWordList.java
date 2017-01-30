@@ -31,15 +31,14 @@ public class KeyWordList extends Fragment {
 
         getActivity().setTitle("Справочник - ключевые слова");
 
-        Spinner spinner = (Spinner) v.findViewById(R.id.keyword_person);
-        spinner.setAdapter(keywordListDB.getAdapterWithPerson());
+        Spinner spinnerPerson = (Spinner) v.findViewById(R.id.keyword_person);
+        spinnerPerson.setAdapter(keywordListDB.getAdapterWithPerson());
 
-        ListView list= (ListView) v.findViewById(R.id.keyword_list);
-        SimpleCursorAdapter adapterKeyWord = keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(), selectedPersonPosition);
-        list.setAdapter(adapterKeyWord);
+        ListView keywordList= (ListView) v.findViewById(R.id.keyword_list);
+        keywordList.setAdapter(keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(), selectedPersonPosition));
 
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerPerson.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {

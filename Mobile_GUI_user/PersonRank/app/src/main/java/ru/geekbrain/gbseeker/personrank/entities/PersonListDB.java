@@ -10,10 +10,9 @@ import android.support.v4.widget.SimpleCursorAdapter;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 
-public class PersonListDB implements LoaderManager.LoaderCallbacks<Cursor> {
+public class PersonListDB  {
     Context context;
-    SimpleCursorAdapter scAdapter;
-    private final static int LOADER_ID=0;
+    SimpleCursorAdapter scPersonAdapter;
 
     public PersonListDB(Context context) {
         this.context = context;
@@ -24,10 +23,26 @@ public class PersonListDB implements LoaderManager.LoaderCallbacks<Cursor> {
         String[] from = new String[]{DBHelper.DB.COLUMNS.PERSON.PERSON};
         int[] to = new int[]{android.R.id.text1};
 
-        scAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
-        loaderManager.initLoader(LOADER_ID, null, this);
+        scPersonAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
+        loaderManager.initLoader(LOADER_IDS.LOADER_PERSONS.ordinal(), null,
+                new PersonListCursorLoaderManager(context, scPersonAdapter));
 
-        return scAdapter;
+        return scPersonAdapter;
+    }
+
+    public void update(){
+        scPersonAdapter.swapCursor(DBHelper.getInstance().getCursorWithPersons());
+        scPersonAdapter.notifyDataSetChanged();
+    }
+}
+
+class PersonListCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>{
+    Context context;
+    SimpleCursorAdapter scAdapter;
+
+    public PersonListCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter) {
+        this.context = context;
+        this.scAdapter = scAdapter;
     }
 
     @Override
@@ -44,23 +59,18 @@ public class PersonListDB implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    static class PersonListCursorLoader extends CursorLoader {
-
-        public PersonListCursorLoader(Context context) {
-            super(context);
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            return DBHelper.getInstance().getDB().query(DBHelper.DB.TABLES.PERSON, null, null, null, null, null, null, null);
-        }
-    }
-
-
-
-
 
 }
 
 
+class PersonListCursorLoader extends CursorLoader {
 
+    public PersonListCursorLoader(Context context) {
+        super(context);
+    }
+
+    @Override
+    public Cursor loadInBackground() {
+        return DBHelper.getInstance().getCursorWithPersons();
+    }
+}
