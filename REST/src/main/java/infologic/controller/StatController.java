@@ -2,7 +2,7 @@ package infologic.controller;
 
 import infologic.StatisticUtilites;
 import infologic.model.CommonStat;
-import infologic.model.Daily;
+import infologic.model.DailyStat;
 import infologic.repository.FakeUserRepository;
 import infologic.repository.UserRepository;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +55,7 @@ public class StatController {
 
 	// Финальный вид для реализованного интрфейса
 	@RequestMapping("/statistic/daily/{siteId}/{personId}/{dateStart}/{dateEnd}")
-	public Daily getDaily(@PathVariable Integer siteId, @PathVariable Integer personId, @PathVariable Long dateStart, @PathVariable Long dateEnd) {
+	public DailyStat getDaily(@PathVariable Integer siteId, @PathVariable Integer personId, @PathVariable Long dateStart, @PathVariable Long dateEnd) {
 		return repository.get(siteId, personId, dateStart, dateEnd);
 	}
 }
