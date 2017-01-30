@@ -12,6 +12,7 @@ public class PersonsDAO implements PersonsDAOInterface {
 	public Collection<PersonsEntity> getAllPerson() {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Collection<PersonsEntity> result = session.createQuery("FROM PersonsEntity").list();
+
 		session.close();
 		return result;
 	}

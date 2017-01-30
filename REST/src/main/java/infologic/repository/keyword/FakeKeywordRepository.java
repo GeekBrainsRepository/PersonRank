@@ -7,14 +7,12 @@ import infologic.repository.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Антон Владимирович on 26.01.2017.
- */
+
 
 public class FakeKeywordRepository implements Repository<KeywordsEntity> {
 
     private List<KeywordsEntity> repo = new ArrayList<>();
-    private FakeKeywordRepository INSTANCE;
+    private static FakeKeywordRepository INSTANCE;
 
     private FakeKeywordRepository() {
 
@@ -58,6 +56,14 @@ public class FakeKeywordRepository implements Repository<KeywordsEntity> {
 
     @Override
     public List<KeywordsEntity> query(Specification specification) {
-        return null;
+        List<KeywordsEntity> list = new ArrayList<>();
+        for (KeywordsEntity entity :
+                repo) {
+            if (specification.specified(entity)){
+                list.add(entity);
+            }
+        }
+
+        return list;
     }
 }

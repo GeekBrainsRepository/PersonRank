@@ -4,14 +4,14 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "sites", schema = "personrank", catalog = "")
+@Table(name = "Sites", schema = "personrank", catalog = "")
 public class SitesEntity {
     private int id;
     private String name;
     private Collection<PagesEntity> pagesById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -21,7 +21,7 @@ public class SitesEntity {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "Name")
     public String getName() {
         return name;
     }

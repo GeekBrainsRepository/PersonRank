@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "persons", schema = "personrank", catalog = "")
+@Table(name = "Persons", schema = "personrank", catalog = "")
 public class PersonsEntity {
     private int id;
     private String name;
@@ -12,7 +12,7 @@ public class PersonsEntity {
     private Collection<PersonPageRankEntity> personPageRanksById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -22,7 +22,7 @@ public class PersonsEntity {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "Name")
     public String getName() {
         return name;
     }
