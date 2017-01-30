@@ -1,5 +1,8 @@
 package infologic.repository;
 
+import infologic.model.CommonStat;
+import infologic.model.Daily;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,7 +11,7 @@ import java.util.Map;
 
 public class FakeUserRepository implements UserRepository {
 
-	private Map<Integer, Common> fakeCommon = new HashMap();
+	private Map<Integer, CommonStat> fakeCommon = new HashMap();
 	private List<Integer> fakeDaily = new ArrayList();
 
 	{
@@ -17,7 +20,7 @@ public class FakeUserRepository implements UserRepository {
 		answer_table.put("Медведев", 150);
 		answer_table.put("Навальный", 250);
 		Date date = new Date(100000000);
-		fakeCommon.put(1, new Common(date, answer_table));
+		fakeCommon.put(1, new CommonStat(date, answer_table));
 	}
 	{
 		Map<String, Integer> answer_table = new HashMap();
@@ -25,7 +28,7 @@ public class FakeUserRepository implements UserRepository {
 		answer_table.put("Медведев", 50);
 		answer_table.put("Навальный", 350);
 		Date date = new Date(200000000);
-		fakeCommon.put(2, new Common(date, answer_table));
+		fakeCommon.put(2, new CommonStat(date, answer_table));
 	}
 
 	{
@@ -35,7 +38,7 @@ public class FakeUserRepository implements UserRepository {
 		fakeDaily.add(400);
 	}
 
-	public Common get(int siteId) {
+	public CommonStat get(int siteId) {
 		return fakeCommon.get(siteId);
 	}
 
