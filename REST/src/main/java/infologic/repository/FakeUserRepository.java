@@ -1,7 +1,7 @@
 package infologic.repository;
 
 import infologic.model.CommonStat;
-import infologic.model.Daily;
+//import infologic.model.Daily;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,8 +42,8 @@ public class FakeUserRepository implements UserRepository {
 		return fakeCommon.get(siteId);
 	}
 
-	@Override
-	public Daily get(int siteId, int personId, long dateStart, long dateEnd) {
-		return new Daily(fakeDaily);
-	}
+//	@Override
+//	public Daily get(int siteId, int personId, long dateStart, long dateEnd) {
+//		return new Daily(fakeDaily);
+//	}
 }
