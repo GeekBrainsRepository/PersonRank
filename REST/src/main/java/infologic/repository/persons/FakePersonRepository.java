@@ -7,15 +7,13 @@ import infologic.repository.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Антон Владимирович on 29.01.2017.
- */
+
 public class FakePersonRepository implements Repository<PersonsEntity>{
     private List<PersonsEntity> repo = new ArrayList<>();
     private static FakePersonRepository INSTANCE;
 
     private FakePersonRepository() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             PersonsEntity entity = new PersonsEntity();
              entity.setId(i);
             entity.setName("Name No."+i);
@@ -23,7 +21,7 @@ public class FakePersonRepository implements Repository<PersonsEntity>{
         }
     }
 
-    public FakePersonRepository getInstanse() {
+    public static FakePersonRepository getInstanse() {
         if (INSTANCE == null) {
             INSTANCE = new FakePersonRepository();
             return INSTANCE;
