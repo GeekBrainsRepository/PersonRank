@@ -11,6 +11,8 @@ import infologic.repository.persons.FakePersonRepository;
 import infologic.repository.persons.PersonSpecificationGetAll;
 import infologic.repository.rank.FakeRankRepository;
 import infologic.repository.rank.RankSpecificationByPageID;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -56,5 +58,26 @@ public class StatisticUtilities {
         }
         CommonStat statistic = new CommonStat(lastDate, result);
         return statistic;
+    }
+
+    public static CommonStat createCommon(int siteId) {
+        Map<String, Integer> result = new HashMap<>();
+        Date date = new Date(0l);
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("SELECT pe.name, ppr.rank, p.lastScanDate FROM PersonsEntity as pe INNER JOIN pe.personPageRanksById as ppr "
+                + "INNER JOIN ppr.pagesByPageId as p "
+                + "INNER JOIN p.sitesBySiteId as s "
+                + "WHERE s.id = :id");
+        query.setParameter("id", siteId);
+        for (Object o : query.list()) {
+            Object[] row = (Object[]) o;
+            String name = (String) row[0];
+            int rank = (int) row[1];
+            if (((Date)row[2]).after(date)) date = (Date)row[2];
+            if (result.containsKey(name)) result.put(name, result.get(name) + rank);
+            else result.put(name, rank);
+        }
+        return new CommonStat(date, result);
     }
 }
