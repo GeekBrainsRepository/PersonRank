@@ -117,4 +117,21 @@ public class StatisticUtilities {
         session.close();
         return new DailyStat(result);
     }
+
+    public static Map<Integer, String> getSites(){
+        ArrayList<SitesEntity> undoSites;
+        Map<Integer, String> newSites = new HashMap<>();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("FROM SitesEntity");
+        undoSites = (ArrayList<SitesEntity>) query.list();
+        for (int i = 0; i < undoSites.size(); i++) {
+            newSites.put(undoSites.get(i).getId(), undoSites.get(i).getName());
+        }
+        session.getTransaction().commit();
+        session.close();
+
+        return newSites;
+
+    }
 }
