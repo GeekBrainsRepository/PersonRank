@@ -1,4 +1,4 @@
-package ru.geekbrain.gbseeker.personrank.DB;
+package ru.geekbrain.gbseeker.personrank.entities;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,6 +10,8 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+
+import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 
 public class KeywordListDB implements LoaderManager.LoaderCallbacks<Cursor> {
     Context context;

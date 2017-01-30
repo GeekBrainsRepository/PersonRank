@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import ru.geekbrain.gbseeker.personrank.DB.PersonListDB;
+import ru.geekbrain.gbseeker.personrank.entities.PersonListDB;
 
 public class PersonList extends Fragment {
     SimpleCursorAdapter scAdapter;

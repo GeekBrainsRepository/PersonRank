@@ -18,7 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Date;
 
-import ru.geekbrain.gbseeker.personrank.DB.DailyStatsDB;
+import ru.geekbrain.gbseeker.personrank.entities.DailyStatsDB;
 
 
 public class DailyStatsFragment extends Fragment {
@@ -81,6 +81,8 @@ public class DailyStatsFragment extends Fragment {
                 t=dates.get(dates.size()-1);
                 Date minDay=new Date(dates.get(0));
                 Date maxDay=new Date(dates.get(dates.size()-1));
+                long q=minDay.getTime();
+                q=maxDay.getTime();
                 tpd.getDatePicker().setMinDate(minDay.getTime());
                 tpd.getDatePicker().setMaxDate(maxDay.getTime());
                 tpd.show();

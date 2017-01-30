@@ -1,4 +1,4 @@
-package ru.geekbrain.gbseeker.personrank.DB;
+package ru.geekbrain.gbseeker.personrank.entities;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,18 +8,20 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 
-public class SiteListDB implements LoaderManager.LoaderCallbacks<Cursor> {
+import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
+
+public class PersonListDB implements LoaderManager.LoaderCallbacks<Cursor> {
     Context context;
     SimpleCursorAdapter scAdapter;
-    private final static int LOADER_ID = 1;
+    private final static int LOADER_ID=0;
 
-    public SiteListDB(Context context) {
+    public PersonListDB(Context context) {
         this.context = context;
     }
 
-    public SimpleCursorAdapter getAdapterWithSite(LoaderManager loaderManager) {
+    public SimpleCursorAdapter getAdapterWithPerson(LoaderManager loaderManager) {
 
-        String[] from = new String[]{DBHelper.DB.COLUMNS.SITE.SITE};
+        String[] from = new String[]{DBHelper.DB.COLUMNS.PERSON.PERSON};
         int[] to = new int[]{android.R.id.text1};
 
         scAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
@@ -30,7 +32,7 @@ public class SiteListDB implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new SiteListCursorLoader(context);
+        return new PersonListCursorLoader(context);
     }
 
     @Override
@@ -42,20 +44,23 @@ public class SiteListDB implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    static class SiteListCursorLoader extends CursorLoader {
+    static class PersonListCursorLoader extends CursorLoader {
 
-        public SiteListCursorLoader(Context context) {
+        public PersonListCursorLoader(Context context) {
             super(context);
         }
 
         @Override
         public Cursor loadInBackground() {
-            return DBHelper.getInstance().getDB().query(DBHelper.DB.TABLES.SITE, null, null, null, null, null, null, null);
+            return DBHelper.getInstance().getDB().query(DBHelper.DB.TABLES.PERSON, null, null, null, null, null, null, null);
         }
     }
+
+
+
+
+
 }
-
-
 
 
 

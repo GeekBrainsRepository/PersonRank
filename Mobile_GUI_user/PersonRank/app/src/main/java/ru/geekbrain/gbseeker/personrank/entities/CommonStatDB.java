@@ -1,4 +1,4 @@
-package ru.geekbrain.gbseeker.personrank.DB;
+package ru.geekbrain.gbseeker.personrank.entities;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 
+import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
 
 public class CommonStatDB implements LoaderManager.LoaderCallbacks<Cursor> {

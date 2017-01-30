@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBHelper";
 
     //DB decriptor
-    public interface DB {
+    public interface DB  {
         String DB_NAME = "personrank";
         int DB_VERSION = 1;
 
@@ -219,8 +219,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-
-
     public void addSite(String site) {
         ContentValues cv = new ContentValues();
         cv.put(DB.COLUMNS.SITE.SITE, site);
@@ -258,8 +256,11 @@ public class DBHelper extends SQLiteOpenHelper {
         int site_id= getSiteID(site);
         if (site_id == 0) {
             addSite(site);
+            return getSiteID(site);
         }
-        return getSiteID(site);
+        else{
+            return site_id;
+        }
     }
     public void getSiteList(ArrayList<String> siteList) {
         siteList.clear();
@@ -275,6 +276,9 @@ public class DBHelper extends SQLiteOpenHelper {
         } finally {
             if (cursor != null) cursor.close();
         }
+    }
+    public Cursor getCursorWithSites(){
+        return DBHelper.getInstance().getDB().query(DB.TABLES.SITE, null,null,null, null, null, null, null);
     }
 
     public void addKeyword(int person_id,String keyword) {
@@ -582,182 +586,3 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 }
-/*    public void deepDeleteChild(int parent_id){
-        Cursor cursor = null;
-        try {
-            cursor = getDB().query(DBtableTask, null, DBtableTaskParent + "=" + parent_id, null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                int indexID = cursor.getColumnIndex(DBtableTaskID);
-                do {
-                    int id = cursor.getInt(indexID);
-                    deepDeleteChild(id);
-                } while (cursor.moveToNext());
-            }
-            db.delete(DBtableTask, DBtableTaskParent + "=" + parent_id, null);
-        }
-        finally {
-            if(cursor!=null) cursor.close();
-        }
-    }
-    public void delete(int id){
-        getDB().delete(DBtableTask, DBtableTaskID+"=" + id, null);
-    }
-    public void delete(){
-        getDB().delete(DBtableTask, null, null);
-    }
-
-    public void update(Task ts) {
-        ContentValues cv = new ContentValues();
-        cv.put(DBtableTaskID, ts.getId());
-        cv.put(DBtableTaskName, ts.getTaskName());
-        cv.put(DBtableTaskParent, ts.getParent() == null ? -1 : ts.getParent().getId());
-        getDB().update(DBtableTask, cv, DBtableTaskID + "=" + ts.getId(), null);
-    }
-
-    public void insert(Task ts) {
-        ContentValues cv = new ContentValues();
-        cv.put(DBtableTaskID, ts.getId());
-        cv.put(DBtableTaskName, ts.getTaskName());
-        cv.put(DBtableTaskParent, ts.getParent() == null ? -1 : ts.getParent().getId());
-        getDB().insert(DBtableTask, null, cv);
-    }
-
-
-
-    public void serializeTaskListSQL(Task ts) {
-        Cursor cursor = null;
-        try {
-            cursor = getDB().query(DBtableTask, null, DBtableTaskID + "=" + ts.getId(), null, null, null, null, null);
-            int parent_id = (ts.getParent() == null) ? -1 : ts.getParent().getId();
-
-            if (cursor.moveToFirst()) {
-                int idName = cursor.getColumnIndex(DBtableTaskName);
-                int idParent = cursor.getColumnIndex(DBtableTaskParent);
-
-                if (!cursor.getString(idName).equals(ts.getTaskName())
-                        || cursor.getInt(idParent) != parent_id) { //need to update record
-                    update(ts);
-                } else { // record match with current
-                }
-            } else { //there is no such record
-                insert(ts);
-            }
-        }
-        finally {
-            if(cursor!=null) cursor.close();
-        }
-
-        // check child
-        int size = ts.getChild() == null ? 0 : ts.getChild().size();
-        if (size == 0) {
-            deepDeleteChild(ts.getId());
-        } else {
-            cursor=null;
-            HashMap<Integer, Task> ids = new HashMap<>(size);
-
-            try {
-                cursor = getDB().query(DBtableTask, null, DBtableTaskParent + "=" + ts.getId(), null, null, null, null, null);
-
-                for (Task t : ts.getChild()) {
-                    ids.put(t.getId(), t);
-                }
-
-                if (cursor.moveToFirst()) {
-                    do {
-                        int id = cursor.getColumnIndex(DBtableTaskID);
-                        Task t = ids.get(cursor.getInt(id));
-                        if (t == null) {
-                            delete(cursor.getInt(id));
-                        } else {
-                            serializeTaskListSQL(t);
-                            ids.remove(cursor.getInt(id));
-                        }
-                    } while (cursor.moveToNext());
-                }
-            }
-            finally {
-                if(cursor!=null) cursor.close();
-            }
-            for (Map.Entry<Integer, Task> e : ids.entrySet()) {
-                serializeTaskListSQL(e.getValue());
-            }
-
-        }
-
-    }
-
-
-    public void deserializeTaskListSQL(Task ts) {
-        Cursor cursor =null;
-        try {
-            cursor = getDB().query(DBtableTask, null, DBtableTaskParent + "=" + ts.getId(), null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                do {
-                    int idName = cursor.getColumnIndex(DBtableTaskName);
-                    int idParent = cursor.getColumnIndex(DBtableTaskParent);
-                    int id = cursor.getColumnIndex(DBtableTaskID);
-
-                    Task child = new Task(cursor.getString(idName), ts);
-                    child.setId(cursor.getInt(id));
-                    ts.addChildTask(-1, child);
-
-                    if(ts.getId()>Task.getGlobalID()){ Task.setGlobalID(ts.getId()+1);}
-
-                    deserializeTaskListSQL(child);
-                } while (cursor.moveToNext());
-            }
-        }
-        finally {
-            if(cursor!=null) cursor.close();
-        }
-    }
-
-    public Task deserializeRootTaskListSQL() {
-        Cursor cursor = null;
-        Task ts = Task.getEmptyTask();
-
-        try {
-            cursor = getDB().query(DBtableTask, null, DBtableTaskParent + "=-1", null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                int idName = cursor.getColumnIndex(DBtableTaskName);
-                int id = cursor.getColumnIndex(DBtableTaskID);
-
-                ts = new Task(cursor.getString(idName), null);
-                ts.setId(cursor.getInt(id));
-
-                if (ts.getId() > Task.getGlobalID()) {
-                    Task.setGlobalID(ts.getId() + 1);
-                }
-            }
-        } finally {
-            if (cursor != null) cursor.close();
-        }
-        return ts;
-    }
-
-    public void readSQLToConsole() {
-        Cursor cursor = null;
-        try {
-            cursor = getDB().query(DBtableTask, null, null, null, null, null, null, null);
-            System.out.println("read=" + cursor.getCount());
-            if (cursor.moveToFirst()) {
-                do {
-                    int idName = cursor.getColumnIndex(DBtableTaskName);
-                    int idparent = cursor.getColumnIndex(DBtableTaskParent);
-                    int id = cursor.getColumnIndex(DBtableTaskID);
-
-                    System.out.println(cursor.getInt(id) + ":" + cursor.getInt(idparent) + ":" + cursor.getString(idName));
-                } while (cursor.moveToNext());
-            } else {
-                System.out.println("empty");
-            }
-        } finally {
-            if (cursor != null) cursor.close();
-        }
-    }
-
-
-}
-
-
-*/

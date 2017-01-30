@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import ru.geekbrain.gbseeker.personrank.DB.KeywordListDB;
+import ru.geekbrain.gbseeker.personrank.entities.KeywordListDB;
 
 
 public class KeyWordList extends Fragment {
