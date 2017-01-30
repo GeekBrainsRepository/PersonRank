@@ -1,7 +1,8 @@
 package infologic.controller;
 
-import infologic.repository.Common;
-import infologic.repository.Daily;
+import infologic.StatisticUtilites;
+import infologic.model.CommonStat;
+import infologic.model.Daily;
 import infologic.repository.FakeUserRepository;
 import infologic.repository.UserRepository;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,43 +43,15 @@ public class StatController {
 		return map;
 
 	}
-	// @RequestMapping("/statistic/common/{resourceId}")
-	// public Map<String,Integer>
-	// getCommonResourceStat(@PathVariable("resourceId") Integer resourceId) {
-	// //fake data
-	// //TODO replace with DAO request
-	// Map<String,Integer> map = new HashMap<>();
-	// map.put("Putin",450);
-	// map.put("Medvedev",370);
-	// map.put("Variable",resourceId);
-	//
-	//
-	// return map;
 
-	// }
 
 	// Финальный вид для реализованного интрфейса
 	@RequestMapping("/statistic/common/{siteId}")
-	public Common getCommon(@PathVariable("siteId") Integer siteId) {
-		return repository.get(siteId);
+	public CommonStat getCommon(@PathVariable("siteId") Integer siteId) {
+		return StatisticUtilites.createFakeCommon(siteId);
 	}
 
-	// @RequestMapping("/statistic/daily/{resourceId}/{personId}/{dateStart}/{dateEnd}")
-	// public Map<LocalDate,Integer> getDailyStat(@PathVariable Integer
-	// resourceId,@PathVariable Integer personId,
-	// @PathVariable String dateStart,@PathVariable String dateEnd) {
-	// Map<LocalDate,Integer> map = new HashMap<>();
-	//
-	// //String parsing example
-	// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd:MM:yyyy");
-	// LocalDate dateTime = LocalDate.parse(dateStart, formatter);
-	// Date.from(dateTime.atStartOfDay(ZoneId.systemDefault()).toInstant());
-	//
-	// map.put(dateTime,1000);
-	// map.put(dateTime,1001);
-	//
-	// return map;
-	// }
+
 
 	// Финальный вид для реализованного интрфейса
 	@RequestMapping("/statistic/daily/{siteId}/{personId}/{dateStart}/{dateEnd}")
