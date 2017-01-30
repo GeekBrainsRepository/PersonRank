@@ -102,23 +102,15 @@ public class StatisticUtilities {
         for (Object o : query.list()) {
             Object[] row = (Object[]) o;
             int rank = (int) row[0];
-            Date date = (Date) row[1];
-            //а сейчас начнется очень притивный перебор, но думать как красивее реализовать не хочу
-            int index = 0;
-            Date tempDate = new Date(startDate + day);
-            while (true) {
-                if (tempDate.after(date)) break;
-                index++;
-                tempDate = new Date(tempDate.getTime() + day);
-            }
-            result.add(index, result.get(index) + rank);
+            int index = (int) ((((Date) row[1]).getTime() - startDate) / day);
+            result.set(index, result.get(index) + rank);
         }
         session.getTransaction().commit();
         session.close();
         return new DailyStat(result);
     }
 
-    public static Map<Integer, String> getSites(){
+    public static Map<Integer, String> getSites() {
         ArrayList<SitesEntity> undoSites;
         Map<Integer, String> newSites = new HashMap<>();
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -130,7 +122,6 @@ public class StatisticUtilities {
         }
         session.getTransaction().commit();
         session.close();
-
         return newSites;
 
     }
