@@ -15,16 +15,16 @@ import java.util.Collections;
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
 
-public class DailyStatsDB implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DailyStatsDB{
     Context context;
-    ArrayList<String> siteList=new ArrayList<>();
-    ArrayList<String> personList=new ArrayList<>();
+    ArrayList<String> siteList = new ArrayList<>();
+    ArrayList<String> personList = new ArrayList<>();
     ArrayAdapter<String> personAdapter;
-    SimpleCursorAdapter scAdapter;
-    int selectedSite=0;
-    int selectedPerson=0;
+    ArrayAdapter<String> adapterSite;
+    int selectedSite = 0;
+    int selectedPerson = 0;
 
-    private final static int LOADER_ID=7;
+    SimpleCursorAdapter scAdapter;
 
     public DailyStatsDB(Context context) {
         this.context = context;
@@ -36,41 +36,45 @@ public class DailyStatsDB implements LoaderManager.LoaderCallbacks<Cursor> {
         return siteList;
     }
     public ArrayAdapter<String> getAdapterWithSite() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSiteList());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
+        adapterSite = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSiteList());
+        adapterSite.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapterSite;
     }
 
     public ArrayList<String> getPersonListOnSite() {
-        DBHelper.getInstance().getPersonListOnSite(personList,(siteList.size()==0)?"":siteList.get(selectedSite));
+        DBHelper.getInstance().getPersonListOnSite(personList, (siteList.size() == 0) ? "" : siteList.get(selectedSite));
         return personList;
     }
     public ArrayAdapter<String> getAdapterWithPersonOnSite() {
-        personAdapter= new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonListOnSite());
+        personAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonListOnSite());
         personAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return personAdapter;
     }
 
 
-    public void setSelectedSitePosition(int id){
-        selectedSite=id;
-        personList=getPersonListOnSite();
+    public void setSelectedSitePosition(int id) {
+        selectedSite = id;
+        personList = getPersonListOnSite();
         personAdapter.notifyDataSetChanged();
     }
 
-    public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager,int selectedSite,int selectedPerson) {
+    public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager, int selectedSite, int selectedPerson) {
         String[] from = new String[]{DBHelper.DB.COLUMNS.DAILY.DATE, DBHelper.DB.COLUMNS.DAILY.STATS};
-        int[] to = new int[]{R.id.text1,R.id.text2};
-        this.selectedSite=selectedSite;
-        this.selectedPerson=selectedPerson;
+        int[] to = new int[]{R.id.text1, R.id.text2};
+        this.selectedSite = selectedSite;
+        this.selectedPerson = selectedPerson;
 
         scAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
-        loaderManager.initLoader(LOADER_ID, null, this);
-
+        loaderManager.initLoader(LOADER_IDS.LOADER_DAILY_STATS.ordinal(), null,
+                new DailyStatsCursorLoaderManager(context, scAdapter,
+                        siteList.get(selectedSite),
+                        personList.get(selectedPerson))
+        );
         return scAdapter;
     }
-    public ArrayList<String> getMinMaxDate(int selectedSite,int selectedPerson) {
-        ArrayList<String> dates=new ArrayList<>();
+
+    public ArrayList<String> getMinMaxDate(int selectedSite, int selectedPerson) {
+        ArrayList<String> dates = new ArrayList<>();
         Cursor cursor = null;
         try {
             cursor = DBHelper.getInstance().getCursorOfDailyStatsWithSite(siteList.get(selectedSite), personList.get(selectedPerson));
@@ -82,15 +86,29 @@ public class DailyStatsDB implements LoaderManager.LoaderCallbacks<Cursor> {
                 Collections.sort(dates);
             }
 
-        }
-        finally {
+        } finally {
             cursor.close();
         }
         return dates;
     }
+}
+
+class DailyStatsCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor> {
+    Context context;
+    SimpleCursorAdapter scAdapter;
+    String person;
+    String site;
+
+    public DailyStatsCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter, String site, String person) {
+        this.context = context;
+        this.scAdapter = scAdapter;
+        this.person = person;
+        this.site = site;
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new DailyStatsCursorLoader(context,siteList.get(selectedSite),personList.get(selectedPerson));
+        return new DailyStatsCursorLoader(context,site,person);
 
     }
 
@@ -103,23 +121,23 @@ public class DailyStatsDB implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    static class DailyStatsCursorLoader extends CursorLoader {
-        String site;
-        String person;
-        public DailyStatsCursorLoader(Context context,String site,String person) {
-            super(context);
-            this.site=site;
-            this.person=person;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            return DBHelper.getInstance().getCursorOfDailyStatsWithSite(site,person);
-        }
-    }
 
 }
 
 
+class DailyStatsCursorLoader extends CursorLoader {
+    String site;
+    String person;
+    public DailyStatsCursorLoader(Context context,String site,String person) {
+        super(context);
+        this.site=site;
+        this.person=person;
+    }
+
+    @Override
+    public Cursor loadInBackground() {
+        return DBHelper.getInstance().getCursorOfDailyStatsWithSite(site,person);
+    }
+}
 
 

@@ -195,10 +195,6 @@ public class DBHelper extends SQLiteOpenHelper {
         personList.clear();
         int site_id=getSiteID(site);
 
-        dumpTablePerson();
-        dumpTableSite();
-        dumpTableDailyStats();
-
         String table = DB.TABLES.PERSON+" as PS inner join "+DB.TABLES.DAILY+" as DS " +
                 " on PS."+DB.COLUMNS.PERSON.ID+"=DS."+DB.COLUMNS.DAILY.PERSON_REF;
         String columns[] = {"PS.person as person", " PS._id as _id"};
@@ -409,6 +405,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getCursorOfDailyStatsWithSite(String site,String person) {
         int site_id = DBHelper.getInstance().getSiteID(site);
         int person_id = DBHelper.getInstance().getPersonID(person);
+        dumpTablePerson();
+        dumpTableSite();
+        dumpTableDailyStats();
 
         return DBHelper.getInstance().getDB().query(DB.TABLES.DAILY, null,
                 DB.COLUMNS.DAILY.PERSON_REF+'='+person_id+" and "+DB.COLUMNS.DAILY.SITE_REF+'='+site_id,
