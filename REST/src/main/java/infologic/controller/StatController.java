@@ -38,6 +38,11 @@ public class StatController {
     }
 
     // Финальный вид для реализованного интрфейса
+    // For test
+    //Wed Feb 01 00:00:00 MSK 2017 long 1485896400000
+    //Thu Feb 02 00:00:00 MSK 2017 long 1485982800000
+    //Fri Feb 03 00:00:00 MSK 2017 long 1486069200000
+    //Sat Feb 04 00:00:00 MSK 2017 long 1486155600000
     @RequestMapping("/statistic/daily/{siteId}/{personId}/{dateStart}/{dateEnd}")
     public DailyStat getDaily(@PathVariable Integer siteId, @PathVariable Integer personId, @PathVariable Long dateStart, @PathVariable Long dateEnd) {
         return StatisticUtilities.createDaily(siteId,personId,dateStart,dateEnd);
