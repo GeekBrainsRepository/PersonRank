@@ -17,7 +17,7 @@ public class FakePageRepository implements Repository<PagesEntity> {
         for (int i = 0; i < 10; i++) {
             PagesEntity entity = new PagesEntity();
             entity.setId(i);
-            entity.setSiteId(i);
+            entity.setSiteId(1);
             entity.setUrl("http://site" + i + ".ru");
             entity.setFoundDataTime(new Timestamp(2000000 + i));
             entity.setLastScanDate(new Timestamp(2000000 + 2 * i));
@@ -25,7 +25,7 @@ public class FakePageRepository implements Repository<PagesEntity> {
         }
     }
 
-    public FakePageRepository getInstanse() {
+    public static FakePageRepository getInstanse() {
         if (INSTANCE == null) {
             INSTANCE = new FakePageRepository();
             return INSTANCE;

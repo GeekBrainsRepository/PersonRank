@@ -7,6 +7,7 @@ import infologic.repository.Specification;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class FakeRankRepository implements Repository<PersonPageRankEntity> {
@@ -18,12 +19,12 @@ public class FakeRankRepository implements Repository<PersonPageRankEntity> {
             PersonPageRankEntity entity = new PersonPageRankEntity();
             entity.setPageId(i);
             entity.setPersonId(i);
-            entity.setRank(i+1);
-            entity.setRankId(i*2);
+            entity.setRank(new Random(System.currentTimeMillis()).nextInt(32));
+            entity.setId(i*2);
             repo.add(entity);
         }
     }
-    public FakeRankRepository getInstanse() {
+    public static FakeRankRepository getInstanse() {
         if (INSTANCE == null) {
             INSTANCE = new FakeRankRepository();
             return INSTANCE;
@@ -48,6 +49,14 @@ public class FakeRankRepository implements Repository<PersonPageRankEntity> {
 
     @Override
     public List<PersonPageRankEntity> query(Specification specification) {
-        return null;
+        List<PersonPageRankEntity> list = new ArrayList<>();
+        for (PersonPageRankEntity entity :
+                repo) {
+            if (specification.specified(entity)){
+                list.add(entity);
+            }
+        }
+
+        return list;
     }
 }
