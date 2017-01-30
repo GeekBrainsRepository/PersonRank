@@ -1,14 +1,14 @@
-package infologic.repository;
+package infologic.model;
 
 import java.util.Date;
 import java.util.Map;
 
-public class Common {
+public class CommonStat {
 
 	private Date date;
 	private Map<String, Integer> result;
 
-	public Common(Date date, Map<String, Integer> result) {
+	public CommonStat(Date date, Map<String, Integer> result) {
 		this.result = result;
 		this.date = date;
 	}
@@ -19,6 +19,9 @@ public class Common {
 
 	public Date getDate() {
 		return date;
+	}
+	public void setDate(Date date){
+		this.date=date;
 	}
 
 }
