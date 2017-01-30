@@ -1,4 +1,4 @@
-Вообщем примерный вид API будет таким:
+﻿Вообщем примерный вид API будет таким:
 Для статистик 
 
 
@@ -9,15 +9,8 @@ JSON , пары ключ:значение  (id:person_name)
 Пример:
 {"1":"First","2":"Second"}
 
-service.addr/statistic/getresourcelist
-возвращает список ресурсов
-Предварительный формат данных:
-JSON , пары ключ:значение  (id:url)
-Пример:
-{"1":"First","2":"Second"}
 
-
-service.addr/statistic/daily/{site_id}/{person_id}/{date_start}/{date_end}
+service.addr/statistic/daily/{siteId}/{personId}/{dateStart}/{dateEnd}
 возвращает статистику по реурсу site_id для персоны person_id за дату date
 service.addr - адрес веб-сервиса
 {site_id} - ID сайта из таблицы Sites
@@ -25,7 +18,7 @@ service.addr - адрес веб-сервиса
 {date_start} - дата старта выборки статистики ?? в формате long
 {date_end} - дата конца выборки статистики ?? в формате long
 
-service.addr/statistic/common/{site_id}
+service.addr/statistic/common/{siteId}
 возвращает общую статистику по ресурсу site_id
 service.addr - адрес веб-сервиса
 {site_id} - ID сайта из таблицы Sites
