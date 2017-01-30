@@ -15,7 +15,7 @@ import infologic.repository.rank.RankSpecificationByPageID;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class StatisticUtilites {
+public class StatisticUtilities {
     public static CommonStat createFakeCommon(int siteId) {
         Map<String, Integer> result = new HashMap<>();
         //Выбираем все страницы сайта,по которым будем смотреть статистику

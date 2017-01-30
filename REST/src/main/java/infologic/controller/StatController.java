@@ -1,6 +1,6 @@
 package infologic.controller;
 
-import infologic.StatisticUtilites;
+import infologic.StatisticUtilities;
 import infologic.model.CommonStat;
 import infologic.model.DailyStat;
 import infologic.repository.FakeUserRepository;
@@ -48,7 +48,7 @@ public class StatController {
 	// Финальный вид для реализованного интрфейса
 	@RequestMapping("/statistic/common/{siteId}")
 	public CommonStat getCommon(@PathVariable("siteId") Integer siteId) {
-		return StatisticUtilites.createFakeCommon(siteId);
+		return StatisticUtilities.createFakeCommon(siteId);
 	}
 
 
