@@ -6,10 +6,10 @@ import infologic.repository.Specification;
 /**
  * Created by Антон Владимирович on 29.01.2017.
  */
-public class RankSpecificationBySiteID implements Specification<PersonPageRankEntity> {
+public class RankSpecificationByPageID implements Specification<PersonPageRankEntity> {
     int pageId;
 
-    public RankSpecificationBySiteID(int pageId) {
+    public RankSpecificationByPageID(int pageId) {
         this.pageId = pageId;
     }
 
