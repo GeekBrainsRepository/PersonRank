@@ -6,9 +6,8 @@ import infologic.repository.Specification;
 
 import java.util.List;
 
-/**
- * Created by Антон Владимирович on 26.01.2017.
- */
+
+
 public class KeywordRepository implements Repository<KeywordsEntity> {
     @Override
     public void add(KeywordsEntity pattern) {
