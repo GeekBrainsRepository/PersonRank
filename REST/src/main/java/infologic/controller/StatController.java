@@ -42,6 +42,6 @@ public class StatController {
     // Финальный вид для реализованного интрфейса
     @RequestMapping("/statistic/daily/{siteId}/{personId}/{dateStart}/{dateEnd}")
     public DailyStat getDaily(@PathVariable Integer siteId, @PathVariable Integer personId, @PathVariable Long dateStart, @PathVariable Long dateEnd) {
-        return null;
+        return StatisticUtilities.createDaily(siteId,personId,dateStart,dateEnd);
     }
 }
