@@ -1,10 +1,7 @@
 package infologic;
 
 
-import infologic.model.CommonStat;
-import infologic.model.PagesEntity;
-import infologic.model.PersonPageRankEntity;
-import infologic.model.PersonsEntity;
+import infologic.model.*;
 import infologic.repository.pages.FakePageRepository;
 import infologic.repository.pages.PageSpecificationBySiteID;
 import infologic.repository.persons.FakePersonRepository;
@@ -74,10 +71,50 @@ public class StatisticUtilities {
             Object[] row = (Object[]) o;
             String name = (String) row[0];
             int rank = (int) row[1];
-            if (((Date)row[2]).after(date)) date = (Date)row[2];
+            if (((Date) row[2]).after(date)) date = (Date) row[2];
             if (result.containsKey(name)) result.put(name, result.get(name) + rank);
             else result.put(name, rank);
         }
+        session.getTransaction().commit();
+        session.close();
         return new CommonStat(date, result);
+    }
+
+    public static DailyStat createDaily(int siteId, int personId, long startDate, long endDate) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("SELECT personPageRank.rank, page.foundDataTime FROM PersonPageRankEntity AS personPageRank "
+                + "INNER JOIN personPageRank.pagesByPageId AS page "
+                + "INNER JOIN personPageRank.personsByPersonId AS person WHERE "
+                + "person.id = :personId "
+                + "AND page.siteId = :siteId "//);
+                + "AND page.foundDataTime BETWEEN :dateStart AND :dateEnd");
+        query.setParameter("personId", personId);
+        query.setParameter("siteId", siteId);
+        query.setParameter("dateStart", new Date(startDate));
+        query.setParameter("dateEnd", new Date(endDate));
+        final long day = 86400000l;
+        List<Integer> result = new ArrayList<>();
+        int count = (int) ((endDate - startDate) / day);
+        for (int i = 0; i <= count; i++) {
+            result.add(0);
+        }
+        for (Object o : query.list()) {
+            Object[] row = (Object[]) o;
+            int rank = (int) row[0];
+            Date date = (Date) row[1];
+            //а сейчас начнется очень притивный перебор, но думать как красивее реализовать не хочу
+            int index = 0;
+            Date tempDate = new Date(startDate + day);
+            while (true) {
+                if (tempDate.after(date)) break;
+                index++;
+                tempDate = new Date(tempDate.getTime() + day);
+            }
+            result.add(index, result.get(index) + rank);
+        }
+        session.getTransaction().commit();
+        session.close();
+        return new DailyStat(result);
     }
 }
