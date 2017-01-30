@@ -123,6 +123,19 @@ public class StatisticUtilities {
         session.getTransaction().commit();
         session.close();
         return newSites;
-
+    }
+    public static Map<Integer, String> getPersons() {
+        ArrayList<PersonsEntity> undoPersons;
+        Map<Integer, String> newpersons = new HashMap<>();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("FROM PersonsEntity");
+        undoPersons = (ArrayList<PersonsEntity>) query.list();
+        for (int i = 0; i < undoPersons.size(); i++) {
+            newpersons.put(undoPersons.get(i).getId(), undoPersons.get(i).getName());
+        }
+        session.getTransaction().commit();
+        session.close();
+        return newpersons;
     }
 }

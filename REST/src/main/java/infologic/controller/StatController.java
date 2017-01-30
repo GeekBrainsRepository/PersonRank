@@ -18,12 +18,7 @@ public class StatController {
 
     @RequestMapping("/statistic/getpersonlist")
     public Map<Integer, String> getPersonList() {
-        // fake data
-        // TODO replace with DAO request
-        Map<Integer, String> map = new HashMap<>();
-        map.put(1, "First");
-        map.put(2, "Second");
-        return map;
+        return StatisticUtilities.getPersons();
     }
 
     @RequestMapping("/statistic/getresourcelist")
