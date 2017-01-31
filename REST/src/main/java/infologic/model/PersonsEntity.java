@@ -3,9 +3,16 @@ package infologic.model;
 import javax.persistence.*;
 import java.util.Collection;
 
+@NamedQueries(
+        @NamedQuery(
+                name = "getPersonsByName",
+                query = "from PersonsEntity pe where pe.name = :name"
+        )
+)
+
 @Entity
 @Table(name = "Persons", schema = "personrank", catalog = "")
-public class PersonsEntity {
+public class PersonsEntity implements Book{
     private int id;
     private String name;
     private Collection<KeywordsEntity> keywordsesById;

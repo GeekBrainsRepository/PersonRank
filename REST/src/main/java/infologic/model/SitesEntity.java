@@ -5,7 +5,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "Sites", schema = "personrank", catalog = "")
-public class SitesEntity {
+public class SitesEntity implements Book{
     private int id;
     private String name;
     private Collection<PagesEntity> pagesById;
