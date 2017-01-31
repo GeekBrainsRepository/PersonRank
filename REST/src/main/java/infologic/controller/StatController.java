@@ -6,6 +6,7 @@ import infologic.model.DailyStat;
 import infologic.model.SitesEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.Map;
 @RestController
 public class StatController {
 
-    @RequestMapping("/statistic/getpersonlist")
+    @RequestMapping(method = RequestMethod.GET, path="/statistic/getpersonlist")
     public Map<Integer, String> getPersonList() {
         return StatisticUtilities.getPersons();
     }

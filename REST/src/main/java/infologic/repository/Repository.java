@@ -1,14 +1,46 @@
 package infologic.repository;
 
+import infologic.HibernateUtil;
+import infologic.model.Dictionary;
+import org.hibernate.Session;
+
 import java.util.List;
 
 /**
- * Created by Антон Владимирович on 25.01.2017.
+ * Created by lWeRl on 31.01.2017.
  */
-public interface Repository<T> {
-    void add(T pattern);
-    void remove(T pattern);
-    void update(T pattern);
+public class Repository implements RepositoryInterface<Dictionary> {
+    private Session session;
 
-    List<T> query(Specification specification);
+    @Override
+    public void add(Dictionary pattern) {
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        session.save(pattern);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    @Override
+    public void remove(Dictionary pattern) {
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        session.delete(pattern);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    @Override
+    public void update(Dictionary pattern) {
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        session.saveOrUpdate(pattern);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    @Override
+    public List<Dictionary> query(Specification specification) {
+        throw new UnsupportedOperationException();
+    }
 }

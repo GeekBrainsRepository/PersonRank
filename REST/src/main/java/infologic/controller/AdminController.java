@@ -1,17 +1,17 @@
 package infologic.controller;
 
-import infologic.model.Book;
+import infologic.model.Dictionary;
 import infologic.model.KeywordsEntity;
 import infologic.model.PersonsEntity;
 import infologic.model.SitesEntity;
-import infologic.repository.BookRepository;
 import infologic.repository.Repository;
+import infologic.repository.RepositoryInterface;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AdminController {
 
-    private static Repository<Book> repository = new BookRepository();
+    private static RepositoryInterface<Dictionary> repository = new Repository();
 
     ////////////////////////////////DELETE
     @RequestMapping(method = RequestMethod.DELETE, path = "/admin/person/{id}")
