@@ -19,4 +19,9 @@ public class KeywordsService implements IKeywordsMapper {
     public List<Keywords> getKeywords() {
         return iKeywordsMapper.getKeywords();
     }
+
+    @Override
+    public List<String> getKeywordsByPersonId(final int personId) {
+        return iKeywordsMapper.getKeywordsByPersonId(personId);
+    }
 }

@@ -14,5 +14,4 @@ public interface ISitesMapper {
 
     @Select(SELECT_SITES)
     List<Sites> getSites();
-
 }
