@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Keywords", schema = "personrank", catalog = "")
-public class KeywordsEntity {
+public class KeywordsEntity implements Dictionary {
     private int id;
     private String name;
     private int personId;

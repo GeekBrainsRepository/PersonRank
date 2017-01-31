@@ -5,7 +5,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "Persons", schema = "personrank", catalog = "")
-public class PersonsEntity {
+public class PersonsEntity implements Dictionary {
     private int id;
     private String name;
     private Collection<KeywordsEntity> keywordsesById;
