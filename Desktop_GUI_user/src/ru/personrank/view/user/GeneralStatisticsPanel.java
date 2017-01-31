@@ -80,16 +80,16 @@ public class GeneralStatisticsPanel extends JPanel {
         JTable generalTable = new JTable(generalTableModel);
         generalTable.setRowHeight(30);
         JScrollPane tabTable = new JScrollPane(generalTable);
-        tabTable.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
+        //tabTable.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
         tabbedPane.addTab("Таблица", tabTable);
         barChart = ChartFactory.createBarChart(
-                "Диаграмма популярности персоны",
+                null,
                 null,
                 "к-во упоминаний",
                 createDatashet(),
                 PlotOrientation.VERTICAL, true, true, false);
         ChartPanel chartPanel = new ChartPanel(barChart);
-        chartPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
+        //chartPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
         tabbedPane.addTab("Диаграмма", chartPanel);
         return tabbedPane;
     }

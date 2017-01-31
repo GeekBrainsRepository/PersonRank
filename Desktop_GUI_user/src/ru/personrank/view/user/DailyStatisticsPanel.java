@@ -64,8 +64,6 @@ public class DailyStatisticsPanel extends JPanel {
             System.err.println(ex);
         }
 
-
-        setOpaque(false);
         dailyStatisticRepository = DailyStatisticOnSiteRepository.getInstance();
         saitLabel = new JLabel();
         personLabel = new JLabel();
@@ -98,15 +96,15 @@ public class DailyStatisticsPanel extends JPanel {
         dailyTable = new JTable(statisticTableModel); 
         dailyTable.setRowHeight(30);
         scrollPane = new JScrollPane(dailyTable);
-        scrollPane.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
+//        scrollPane.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
         contentTabbedPane.addTab("Таблица", scrollPane);
         lineChart = ChartFactory.createTimeSeriesChart(
-                "График изменения популярности", 
+                null, 
                 "Дата", 
                 "к-во страниц", 
                 createDataset(), false, true, true);
         ChartPanel chartPanel = new ChartPanel(lineChart);
-        chartPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
+//        chartPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
         contentTabbedPane.addTab("Граффик", chartPanel);
         setOpaque(false);
         contentPositioning();
