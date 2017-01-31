@@ -19,4 +19,14 @@ public class PersonPageRankService implements IPersonPageRankMapper {
     public List<PersonPageRank> getPersonPageRank() {
         return iPersonPageRankMapper.getPersonPageRank();
     }
+
+    @Override
+    public void setInsertPersonPageRank(PersonPageRank personPageRank) {
+        iPersonPageRankMapper.setInsertPersonPageRank(personPageRank);
+    }
+
+    @Override
+    public void setUpdatePersonPageRank(int rank, int personId, int pageId) {
+        this.iPersonPageRankMapper.setUpdatePersonPageRank(rank, personId, pageId);
+    }
 }

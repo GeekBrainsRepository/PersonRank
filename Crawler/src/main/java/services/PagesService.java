@@ -22,12 +22,12 @@ public class PagesService implements IPagesMapper {
     }
 
     @Override
-    public void insertPage(String url, int siteId, Calendar foundDateTime) {
-        iPagesMapper.insertPage(url, siteId, foundDateTime);
+    public void insertPage(Pages page) {
+        iPagesMapper.insertPage(page);
     }
 
     @Override
     public void setUpdateLastScanDate(final Calendar lastScanDate) {
-        iPagesMapper.setUpdateLastScanDate(lastScanDate);
+        this.iPagesMapper.setUpdateLastScanDate(lastScanDate);
     }
 }
