@@ -24,7 +24,6 @@ public class Window extends JFrame {
             new PersonsPanel(),
             new SitesPanel()
     };
-
     
     static {
         try {
