@@ -1,25 +1,19 @@
 package ru.personrank.view;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
 import ru.personrank.view.admin.KeywordsPanel;
 import ru.personrank.view.admin.PersonsPanel;
 import ru.personrank.view.admin.SitesPanel;
 import ru.personrank.view.user.DailyStatisticsPanel;
 import ru.personrank.view.user.GeneralStatisticsPanel;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 public class Window extends JFrame {
-    private JButton exit = new JButton();
-    private JButton hide = new JButton();
-    private static final Color WINDOW_BACKGROUND = Color.LIGHT_GRAY;
+    
     private LeftLinksPanel leftLinksPanel = new LeftLinksPanel();
     private JPanel contentPanel = new JPanel(new BorderLayout());
     private JLabel[] labelMenu;
@@ -30,42 +24,53 @@ public class Window extends JFrame {
             new PersonsPanel(),
             new SitesPanel()
     };
-    private static Font font;
-    private JLabel present = new JLabel();
 
-    private BufferedImage icon = ImageIO.read(getClass().getResource("/ru/resources/image/ico.png"));
-
-    public Window() throws IOException, FontFormatException, URISyntaxException {
+    
+    static {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public Window() {
         setSize(750, 430);
+        setUndecorated(true); 
+        setContentPane(new ContentPane());
+        setTitle("Person Rank");    
+        WindowDragger winDragger = new WindowDragger(this);
+        addMouseListener(winDragger);
+        addMouseMotionListener(winDragger);              
         setLocationRelativeTo(null);
-        setResizable(false);
-        setTitle("PersonRank");
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setContentPane(new BackgroundPane()); //устанавливается задний фон в виде панели
-        setLayout(null);
-        setIconImage(icon); //меняется иконка окна
-        setUndecorated(true); //удаляем стандартную декорацию
-        ownDecoration(); //добавляем свою
-        present.setBounds(5, 5, 150, 20);
-        contentPanel.setOpaque(false);
-        //getContentPane().setBackground(WINDOW_BACKGROUND);
         labelMenu = leftLinksPanel.getLabelLeftMenu();
+        leftLinksPanel.setPreferredSize(new Dimension(230,430));
         for (int i = 0; i < labelMenu.length; i++) {
             labelMenu[i].addMouseListener(new MenuMouseListener(i));
         }
-
-        leftLinksPanel.setBounds(5, 30, 230, 390);
-        add(leftLinksPanel);
-        contentPanel.setBounds(240, 30, 450, 390);
-        add(contentPanel);
-        contentPanel.add(panels[0]);
-        labelMenu[0].setFont(labelMenu[0].getFont().deriveFont(Font.BOLD));
-        add(exit);
-        add(hide);
-        add(present);
-        pack();
+        contentPanel.setOpaque(false);
+        contentPanel.add(panels[0], BorderLayout.CENTER);
+        getContentPane().add(leftLinksPanel, BorderLayout.WEST);
+        getContentPane().add(contentPanel,  BorderLayout.CENTER);
     }
 
+    @Override
+    public void setTitle(String title) {
+       ContentPane contentPane = (ContentPane) this.getContentPane();
+       contentPane.setTitle(title);
+    }
+    
     private class MenuMouseListener extends MouseAdapter {
 
         private int index;
@@ -105,76 +110,4 @@ public class Window extends JFrame {
 
     }
 
-    private void ownDecoration() {
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/fonts/cyrillicAdaptation.ttf")).deriveFont(Font.PLAIN, 40);
-        } catch (FontFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        present.setText("PersonRank");
-        present.setFont(font);
-        present.setBackground(new Color(120,140,110));
-        present.setForeground(new Color(144, 48, 48));
-        /*
-        *   этот компонент скругляет углы фрейма
-        */
-        addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
-            }
-        });
-
-        FrameDragger frameDragger = new FrameDragger(this);//   эти 3 команды реализуют класс FrameDragger
-        addMouseListener(frameDragger);                    //   который отвечают за
-        addMouseMotionListener(frameDragger);              //   перетаскивание фрейма по экрану
-
-
-        ImageIcon exitIcon = new ImageIcon(getClass().getResource("/ru/resources/image/exit.png"));
-        exit.setBounds(650, 2, 34, 24);
-        exit.setOpaque(false);
-        exit.setIcon(exitIcon);
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        exit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                exit.setBounds(650, 4, 34, 24);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                exit.setBounds(650, 2, 34, 24);
-            }
-        });
-
-
-        ImageIcon minimazeIcon = new ImageIcon(getClass().getResource("/ru/resources/image/minimize.png"));
-        hide.setBounds(615, 2, 32, 32);
-        hide.setOpaque(false);
-        hide.setIcon(minimazeIcon);
-        hide.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setState(Window.HIDE_ON_CLOSE);
-            }
-        });
-        hide.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                hide.setBounds(615, 4, 32, 32);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                hide.setBounds(615, 2, 32, 32);
-            }
-        });
-
-    }
 }
