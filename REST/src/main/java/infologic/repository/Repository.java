@@ -2,7 +2,11 @@ package infologic.repository;
 
 import infologic.HibernateUtil;
 import infologic.model.Dictionary;
+import infologic.model.KeywordsEntity;
+import infologic.model.PersonsEntity;
+import infologic.model.SitesEntity;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -40,7 +44,26 @@ public class Repository implements RepositoryInterface<Dictionary> {
     }
 
     @Override
-    public List<Dictionary> query(Specification specification) {
-        throw new UnsupportedOperationException();
+    public List<? extends Dictionary> query(Specification specification, Object... args) {
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        switch (specification) {
+            case getPersons: {
+                Query<PersonsEntity> query = session.createQuery("FROM PersonsEntity", PersonsEntity.class);
+                if (query != null) return query.list();
+            }
+            case getSites: {
+                Query<SitesEntity> query = session.createQuery("FROM SitesEntity", SitesEntity.class);
+                if (query != null) return query.list();
+            }
+            case getKeywords: {
+                Query<KeywordsEntity> query = null;
+                if (args.length == 0) query = session.createQuery("FROM KeywordsEntity", KeywordsEntity.class);
+                else if (args.length == 1 && args[0] instanceof Integer)
+                    query = session.createQuery("FROM KeywordsEntity ke WHERE ke.personId=:personId", KeywordsEntity.class).setParameter("personId", args[0]);
+                if (query != null) return query.list();
+            }
+        }
+        return null;
     }
 }

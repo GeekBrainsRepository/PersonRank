@@ -7,8 +7,10 @@ import java.util.List;
  */
 public interface RepositoryInterface<T> {
     void add(T pattern);
+
     void remove(T pattern);
+
     void update(T pattern);
 
-    List<T> query(Specification specification);
+    List<? extends T> query(Specification specification, Object... args);
 }

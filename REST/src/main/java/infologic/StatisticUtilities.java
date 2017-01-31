@@ -1,18 +1,17 @@
 package infologic;
 
 
-import infologic.model.CommonStat;
-import infologic.model.DailyStat;
-import infologic.model.PersonsEntity;
-import infologic.model.SitesEntity;
+import infologic.model.*;
+import infologic.repository.RepositoryInterface;
+import infologic.repository.Specification;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.*;
 
 public class StatisticUtilities {
-    
-    public static CommonStat createCommon(int siteId) {
+
+    public static Common createCommon(int siteId) {
         Map<String, Integer> result = new HashMap<>();
         Date date = new Date(0l);
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -32,10 +31,10 @@ public class StatisticUtilities {
         }
         session.getTransaction().commit();
         session.close();
-        return new CommonStat(date, result);
+        return new Common(date, result);
     }
 
-    public static DailyStat createDaily(int siteId, int personId, long startDate, long endDate) {
+    public static Daily createDaily(int siteId, int personId, long startDate, long endDate) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Query query = session.createQuery("SELECT personPageRank.rank, page.foundDataTime FROM PersonPageRankEntity AS personPageRank "
@@ -44,10 +43,7 @@ public class StatisticUtilities {
                 + "person.id = :personId "
                 + "AND page.siteId = :siteId "//);
                 + "AND page.foundDataTime BETWEEN :dateStart AND :dateEnd");
-        query.setParameter("personId", personId);
-        query.setParameter("siteId", siteId);
-        query.setParameter("dateStart", new Date(startDate));
-        query.setParameter("dateEnd", new Date(endDate));
+        query.setParameter("personId", personId).setParameter("siteId", siteId).setParameter("dateStart", new Date(startDate)).setParameter("dateEnd", new Date(endDate));
         final long day = 86400000l;
         List<Integer> result = new ArrayList<>();
         int count = (int) ((endDate - startDate) / day);
@@ -62,36 +58,33 @@ public class StatisticUtilities {
         }
         session.getTransaction().commit();
         session.close();
-        return new DailyStat(result);
+        return new Daily(result);
     }
 
-    public static Map<Integer, String> getSites() {
-        ArrayList<SitesEntity> undoSites;
-        Map<Integer, String> newSites = new HashMap<>();
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Query query = session.createQuery("FROM SitesEntity");
-        undoSites = (ArrayList<SitesEntity>) query.list();
-        for (int i = 0; i < undoSites.size(); i++) {
-            newSites.put(undoSites.get(i).getId(), undoSites.get(i).getName());
+    public static Map<Integer, String> createPersons(RepositoryInterface repository) {
+        Map<Integer, String> result = new HashMap<>();
+        for (Object e : repository.query(Specification.getPersons)) {
+            PersonsEntity person = (PersonsEntity) e;
+            result.put(person.getId(), person.getName());
         }
-        session.getTransaction().commit();
-        session.close();
-        return newSites;
+        return result;
     }
 
-    public static Map<Integer, String> getPersons() {
-        ArrayList<PersonsEntity> undoPersons;
-        Map<Integer, String> newpersons = new HashMap<>();
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Query query = session.createQuery("FROM PersonsEntity");
-        undoPersons = (ArrayList<PersonsEntity>) query.list();
-        for (int i = 0; i < undoPersons.size(); i++) {
-            newpersons.put(undoPersons.get(i).getId(), undoPersons.get(i).getName());
+    public static Map<Integer, String> createSites(RepositoryInterface repository) {
+        Map<Integer, String> result = new HashMap<>();
+        for (Object e : repository.query(Specification.getSites)) {
+            SitesEntity site = (SitesEntity) e;
+            result.put(site.getId(), site.getName());
         }
-        session.getTransaction().commit();
-        session.close();
-        return newpersons;
+        return result;
+    }
+
+    public static Map<Integer, String> createKeyword(RepositoryInterface repository, int personId) {
+        Map<Integer, String> result = new HashMap<>();
+        for (Object e : repository.query(Specification.getKeywords, personId)) {
+            KeywordsEntity keyword = (KeywordsEntity) e;
+            result.put(keyword.getId(), keyword.getName());
+        }
+        return result;
     }
 }

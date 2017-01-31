@@ -2,10 +2,10 @@ package infologic.model;
 
 import java.util.List;
 
-public class DailyStat {
+public class Daily {
 	List<Integer> result;
 
-	public DailyStat(List<Integer> result) {
+	public Daily(List<Integer> result) {
 		this.result = result;
 	}
 
