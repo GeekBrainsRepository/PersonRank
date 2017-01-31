@@ -3,13 +3,6 @@ package infologic.model;
 import javax.persistence.*;
 import java.util.Collection;
 
-@NamedQueries(
-        @NamedQuery(
-                name = "getPersonsByName",
-                query = "from PersonsEntity pe where pe.name = :name"
-        )
-)
-
 @Entity
 @Table(name = "Persons", schema = "personrank", catalog = "")
 public class PersonsEntity implements Dictionary {
