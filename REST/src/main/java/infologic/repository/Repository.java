@@ -21,8 +21,7 @@ public class Repository implements RepositoryInterface<Dictionary> {
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.save(pattern);
-        session.getTransaction().commit();
-        session.close();
+        closeSession(session);
     }
 
     @Override
@@ -30,8 +29,7 @@ public class Repository implements RepositoryInterface<Dictionary> {
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.delete(pattern);
-        session.getTransaction().commit();
-        session.close();
+        closeSession(session);
     }
 
     @Override
@@ -39,31 +37,39 @@ public class Repository implements RepositoryInterface<Dictionary> {
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.saveOrUpdate(pattern);
-        session.getTransaction().commit();
-        session.close();
+        closeSession(session);
     }
 
     @Override
     public List<? extends Dictionary> query(Specification specification, Object... args) {
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
+        List<? extends Dictionary> result = null;
         switch (specification) {
             case getPersons: {
                 Query<PersonsEntity> query = session.createQuery("FROM PersonsEntity", PersonsEntity.class);
-                if (query != null) return query.list();
+                if (query != null) result = query.list();
+                break;
             }
             case getSites: {
                 Query<SitesEntity> query = session.createQuery("FROM SitesEntity", SitesEntity.class);
-                if (query != null) return query.list();
+                if (query != null) result = query.list();
+                break;
             }
             case getKeywords: {
                 Query<KeywordsEntity> query = null;
                 if (args.length == 0) query = session.createQuery("FROM KeywordsEntity", KeywordsEntity.class);
                 else if (args.length == 1 && args[0] instanceof Integer)
                     query = session.createQuery("FROM KeywordsEntity ke WHERE ke.personId=:personId", KeywordsEntity.class).setParameter("personId", args[0]);
-                if (query != null) return query.list();
+                if (query != null) result = query.list();
+                break;
             }
         }
-        return null;
+        return result;
+    }
+
+    private void closeSession(Session session) {
+        session.getTransaction().commit();
+        session.close();
     }
 }
