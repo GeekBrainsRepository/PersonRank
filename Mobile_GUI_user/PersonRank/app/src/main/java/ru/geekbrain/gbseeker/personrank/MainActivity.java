@@ -1,5 +1,6 @@
 package ru.geekbrain.gbseeker.personrank;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -9,13 +10,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
+import ru.geekbrain.gbseeker.personrank.net.ConnectionWrapper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    final String TAG = "MAIN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +33,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ConnectionWrapper p = new ConnectionWrapper();
+        p.execute("http://37.194.87.95:30000/statistic/getresourcelist");
+        ConnectionWrapper p1 = new ConnectionWrapper();
+        p1.execute("http://37.194.87.95:30000/statistic/getpersonlist");
+
 
         DBHelper.createDBHelper(this);
         DBHelper.getInstance().fillByFakeData();
@@ -36,15 +52,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager fm=getSupportFragmentManager();
-        Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
-        if(fragment==null){
-            fragment=new DailyStatsFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
+        if (fragment == null) {
+            fragment = new DailyStatsFragment();
             fm.beginTransaction()
-                    .add(R.id.FrameContainer,fragment)
+                    .add(R.id.FrameContainer, fragment)
                     .commit();
         }
-        
+
     }
 
     @Override
@@ -85,50 +101,50 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-       if (id == R.id.common_stats_menu) {
-           FragmentManager fm=getSupportFragmentManager();
-           Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
-               fragment=new CommonStatsFragment();
-               fm.beginTransaction()
-                       .replace(R.id.FrameContainer,fragment)
-                       .commit();
-       } else if (id == R.id.daily_stats_menu) {
-           FragmentManager fm=getSupportFragmentManager();
-           Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
-           fragment=new DailyStatsFragment();
-           fm.beginTransaction()
-                   .replace(R.id.FrameContainer,fragment)
-                   .commit();
-       } else if (id == R.id.nav_persons) {
-           FragmentManager fm=getSupportFragmentManager();
-           Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
-               fragment=new PersonList();
-               fm.beginTransaction()
-                       .replace(R.id.FrameContainer,fragment)
-                       .commit();
-       } else if (id == R.id.nav_keys) {
-           FragmentManager fm=getSupportFragmentManager();
-           Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
-           fragment=new KeyWordList();
-           fm.beginTransaction()
-                   .replace(R.id.FrameContainer,fragment)
-                   .commit();
+        if (id == R.id.common_stats_menu) {
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
+            fragment = new CommonStatsFragment();
+            fm.beginTransaction()
+                    .replace(R.id.FrameContainer, fragment)
+                    .commit();
+        } else if (id == R.id.daily_stats_menu) {
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
+            fragment = new DailyStatsFragment();
+            fm.beginTransaction()
+                    .replace(R.id.FrameContainer, fragment)
+                    .commit();
+        } else if (id == R.id.nav_persons) {
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
+            fragment = new PersonList();
+            fm.beginTransaction()
+                    .replace(R.id.FrameContainer, fragment)
+                    .commit();
+        } else if (id == R.id.nav_keys) {
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
+            fragment = new KeyWordList();
+            fm.beginTransaction()
+                    .replace(R.id.FrameContainer, fragment)
+                    .commit();
 
-       } else if (id == R.id.nav_sites) {
-           FragmentManager fm=getSupportFragmentManager();
-           Fragment fragment=fm.findFragmentById(R.id.FrameContainer);
-           fragment=new SiteList();
-           fm.beginTransaction()
-                   .replace(R.id.FrameContainer,fragment)
-                   .commit();
+        } else if (id == R.id.nav_sites) {
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
+            fragment = new SiteList();
+            fm.beginTransaction()
+                    .replace(R.id.FrameContainer, fragment)
+                    .commit();
 
-       }
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-}
 
+}
 
 
