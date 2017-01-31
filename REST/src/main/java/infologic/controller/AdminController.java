@@ -29,7 +29,7 @@ public class AdminController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/admin/keyword/{id}")
-    public @ResponseBody void deleteKeyWord(@PathVariable Integer id){
+    public @ResponseBody void deleteKeyword(@PathVariable Integer id){
         KeywordsEntity pattern = new KeywordsEntity();
         pattern.setId(id);
         repository.remove(pattern);
@@ -50,7 +50,7 @@ public class AdminController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/admin/keyword/{name}/{personId}")
-    public @ResponseBody void putKeyWord(@PathVariable String name, @PathVariable Integer personId){
+    public @ResponseBody void putKeyword(@PathVariable String name, @PathVariable Integer personId){
         KeywordsEntity pattern = new KeywordsEntity();
         pattern.setName(name);
         pattern.setPersonId(personId);
@@ -73,7 +73,7 @@ public class AdminController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/admin/keyword/{id}/{name}")
-    public @ResponseBody void postKeyWords(@PathVariable Integer id, @PathVariable String name){
+    public @ResponseBody void postKeyword(@PathVariable Integer id, @PathVariable String name){
         KeywordsEntity pattern = new KeywordsEntity();
         pattern.setId(id);
         pattern.setName(name);
