@@ -27,16 +27,8 @@ public class GeneralStatisticsPanel extends JPanel {
     private JComboBox namesSitesComboBox;
     private GeneralStaticTabelModel generalTableModel;
     private JFreeChart barChart;
-    private Font font;
-    public GeneralStatisticsPanel() {       
-        try{
-            font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/fonts/arial.ttf")).deriveFont(Font.PLAIN, 11);
-        }catch (IOException ex){
-            System.err.println(ex);
-        }catch (FontFormatException ex){
-            System.err.println(ex);
-        }
-        
+    
+    public GeneralStatisticsPanel() {        
         statisticRepository = GeneralStatisticOnSiteRepository.getInstance();
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(6, 6, 6, 6));
@@ -52,7 +44,6 @@ public class GeneralStatisticsPanel extends JPanel {
 
         JLabel labelSite = new JLabel();
         labelSite.setText("Сайт:");
-        labelSite.setFont(new Font("Arial", Font.PLAIN, 12));
         box.add(labelSite);
         box.add(Box.createRigidArea(new Dimension(15, 0)));
 
@@ -64,7 +55,6 @@ public class GeneralStatisticsPanel extends JPanel {
         Dimension bnSendSize = new Dimension(90, 30);
         buttonSend.setMinimumSize(bnSendSize);
         buttonSend.setMaximumSize(bnSendSize);
-        buttonSend.setFont(new Font("Tahoma", Font.PLAIN, 11));
         buttonSend.addActionListener(new ButtonSendListener());
         box.add(buttonSend);
         box.add(Box.createHorizontalGlue());

@@ -53,16 +53,8 @@ public class DailyStatisticsPanel extends JPanel {
     private JScrollPane scrollPane;
     private JTabbedPane contentTabbedPane;
     private JFreeChart lineChart;
-    private Font font;
     
     public DailyStatisticsPanel () {        
-        try{
-            font = Font.createFont(Font.TRUETYPE_FONT, new File(System.getProperty("user.dir") + "/fonts/arial.ttf")).deriveFont(Font.PLAIN, 11);
-        }catch (IOException ex){
-            System.err.println(ex);
-        }catch (FontFormatException ex){
-            System.err.println(ex);
-        }
 
         dailyStatisticRepository = DailyStatisticOnSiteRepository.getInstance();
         saitLabel = new JLabel();
@@ -136,15 +128,10 @@ public class DailyStatisticsPanel extends JPanel {
     private void contentPositioning() {
 
         saitLabel.setText("Сайт:");
-        saitLabel.setFont(font);
         personLabel.setText("Личность:");
-        personLabel.setFont(font);
         labelPeriod.setText("Пeриод с:");
-        labelPeriod.setFont(font);
         labelPo.setText("по:");
-        labelPo.setFont(font);
         buttonSend.setText("Применить");
-        buttonSend.setFont(font);
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
