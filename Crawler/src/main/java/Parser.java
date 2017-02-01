@@ -16,7 +16,7 @@ public class Parser {
         }
 
         String titles = doc.select("title").text();
-        String paragraphText = doc.select("p").text();//todo добавить заголовки, ща
+        String paragraphText = doc.select("p").text();
         String headerH1 = doc.select("h1").text();
         String headerH2 = doc.select("h2").text();
         String headerH3 = doc.select("h3").text();

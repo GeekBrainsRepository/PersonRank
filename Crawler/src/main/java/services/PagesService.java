@@ -5,7 +5,7 @@ import mappers.IPagesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ public class PagesService implements IPagesMapper {
     }
 
     @Override
-    public void setUpdateLastScanDate(final Calendar lastScanDate) {
+    public void setUpdateLastScanDate(final Date lastScanDate) {
         this.iPagesMapper.setUpdateLastScanDate(lastScanDate);
     }
 }

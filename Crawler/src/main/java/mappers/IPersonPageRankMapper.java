@@ -10,18 +10,18 @@ import java.util.List;
  */
 public interface IPersonPageRankMapper {
 
-    String SELECT_PERSON_PAGE_RANK = "SELECT person_id as personId, page_id as pageId," +
-            "rank FROM person_page_rank";
-    String INSERT_PERSON_PAGE_RANK = "INSERT INTO person_page_rank (person_id, page_id, rank) " +
+    String SELECT_PERSON_PAGE_RANK = "SELECT ID as id, PersonID as personId, PageID as pageId," +
+            "Rank as rank FROM PersonPageRank";
+    String INSERT_PERSON_PAGE_RANK = "INSERT INTO PersonPageRank (PersonID, PageID, Rank) " +
             "VALUES (#{personId},#{pageId},#{rank})";
-    String UPDATE_PERSON_PAGE_RANK = "UPDATE person_page_rank SET rank = #{rank} WHERE " +
-            "person_id = #{personId} AND page_id = #{pageId}";
+    String UPDATE_PERSON_PAGE_RANK = "UPDATE PersonPageRank SET Rank = #{rank} WHERE " +
+            "PersonID = #{personId} AND PageID = #{pageId}";
 
     @Select(SELECT_PERSON_PAGE_RANK)
     List<PersonPageRank> getPersonPageRank();
 
     @Insert(INSERT_PERSON_PAGE_RANK)
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Options(useGeneratedKeys = true, keyProperty = "ID")
     void setInsertPersonPageRank(PersonPageRank personPageRank);
 
     @Update(UPDATE_PERSON_PAGE_RANK)

@@ -1,9 +1,12 @@
 package mappers;
 
 import beans.Pages;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
-import java.util.Calendar;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -11,20 +14,20 @@ import java.util.List;
  */
 public interface IPagesMapper {
 
-    String SELECT_PAGES = "SELECT id, url, site_id as siteId, found_date_time as " +
-            "foundDateTime, last_scan_date as lastScanDate FROM pages";
-    String INSERT_PAGE = "INSERT INTO pages (url, site_id, found_date_time) VALUES" +
-            "(#{url},#{siteId},#{foundDateTime}";
-    String UPDATE_LAST_SCAN_DATE = "UPDATE pages SET last_scan_date = #{lastScanDate}" +
-            "WHERE id = #{id}";
+    String SELECT_PAGES = "SELECT ID as id, Url as url, SiteID as siteId, FoundDateTime as " +
+            "foundDateTime, LastScanDate as lastScanDate FROM Pages";
+    String INSERT_PAGE = "INSERT INTO Pages (Url, SiteID, FoundDateTime, LastScanDate) VALUES" +
+            "(#{url},#{siteId},#{foundDateTime},#{lastScanDate})";
+    String UPDATE_LAST_SCAN_DATE = "UPDATE Pages SET LastScanDate = #{lastScanDate}" +
+            "WHERE ID = #{id}";
 
     @Select(SELECT_PAGES)
     List<Pages> getPages();
 
     @Insert(INSERT_PAGE)
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Options(useGeneratedKeys = true, keyProperty = "ID")
     void insertPage(Pages page);
 
     @Update(UPDATE_LAST_SCAN_DATE)
-    void setUpdateLastScanDate(final Calendar lastScanDate);
+    void setUpdateLastScanDate(final Date lastScanDate);
 }

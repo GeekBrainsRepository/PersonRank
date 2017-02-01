@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ISitesMapper {
 
-    String SELECT_SITES = "SELECT id, name FROM sites";
+    String SELECT_SITES = "SELECT ID as id, Name as name FROM Sites";
 
     @Select(SELECT_SITES)
     List<Sites> getSites();
