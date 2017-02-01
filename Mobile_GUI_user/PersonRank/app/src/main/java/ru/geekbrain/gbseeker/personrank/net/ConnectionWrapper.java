@@ -3,17 +3,22 @@ package ru.geekbrain.gbseeker.personrank.net;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
     final String TAG="ConnectionWrapper";
+    iNet2SQL net2SQL;
 
-    public ConnectionWrapper() {
+    public ConnectionWrapper(iNet2SQL net2SQL) {
+        this.net2SQL=net2SQL;
     }
 
     @Override
@@ -21,16 +26,22 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
         String content;
         try {
             content = getContent(params[0]);
-            TimeUnit.SECONDS.sleep(10);
+            net2SQL.updateDB(content);
         } catch (Exception ex) {
             content = ex.getMessage();
         }
         Log.d(TAG,content);
 
+
         return content;
 
     }
 
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        net2SQL.updateUI();
+    }
 
     private String getContent(String path) throws IOException {
         BufferedReader reader = null;

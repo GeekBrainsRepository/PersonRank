@@ -30,30 +30,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
         interface COLUMNS {
             interface SITE {
-                String ID = "_id";
+                String ID = "id";
                 String SITE = "site";
             }
 
             interface PERSON {
-                String ID = "_id";
+                String ID = "id";
                 String PERSON = "person";
             }
 
             interface KEYWORD {
-                String ID = "_id";
+                String ID = "id";
                 String KEYWORD = "keyword";
                 String PERSON_REF = "person_id";
             }
 
             interface COMMON {
-                String ID = "_id";
+                String ID = "id";
                 String SITE_REF = "site_id";
                 String PERSON_REF = "person_id";
                 String STATS = "stats";
             }
 
             interface DAILY {
-                String ID = "_id";
+                String ID = "id";
                 String SITE_REF = "site_id";
                 String PERSON_REF = "person_id";
                 String DATE = "date";
@@ -100,32 +100,37 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + DB.TABLES.SITE + "(" +
-                DB.COLUMNS.SITE.ID + " INTEGER PRIMARY KEY," +
+                "_id INTEGER PRIMARY KEY," +
+                DB.COLUMNS.SITE.ID + " INTEGER," +
                 DB.COLUMNS.SITE.SITE + " TEXT" +
                 ")"
         );
 
         db.execSQL("CREATE TABLE " + DB.TABLES.PERSON + "(" +
-                DB.COLUMNS.PERSON.ID + " INTEGER PRIMARY KEY," +
+                "_id INTEGER PRIMARY KEY," +
+                DB.COLUMNS.PERSON.ID + " INTEGER," +
                 DB.COLUMNS.PERSON.PERSON + " TEXT" +
                 ")"
         );
         db.execSQL("CREATE TABLE " + DB.TABLES.KEYWORD + "(" +
-                DB.COLUMNS.KEYWORD.ID + " INTEGER PRIMARY KEY," +
+                "_id INTEGER PRIMARY KEY," +
+                DB.COLUMNS.KEYWORD.ID + " INTEGER," +
                 DB.COLUMNS.KEYWORD.KEYWORD + " TEXT," +
                 DB.COLUMNS.KEYWORD.PERSON_REF + " INTEGER " +
                 ")"
         );
 
         db.execSQL("CREATE TABLE " + DB.TABLES.COMMON + "(" +
-                DB.COLUMNS.COMMON.ID + " INTEGER PRIMARY KEY," +
+                "_id INTEGER PRIMARY KEY," +
+                DB.COLUMNS.COMMON.ID + " INTEGER," +
                 DB.COLUMNS.COMMON.STATS + " INTEGER," +
                 DB.COLUMNS.COMMON.SITE_REF + " INTEGER," +
                 DB.COLUMNS.COMMON.PERSON_REF + " INTEGER" +
                 ")"
         );
         db.execSQL("CREATE TABLE " + DB.TABLES.DAILY + "(" +
-                DB.COLUMNS.DAILY.ID + " INTEGER PRIMARY KEY," +
+                "_id INTEGER PRIMARY KEY," +
+                DB.COLUMNS.DAILY.ID + " INTEGER," +
                 DB.COLUMNS.DAILY.STATS + " INTEGER," +
                 DB.COLUMNS.DAILY.DATE + " DATE," +
                 DB.COLUMNS.DAILY.PERSON_REF + " INTEGER," +
@@ -134,19 +139,39 @@ public class DBHelper extends SQLiteOpenHelper {
         );
     }
 
-    public void addPerson(String person) {
+    public void addPerson(int id,String person) {
         ContentValues cv = new ContentValues();
+        cv.put(DB.COLUMNS.PERSON.ID, id);
         cv.put(DB.COLUMNS.PERSON.PERSON, person);
         getDB().insert(DB.TABLES.PERSON, null, cv);
     }
-    public void addPersonWithCheck(String person) {
+    public void addPersonWithCheck(int id,String person) {
         Cursor cursor = null;
         try {
-            cursor = getDB().query(DB.TABLES.PERSON, null, DB.COLUMNS.PERSON.PERSON + "='" + person + "'", null, null, null, null, null);
+            cursor = getDB().query(DB.TABLES.PERSON, null,
+                    DB.COLUMNS.PERSON.PERSON + "='" + person + "' AND "+DB.COLUMNS.PERSON.ID+ "=" + id,
+                    null, null, null, null, null);
             if (cursor.moveToFirst()) {
-                return;
-            } else {
-                addPerson(person);
+            }else {
+                addPerson(id, person);
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+            cursor=null;
+        }
+
+        try{
+            cursor = getDB().query(DB.TABLES.PERSON, null,
+                    "("+DB.COLUMNS.PERSON.PERSON + "!='" + person + "' AND "+DB.COLUMNS.PERSON.ID+  "=" + id +") OR "+
+                    "("+DB.COLUMNS.PERSON.PERSON +  "='" + person + "' AND "+DB.COLUMNS.PERSON.ID+ "!=" + id+")",
+                    null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                cursor.close();
+                cursor=null;
+                getDB().delete(DB.TABLES.PERSON,
+                        "("+DB.COLUMNS.PERSON.PERSON + "!='" + person + "' AND "+DB.COLUMNS.PERSON.ID+  "=" + id +") OR "+
+                        "("+DB.COLUMNS.PERSON.PERSON +  "='" + person + "' AND "+DB.COLUMNS.PERSON.ID+ "!=" + id+")",
+                        null);
             }
         } finally {
             if (cursor != null) cursor.close();
@@ -165,15 +190,6 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         } finally {
             if (cursor != null) cursor.close();
-        }
-    }
-    public int getPersonIDOrCreate(String person) {
-        int person_id = getPersonID(person);
-        if (person_id == 0) {
-            addPerson(person);
-            return getPersonID(person);
-        }else {
-            return person_id;
         }
     }
     public void getPersonList(ArrayList<String> personList) {
@@ -218,19 +234,39 @@ public class DBHelper extends SQLiteOpenHelper {
         return DBHelper.getInstance().getDB().query(DB.TABLES.PERSON, null,null,null, null, null, null, null);
     }
 
-    public void addSite(String site) {
+    public void addSite(int id,String site) {
         ContentValues cv = new ContentValues();
+        cv.put(DB.COLUMNS.SITE.ID, id);
         cv.put(DB.COLUMNS.SITE.SITE, site);
         getDB().insert(DB.TABLES.SITE, null, cv);
     }
-    public void addSiteWithCheck(String site) {
+    public void addSiteWithCheck(int id,String site) {
         Cursor cursor = null;
         try {
-            cursor = getDB().query(DB.TABLES.SITE, null, DB.COLUMNS.SITE.SITE + "='" + site+"'", null, null, null, null, null);
+            cursor = getDB().query(DB.TABLES.SITE, null,
+                    DB.COLUMNS.SITE.SITE+ "='" + site + "' AND "+DB.COLUMNS.SITE.ID+ "=" + id,
+                    null, null, null, null, null);
             if (cursor.moveToFirst()) {
-                return;
-            } else {
-                addSite(site);
+            }else {
+                addSite(id, site);
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+            cursor=null;
+        }
+
+        try{
+            cursor = getDB().query(DB.TABLES.SITE, null,
+                    "("+DB.COLUMNS.SITE.SITE + "!='" + site + "' AND "+DB.COLUMNS.SITE.ID+  "=" + id +") OR "+
+                    "("+DB.COLUMNS.SITE.SITE +  "='" + site + "' AND "+DB.COLUMNS.SITE.ID+ "!=" + id+")",
+                    null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                cursor.close();
+                cursor=null;
+                getDB().delete(DB.TABLES.SITE,
+                        "("+DB.COLUMNS.SITE.SITE + "!='" + site + "' AND "+DB.COLUMNS.SITE.ID+  "=" + id +") OR "+
+                        "("+DB.COLUMNS.SITE.SITE +  "='" + site + "' AND "+DB.COLUMNS.SITE.ID+ "!=" + id+")",
+                        null);
             }
         } finally {
             if (cursor != null) cursor.close();
@@ -249,16 +285,6 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         } finally {
             if (cursor != null) cursor.close();
-        }
-    }
-    public int getSiteIDOrCreate(String site) {
-        int site_id= getSiteID(site);
-        if (site_id == 0) {
-            addSite(site);
-            return getSiteID(site);
-        }
-        else{
-            return site_id;
         }
     }
     public void getSiteList(ArrayList<String> siteList) {
@@ -280,14 +306,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return DBHelper.getInstance().getDB().query(DB.TABLES.SITE, null,null,null, null, null, null, null);
     }
 
-    public void addKeyword(int person_id,String keyword) {
+    public void addKeyword(int id,int person_id,String keyword) {
         ContentValues cv = new ContentValues();
+        cv.put(DB.COLUMNS.KEYWORD.ID, id);
         cv.put(DB.COLUMNS.KEYWORD.PERSON_REF, person_id);
         cv.put(DB.COLUMNS.KEYWORD.KEYWORD, keyword);
         getDB().insert(DB.TABLES.KEYWORD, null, cv);
     }
-    public void addKeywordWithCheck(String person,String keyword){
-        int person_id = getPersonIDOrCreate(person);
+    public void addKeywordWithCheck(int id,String person,String keyword){
+        int person_id = getPersonID(person);
 
         Cursor cursor = null;
         try {

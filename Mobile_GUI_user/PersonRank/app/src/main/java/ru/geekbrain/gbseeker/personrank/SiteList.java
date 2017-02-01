@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import ru.geekbrain.gbseeker.personrank.entities.SiteListDB;
+import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class SiteList extends Fragment {
     SimpleCursorAdapter scSiteAdapter;
@@ -19,6 +20,8 @@ public class SiteList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         siteListDB = new SiteListDB(getContext());
+
+        RestAPI.getSite(siteListDB);
     }
 
     @Nullable
