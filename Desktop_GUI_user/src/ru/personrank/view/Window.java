@@ -1,29 +1,18 @@
 package ru.personrank.view;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
-import ru.personrank.view.admin.KeywordsPanel;
-import ru.personrank.view.admin.PersonsPanel;
-import ru.personrank.view.admin.SitesPanel;
+import org.jdesktop.swingx.JXTaskPane;
+import org.jdesktop.swingx.JXTaskPaneContainer;
 import ru.personrank.view.user.DailyStatisticsPanel;
 import ru.personrank.view.user.GeneralStatisticsPanel;
 
 public class Window extends JFrame {
     
-    private LeftLinksPanel leftLinksPanel = new LeftLinksPanel();
-    private JPanel contentPanel = new JPanel(new BorderLayout());
-    private JLabel[] labelMenu;
-    private JPanel[] panels = new JPanel[]{
-            new GeneralStatisticsPanel(),
-            new DailyStatisticsPanel(),
-            new KeywordsPanel(),
-            new PersonsPanel(),
-            new SitesPanel()
-    };
+    private JXTaskPaneContainer menu;
+    private JPanel content;
     
     static {
         try {
@@ -53,60 +42,67 @@ public class Window extends JFrame {
         addMouseListener(winDragger);
         addMouseMotionListener(winDragger);              
         setLocationRelativeTo(null);
-        labelMenu = leftLinksPanel.getLabelLeftMenu();
-        leftLinksPanel.setPreferredSize(new Dimension(230,430));
-        for (int i = 0; i < labelMenu.length; i++) {
-            labelMenu[i].addMouseListener(new MenuMouseListener(i));
-        }
-        contentPanel.setOpaque(false);
-        contentPanel.add(panels[0], BorderLayout.CENTER);
-        getContentPane().add(leftLinksPanel, BorderLayout.WEST);
-        getContentPane().add(contentPanel,  BorderLayout.CENTER);
+        menu = createMainMenu();
+        content = createContentContainer();
+        getContentPane().add(content, BorderLayout.CENTER);
+        getContentPane().add(menu, BorderLayout.WEST);     
+    }
+    
+    private JXTaskPaneContainer createMainMenu () {
+        JXTaskPaneContainer container = new JXTaskPaneContainer();
+        JXTaskPane statistics = new JXTaskPane();
+        statistics.setTitle("Статистика");
+        statistics.add(new ActionGeneral());
+        statistics.add(new ActionDaily());
+        JXTaskPane reference = new JXTaskPane();
+        reference.setTitle("Справочники");
+        reference.add(new JLabel("Ключевые слова"));
+        reference.add(new JLabel("Персоны"));
+        reference.add(new JLabel("Сайты"));
+        container.add(statistics);
+        container.add(reference);
+        return container;
     }
 
+    private JPanel createContentContainer () {
+        JPanel container = new JPanel();
+        CardLayout layout = new CardLayout();
+        container.setLayout(layout);
+        container.add("GeneralStatistic",new GeneralStatisticsPanel());
+        container.add("DailyStatistic", new DailyStatisticsPanel());
+        return container;
+    }
+    
     @Override
     public void setTitle(String title) {
        ContentPane contentPane = (ContentPane) this.getContentPane();
        contentPane.setTitle(title);
     }
     
-    private class MenuMouseListener extends MouseAdapter {
+    private class ActionGeneral extends AbstractAction {
 
-        private int index;
-
-        public MenuMouseListener(int indexPanel) {
-            index = indexPanel;
+        public ActionGeneral() {
+            putValue(Action.NAME, "Общая");
         }
 
         @Override
-        public void mouseClicked(MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON1) {
-                for (JLabel label : labelMenu) {
-                    label.setFont(label.getFont().deriveFont(Font.PLAIN));
-                }
-                JLabel label = (JLabel) e.getSource();
-                label.setFont(label.getFont().deriveFont(Font.BOLD));
-                contentPanel.removeAll();
-                contentPanel.add(panels[index], BorderLayout.CENTER);
-                contentPanel.revalidate();
-                contentPanel.repaint();
-            }
+        public void actionPerformed(ActionEvent e) {
+            CardLayout layout = (CardLayout) content.getLayout();
+            layout.show(content,"GeneralStatistic");
         }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            JLabel label = (JLabel) e.getSource();
-            String text = label.getText();
-            label.setText("<html><b><u>" + text);
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            JLabel label = (JLabel) e.getSource();
-            String text = label.getText();
-            label.setText(text.substring(12));
-        }
-
     }
+    
+    private class ActionDaily extends AbstractAction {
 
+        public ActionDaily() {
+            putValue(Action.NAME, "Ежедневная");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            CardLayout layout = (CardLayout) content.getLayout();
+            layout.show(content,"DailyStatistic");
+        }
+    }
+    
 }
