@@ -50,7 +50,7 @@ CREATE TABLE `Pages` (
   `Url` varchar(2048) NOT NULL COMMENT 'Полный Url адрес страницы',
   `SiteID` int(11) NOT NULL COMMENT 'Идентификатор сайта (ресурса), \nкоторый предоставлен  администратором для анализа. \n\nЯвляется внешним ключом к таблице Sites',
   `FoundDateTime` datetime NOT NULL COMMENT 'Дата и время обнаружения страницы системой',
-  `LastScanDate` datetime COMMENT 'Дата и время последней проверки на упоминания',
+  `LastScanDate` datetime DEFAULT NULL COMMENT 'Дата и время последней проверки на упоминания',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`),
   KEY `PagesSitesFK_IDx` (`SiteID`),
