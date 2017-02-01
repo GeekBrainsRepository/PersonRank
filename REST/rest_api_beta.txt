@@ -1,92 +1,44 @@
-Вообщем примерный вид API будет таким:
-Для статистик 
+﻿REST API v 1.0
 
-
-service.addr/statistic/getpersonlist
-Возвращает список персон
-Предварительный формат данных:
-JSON , пары ключ:значение  (id:person_name)
-Пример:
-{"1":"First","2":"Second"}
-
-service.addr/statistic/getresourcelist
-возвращает список ресурсов
-Предварительный формат данных:
-JSON , пары ключ:значение  (id:url)
-Пример:
-{"1":"First","2":"Second"}
-
-
-service.addr/statistic/daily/{site_id}/{person_id}/{date_start}/{date_end}
-возвращает статистику по реурсу site_id для персоны person_id за дату date
-service.addr - адрес веб-сервиса
+Сокращения
 {site_id} - ID сайта из таблицы Sites
 {person_id} - ID персоны из таблицы Persons
-{date_start} - дата старта выборки статистики ?? в формате long
-{date_end} - дата конца выборки статистики ?? в формате long
+{date_start} - дата старта выборки ежедневной статистики в формате long(миллисекунды), соответвествует времени начала суток 00:00:00.000
+{date_end} - дата конца выборки ежеднейвной статистики в формате long(миллисекунды), сответвествует времени конца суток 23:59:59.999
 
-service.addr/statistic/common/{site_id}
-возвращает общую статистику по ресурсу site_id
-service.addr - адрес веб-сервиса
-{site_id} - ID сайта из таблицы Sites
+Функционал:
 
+Запросы GET
 
+/common/{siteId} общая статистика
+Ответ: {"date":1486515600000,"result":{"Путин":16,"Медведев":20}}
 
-Администрирование
+/daily/{siteId}/{personId}/{dateStart}/{dateEnd} ежедневная статистика
+Ответ: {"result":[1,3]} каждое число соответвует суткам в выборке
 
-Получить списки ресурсов и ключевых слов лучше через 
-service.addr/statistic/getresourcelist
-service.addr/statistic/getresourcelist
-ибо незачем 2 раза делать одно и то же
+/person
+Ответ: {"1":"Путин","2":"Медведев","5":"TEST_PERSON"}
 
-@DELETE
-service.addr/admin/person/{id}
-Удаление личности
-{id} - ID личности, int
+/site
+Ответ: {"1":"www.1.test","2":"www.2.test","3":"www.3.test","4":"www.4.test","7":"TEST_SITE","8":"site1"}
 
+/keyword/{personId}
+Ответ: {"1":"Путин","2":"Путиным ","3":"Путина "}
 
-@PUT
-service.addr/admin/person/{id}
-обновление личности
-{id} - ID личности, int
+Запросы PUT
 
+/person/{name}
+/site/{name}
+/keyword/{name}/{personId}
 
-@POST
-service.addr/admin/person
-Добавление личности
+Запросы DELETE
 
+/person/{id}
+/site/{id}
+/keyword/{id}
 
+Запросы POST
 
-@DELETE
-service.addr/admin/site/{id}
-Удаление сайта
-{id} - ID сайта, int
-
-
-@PUT
-service.addr/admin/site/{id}
-обновление сайта
-{id} - ID сайта, int
-
-@POST
-service.addr/admin/site
-Добавление сайта
-
-@GET
-service.addr/admin/keyword
-Получение списка ключевых слов
-
-@DELETE
-service.addr/admin/keyword/{id}
-Удаление ключевого слова
-{id} - ID ключевого слова, int
-
-@PUT
-service.addr/admin/keyword/{id}
-обновление ключевого слова
-{id} - ID ключевого слова, int
-
-
-@POST
-service.addr/admin/keyword
-Добавление ключевого слова
+/person/{id}/{name}
+/site/{id}/{name}
+/keyword/{id}/{name}/{personId}

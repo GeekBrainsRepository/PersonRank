@@ -4,15 +4,15 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "persons", schema = "personrank", catalog = "")
-public class PersonsEntity {
+@Table(name = "Persons", schema = "personrank", catalog = "")
+public class PersonsEntity implements Dictionary {
     private int id;
     private String name;
     private Collection<KeywordsEntity> keywordsesById;
     private Collection<PersonPageRankEntity> personPageRanksById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -22,7 +22,7 @@ public class PersonsEntity {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "Name")
     public String getName() {
         return name;
     }

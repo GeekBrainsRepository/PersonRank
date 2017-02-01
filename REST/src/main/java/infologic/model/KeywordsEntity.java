@@ -3,15 +3,15 @@ package infologic.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "keywords", schema = "personrank", catalog = "")
-public class KeywordsEntity {
+@Table(name = "Keywords", schema = "personrank", catalog = "")
+public class KeywordsEntity implements Dictionary {
     private int id;
     private String name;
     private int personId;
     private PersonsEntity personsByPersonId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -21,7 +21,7 @@ public class KeywordsEntity {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "Name")
     public String getName() {
         return name;
     }
@@ -31,7 +31,7 @@ public class KeywordsEntity {
     }
 
     @Basic
-    @Column(name = "person_id", insertable = false, updatable = false)
+    @Column(name = "PersonID", insertable = false, updatable = false)
     public int getPersonId() {
         return personId;
     }
@@ -63,7 +63,7 @@ public class KeywordsEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "PersonID", referencedColumnName = "ID", nullable = false)
     public PersonsEntity getPersonsByPersonId() {
         return personsByPersonId;
     }

@@ -5,6 +5,7 @@ import mappers.IPagesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -18,5 +19,15 @@ public class PagesService implements IPagesMapper {
     @Override
     public List<Pages> getPages() {
         return iPagesMapper.getPages();
+    }
+
+    @Override
+    public void insertPage(Pages page) {
+        iPagesMapper.insertPage(page);
+    }
+
+    @Override
+    public void setUpdateLastScanDate(final Calendar lastScanDate) {
+        this.iPagesMapper.setUpdateLastScanDate(lastScanDate);
     }
 }

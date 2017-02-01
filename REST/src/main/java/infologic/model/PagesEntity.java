@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "pages", schema = "personrank", catalog = "")
+@Table(name = "Pages", schema = "personrank", catalog = "")
 public class PagesEntity {
     private int id;
     private String url;
@@ -16,7 +16,7 @@ public class PagesEntity {
     private Collection<PersonPageRankEntity> personPageRanksById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -26,7 +26,7 @@ public class PagesEntity {
     }
 
     @Basic
-    @Column(name = "url")
+    @Column(name = "Url")
     public String getUrl() {
         return url;
     }
@@ -36,7 +36,7 @@ public class PagesEntity {
     }
 
     @Basic
-    @Column(name = "site_id", insertable = false, updatable = false)
+    @Column(name = "SiteID", insertable = false, updatable = false)
     public int getSiteId() {
         return siteId;
     }
@@ -46,7 +46,7 @@ public class PagesEntity {
     }
 
     @Basic
-    @Column(name = "found_data_time")
+    @Column(name = "FoundDateTime")
     public Timestamp getFoundDataTime() {
         return foundDataTime;
     }
@@ -56,7 +56,7 @@ public class PagesEntity {
     }
 
     @Basic
-    @Column(name = "last_scan_date")
+    @Column(name = "LastScanDate")
     public Timestamp getLastScanDate() {
         return lastScanDate;
     }
@@ -93,7 +93,7 @@ public class PagesEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "site_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "SiteID", referencedColumnName = "ID", nullable = false)
     public SitesEntity getSitesBySiteId() {
         return sitesBySiteId;
     }

@@ -1,4 +1,9 @@
-﻿-- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+﻿DROP DATABASE `personrank`;
+create database `personrank`;
+
+use `personrank`;
+-- @@ -1,79 +1,113 @@
+-- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
 -- Host: localhost    Database: PersonRankDB
 -- ------------------------------------------------------
@@ -30,7 +35,7 @@ CREATE TABLE `Keywords` (
   UNIQUE KEY `ID_UNIQUE` (`ID`),
   KEY `KeywordsPersonFK_IDx` (`PersonID`),
   CONSTRAINT `KeywordsPersonFK` FOREIGN KEY (`PersonID`) REFERENCES `Persons` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,12 +50,12 @@ CREATE TABLE `Pages` (
   `Url` varchar(2048) NOT NULL COMMENT 'Полный Url адрес страницы',
   `SiteID` int(11) NOT NULL COMMENT 'Идентификатор сайта (ресурса), \nкоторый предоставлен  администратором для анализа. \n\nЯвляется внешним ключом к таблице Sites',
   `FoundDateTime` datetime NOT NULL COMMENT 'Дата и время обнаружения страницы системой',
-  `LastScanDate` datetime NOT NULL COMMENT 'Дата и время последней проверки на упоминания',
+  `LastScanDate` datetime DEFAULT NULL COMMENT 'Дата и время последней проверки на упоминания',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`),
   KEY `PagesSitesFK_IDx` (`SiteID`),
   CONSTRAINT `PagesSiteFK` FOREIGN KEY (`SiteID`) REFERENCES `Sites` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,17 +66,13 @@ DROP TABLE IF EXISTS `PersonPageRank`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `PersonPageRank` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT
-  `person_id` int(11) DEFAULT NULL COMMENT 'Идентификатор личности, \nкоторой соответствует данное ключевое слово. \n\nЯвляется внешним ключом к таблице Persons.',
-  `page_id` int(11) DEFAULT NULL COMMENT 'Идентификатор страницы сайта, \nна которой найдены упоминания о персонах. \n\nЯвляется внешним ключом к таблице Pages\n',
-  `rank` INT(30) DEFAULT NULL COMMENT 'Количество упоминаний личности на странице ' ,
-
-  KEY `PersonPersonsPageRankFK_IDx` (`person_id`),
-  KEY `PagePersonPageRankFK_IDx` (`page_id`),
-  ADD PRIMARY KEY (`id`),
-ADD UNIQUE INDEX `rank_id_UNIQUE` (`id` ASC);
-  CONSTRAINT `PagePersonPageRankFK` FOREIGN KEY (`page_id`) REFERENCES `Pages` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `PersonPersonsPageRankFK` FOREIGN KEY (`person_id`) REFERENCES `Persons` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  `PersonID` int(11) DEFAULT NULL COMMENT 'Идентификатор личности, \nкоторой соответствует данное ключевое слово. \n\nЯвляется внешним ключом к таблице Persons.',
+  `PageID` int(11) DEFAULT NULL COMMENT 'Идентификатор страницы сайта, \nна которой найдены упоминания о персонах. \n\nЯвляется внешним ключом к таблице Pages\n',
+  `Rank` int(11) DEFAULT NULL COMMENT 'Количество упоминаний личности на странице ',
+  KEY `PersonPersonsPageRankFK_IDx` (`PersonID`),
+  KEY `PagePersonPageRankFK_IDx` (`PageID`),
+  CONSTRAINT `PagePersonPageRankFK` FOREIGN KEY (`PageID`) REFERENCES `Pages` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `PersonPersonsPageRankFK` FOREIGN KEY (`PersonID`) REFERENCES `Persons` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -87,7 +88,7 @@ CREATE TABLE `Persons` (
   `Name` varchar(2048) NOT NULL COMMENT 'Наименование личности',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +103,7 @@ CREATE TABLE `Sites` (
   `Name` varchar(2048) NOT NULL COMMENT 'Наименование сайта',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -115,3 +116,8 @@ CREATE TABLE `Sites` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2017-01-26 17:44:05
+
+ALTER TABLE `personrank`.`personpagerank` 
+ADD COLUMN `ID` INT NOT NULL AUTO_INCREMENT FIRST,
+ADD PRIMARY KEY (`ID`),
+ADD UNIQUE INDEX `ID_UNIQUE` (`ID` ASC);
