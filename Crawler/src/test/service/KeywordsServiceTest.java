@@ -18,6 +18,6 @@ public class KeywordsServiceTest {
 
     @Test
     public void getKeywords() {
-        Assert.assertNotNull("getKeywords it's OK", keywordsService.getKeywords());
+        Assert.assertNotNull("getKeywords is NOT OK", keywordsService.getKeywords());
     }
 }
