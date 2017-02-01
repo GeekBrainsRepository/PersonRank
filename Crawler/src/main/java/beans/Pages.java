@@ -1,6 +1,6 @@
 package beans;
 
-import java.util.Calendar;
+import java.sql.Date;
 
 /**
  * бин для таблицы Pages
@@ -10,8 +10,8 @@ public class Pages {
     private int id;
     private String url;
     private int siteId;
-    private Calendar foundDateTime;
-    private Calendar lastScanDate;
+    private Date foundDateTime;
+    private Date lastScanDate;
 
     public int getId() {
         return id;
@@ -37,19 +37,19 @@ public class Pages {
         this.siteId = siteId;
     }
 
-    public Calendar getFoundDateTime() {
+    public Date getFoundDateTime() {
         return foundDateTime;
     }
 
-    public void setFoundDateTime(Calendar foundDateTime) {
+    public void setFoundDateTime(Date foundDateTime) {
         this.foundDateTime = foundDateTime;
     }
 
-    public Calendar getLastScanDate() {
+    public Date getLastScanDate() {
         return lastScanDate;
     }
 
-    public void setLastScanDate(Calendar lastScanDate) {
+    public void setLastScanDate(Date lastScanDate) {
         this.lastScanDate = lastScanDate;
     }
 }
