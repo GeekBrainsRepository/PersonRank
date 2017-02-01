@@ -1,6 +1,5 @@
 package ru.geekbrain.gbseeker.personrank;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -10,18 +9,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
-import ru.geekbrain.gbseeker.personrank.net.ConnectionWrapper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,12 +25,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        ConnectionWrapper p = new ConnectionWrapper();
-        p.execute("http://37.194.87.95:30000/statistic/getresourcelist");
-        ConnectionWrapper p1 = new ConnectionWrapper();
-        p1.execute("http://37.194.87.95:30000/statistic/getpersonlist");
-
 
         DBHelper.createDBHelper(this);
         DBHelper.getInstance().fillByFakeData();
@@ -55,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
         if (fragment == null) {
-            fragment = new DailyStatsFragment();
+            fragment = new SiteList();
             fm.beginTransaction()
                     .add(R.id.FrameContainer, fragment)
                     .commit();

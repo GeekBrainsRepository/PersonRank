@@ -64,12 +64,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /// singleton for DB
     private SQLiteDatabase db = null;
-
     public SQLiteDatabase getDB() {
         if (db == null) db = getWritableDatabase();
         return db;
     }
-
     public void close() {
         super.close();
         db = null;
@@ -77,17 +75,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //singleton for DBHelper
     private static DBHelper dbhelper = null;
-
     public static void createDBHelper(Context context) {
         if (dbhelper == null) {
             dbhelper = new DBHelper(context);
         }
     }
-
     private DBHelper(Context context) {
         super(context, DB.DB_NAME, null, 1);
     }
-
     public static DBHelper getInstance() {
         return dbhelper;
     }
@@ -244,10 +239,10 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.SITE, null,
-                    DB.COLUMNS.SITE.SITE+ "='" + site + "' AND "+DB.COLUMNS.SITE.ID+ "=" + id,
+                    DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id,
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
-            }else {
+            } else {
                 addSite(id, site);
             }
         } finally {
@@ -255,22 +250,41 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor=null;
         }
 
-        try{
+        dumpTableSite();
+        try {
             cursor = getDB().query(DB.TABLES.SITE, null,
-                    "("+DB.COLUMNS.SITE.SITE + "!='" + site + "' AND "+DB.COLUMNS.SITE.ID+  "=" + id +") OR "+
-                    "("+DB.COLUMNS.SITE.SITE +  "='" + site + "' AND "+DB.COLUMNS.SITE.ID+ "!=" + id+")",
-                    null, null, null, null, null);
+                    "(" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") OR " +
+                            "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ")",
+                    null, null, null, null);
             if (cursor.moveToFirst()) {
-                cursor.close();
-                cursor=null;
-                getDB().delete(DB.TABLES.SITE,
-                        "("+DB.COLUMNS.SITE.SITE + "!='" + site + "' AND "+DB.COLUMNS.SITE.ID+  "=" + id +") OR "+
-                        "("+DB.COLUMNS.SITE.SITE +  "='" + site + "' AND "+DB.COLUMNS.SITE.ID+ "!=" + id+")",
-                        null);
+                int id0 = cursor.getColumnIndex("_id");
+                int id1 = cursor.getColumnIndex(DB.COLUMNS.SITE.ID);
+                int idname = cursor.getColumnIndex(DB.COLUMNS.SITE.SITE);
+                do {
+                    Log.d(TAG, "_id=" + cursor.getInt(id0) + ":ID=" + cursor.getInt(id1) + ":site=" + cursor.getString(idname));
+                } while (cursor.moveToNext());
             }
-        } finally {
+
+         /*   getDB().delete(DB.TABLES.SITE,
+                    "(" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") OR " +
+                            "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ")",
+                    null);*/
+        }
+        finally {
             if (cursor != null) cursor.close();
         }
+        dumpTableSite();
+        getDB().rawQuery("delete from " + DB.TABLES.COMMON + " where " + DB.COLUMNS.COMMON.SITE_REF + " in " +
+                        " (select " + DB.COLUMNS.SITE.ID + " from " + DB.COLUMNS.SITE.SITE +
+                        " where (" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") OR " +
+                        "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ") )",
+                null);
+
+/*        getDB().rawQuery("delete from " + DB.TABLES.DAILY + " where " + DB.COLUMNS.DAILY.SITE_REF + " in " +
+                        " (select " + DB.COLUMNS.SITE.ID + " from " + DB.COLUMNS.SITE.SITE +
+                        " where (" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") OR " +
+                        "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ") )",
+                null);*/
     }
     public int getSiteID(String site) {
         Cursor cursor = null;
@@ -324,7 +338,7 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 return;
             } else {
-                addKeyword(person_id,keyword);
+      //          addKeyword(person_id,keyword);
             }
         } finally {
             if(cursor!=null)cursor.close();
@@ -352,7 +366,7 @@ public class DBHelper extends SQLiteOpenHelper {
         getDB().update(DB.TABLES.COMMON, cv,DB.COLUMNS.COMMON.ID+"="+commonStatsID,null);
     }
     public void addOrUpdateCommonStatsWithCheck(String site,String person,int stats) {
-        int person_id = getPersonIDOrCreate(person);
+ /*       int person_id = getPersonIDOrCreate(person);
         int site_id = getSiteIDOrCreate(site);
 
         Cursor cursor = null;
@@ -373,7 +387,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         } finally {
             if (cursor != null) cursor.close();
-        }
+        }*/
     }
     public Cursor getCursorOfCommonStatsWithSite(String site) {
         int site_id = DBHelper.getInstance().getSiteID(site);
@@ -404,7 +418,7 @@ public class DBHelper extends SQLiteOpenHelper {
         getDB().update(DB.TABLES.DAILY, cv,DB.COLUMNS.DAILY.ID+"="+dailyStatsID,null);
     }
     public void addOrUpdateDailyStatsWithCheck(String site,String person,Date date,int stats) {
-        int person_id = getPersonIDOrCreate(person);
+  /*      int person_id = getPersonIDOrCreate(person);
         int site_id = getSiteIDOrCreate(site);
 
         Cursor cursor = null;
@@ -427,7 +441,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         } finally {
             if (cursor != null) cursor.close();
-        }
+        }*/
     }
     public Cursor getCursorOfDailyStatsWithSite(String site,String person) {
         int site_id = DBHelper.getInstance().getSiteID(site);
@@ -442,7 +456,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void fillByFakeData() {
-        dumpTablePerson();
+  /*      dumpTablePerson();
         dumpTableSite();
         dumpTableKeyword();
         dumpTableCommonStats();
@@ -514,7 +528,7 @@ public class DBHelper extends SQLiteOpenHelper {
         dumpTableSite();
         dumpTableKeyword();
         dumpTableCommonStats();
-        dumpTableDailyStats();
+        dumpTableDailyStats();*/
     }
 
     public void dumpTablePerson() {
@@ -524,9 +538,10 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d(TAG, "PERSON: read=" + cursor.getCount());
             if (cursor.moveToFirst()) {
                 do {
+                    int id = cursor.getColumnIndex("_id");
                     int indexID = cursor.getColumnIndex(DB.COLUMNS.PERSON.ID);
                     int indexPerson = cursor.getColumnIndex(DB.COLUMNS.PERSON.PERSON);
-                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getString(indexPerson));
+                    Log.d(TAG, "_id="+cursor.getInt(id)+":ID="+cursor.getInt(indexID) + ":person=" + cursor.getString(indexPerson));
                 } while (cursor.moveToNext());
             } else {
                 Log.d(TAG, "empty");
@@ -542,9 +557,10 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d(TAG, "SITE: read=" + cursor.getCount());
             if (cursor.moveToFirst()) {
                 do {
+                    int id = cursor.getColumnIndex("_id");
                     int indexID = cursor.getColumnIndex(DB.COLUMNS.SITE.ID);
                     int indexSite = cursor.getColumnIndex(DB.COLUMNS.SITE.SITE);
-                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getString(indexSite));
+                    Log.d(TAG, "_id="+cursor.getInt(id)+":ID="+cursor.getInt(indexID) + ":site=" + cursor.getString(indexSite));
                 } while (cursor.moveToNext());
             } else {
                 Log.d(TAG, "empty");
@@ -560,10 +576,12 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d(TAG, "KEYWORD: read=" + cursor.getCount());
             if (cursor.moveToFirst()) {
                 do {
+                    int id = cursor.getColumnIndex("_id");
                     int indexID = cursor.getColumnIndex(DB.COLUMNS.KEYWORD.ID);
                     int indexKeyword = cursor.getColumnIndex(DB.COLUMNS.KEYWORD.KEYWORD);
                     int indexRef = cursor.getColumnIndex(DB.COLUMNS.KEYWORD.PERSON_REF);
-                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getString(indexKeyword)+ ":" + cursor.getInt(indexRef));
+                    Log.d(TAG, "_id="+cursor.getInt(id)+":ID="+cursor.getInt(indexID) + ":word=" + cursor.getString(indexKeyword)+
+                            ":person_ref=" + cursor.getInt(indexRef));
                 } while (cursor.moveToNext());
             } else {
                 Log.d(TAG, "empty");
@@ -579,11 +597,13 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d(TAG, "COMMON: read=" + cursor.getCount());
             if (cursor.moveToFirst()) {
                 do {
+                    int id = cursor.getColumnIndex("_id");
                     int indexID = cursor.getColumnIndex(DB.COLUMNS.COMMON.ID);
                     int indexStats = cursor.getColumnIndex(DB.COLUMNS.COMMON.STATS);
                     int indexPersonRef = cursor.getColumnIndex(DB.COLUMNS.COMMON.PERSON_REF);
                     int indexSiteRef = cursor.getColumnIndex(DB.COLUMNS.COMMON.SITE_REF);
-                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getInt(indexStats)+ ":" + cursor.getInt(indexPersonRef)+ ":" + cursor.getInt(indexSiteRef));
+                    Log.d(TAG, "_id="+cursor.getInt(id)+":ID="+cursor.getInt(indexID) + ":stat=" + cursor.getInt(indexStats)+
+                            ":per_ref=" + cursor.getInt(indexPersonRef)+ ":site_ref=" + cursor.getInt(indexSiteRef));
                 } while (cursor.moveToNext());
             } else {
                 Log.d(TAG, "empty");
@@ -599,12 +619,16 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d(TAG, "DAILY: read=" + cursor.getCount());
             if (cursor.moveToFirst()) {
                 do {
+                    int id = cursor.getColumnIndex("_id");
                     int indexID = cursor.getColumnIndex(DB.COLUMNS.DAILY.ID);
                     int indexStats = cursor.getColumnIndex(DB.COLUMNS.DAILY.STATS);
                     int indexPersonRef = cursor.getColumnIndex(DB.COLUMNS.DAILY.PERSON_REF);
                     int indexSiteRef = cursor.getColumnIndex(DB.COLUMNS.DAILY.SITE_REF);
                     int indexDate = cursor.getColumnIndex(DB.COLUMNS.DAILY.DATE);
-                    Log.d(TAG, cursor.getInt(indexID) + ":" + cursor.getInt(indexDate) + ":" + cursor.getInt(indexStats)+ ":" + cursor.getInt(indexPersonRef)+ ":" + cursor.getInt(indexSiteRef));
+                    Log.d(TAG, "_id="+cursor.getInt(id)+":ID="+cursor.getInt(indexID) + ":date=" + cursor.getString(indexDate)+
+                            ":stat=" + cursor.getInt(indexStats)+
+                            ":per_ref=" + cursor.getInt(indexPersonRef)+ ":site_ref=" + cursor.getInt(indexSiteRef));
+
                 } while (cursor.moveToNext());
             } else {
                 Log.d(TAG, "empty");

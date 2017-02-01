@@ -44,7 +44,7 @@ public class SiteListDB implements iNet2SQL {
             while(iter.hasNext()){
                 String k=iter.next();
                 String v=dataJsonObj.getString(k);
-                DBHelper.getInstance().addSiteWithCheck(k,v);
+                DBHelper.getInstance().addSiteWithCheck(Integer.parseInt(k),v);
                 Log.d(TAG,k+":"+v);
             }
         }
