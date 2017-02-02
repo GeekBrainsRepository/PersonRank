@@ -45,7 +45,7 @@ public class Window extends JFrame {
         try {
             FontUIResource font = new FontUIResource(
                     Font.createFont(Font.TRUETYPE_FONT,
-                            new File(System.getProperty("user.dir") + "/fonts/Arial.ttf"))
+                            new File(System.getProperty("user.dir") + "/fonts/Tahoma.ttf"))
                             .deriveFont(Font.PLAIN, 12));
             setDefaultUIFont(font);
         } catch (FontFormatException ex) {
@@ -58,6 +58,7 @@ public class Window extends JFrame {
         setUndecorated(true);
         setContentPane(new ContentPane());
         setTitle("Person Rank");
+        setIconImage(new ImageIcon("images/title_icon.png"));
         WindowDragger winDragger = new WindowDragger(this);
         addMouseListener(winDragger);
         addMouseMotionListener(winDragger);
@@ -112,6 +113,12 @@ public class Window extends JFrame {
         ContentPane contentPane = (ContentPane) this.getContentPane();
         contentPane.setTitle(title);
 
+    }
+
+    private void setIconImage(ImageIcon imageIcon) {
+        super.setIconImage(imageIcon.getImage());
+        ContentPane pane = (ContentPane) getContentPane();
+        pane.setTitleIcon(imageIcon);
     }
 
     private class ActionGeneral extends AbstractAction {
