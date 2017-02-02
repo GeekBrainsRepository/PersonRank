@@ -37,7 +37,7 @@ import javax.swing.plaf.FontUIResource;
 class ContentPane extends JComponent {
 
     // Константы класса
-    private static final Color TITLE_COLOR = new Color(20,116,138,248);
+    private static final Color TITLE_COLOR = new Color(20, 116, 138, 248);
     private static final Color HEADER_COLOR = new Color(170, 170, 170, 255);
     private static final Color CONTENT_GRADIENT_A = new Color(130, 130, 130, 128);
     private static final Color CONTENT_GRADIENT_B = new Color(220, 220, 220, 64);
@@ -48,14 +48,14 @@ class ContentPane extends JComponent {
     private JComponent headerPanel;
     private JLabel title;
     private JButton bnExit;
-    private JButton bnExpand;
-    private JButton bnTurn;
+    private JButton bnExtended;
+    private JButton bnIconified;
     private JComponent contentPanel;
 
     // Конструктор класса
     public ContentPane() {
         super.setLayout(new BorderLayout());
-        Border outsideBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED, TITLE_COLOR, new Color(20,116,138,128));
+        Border outsideBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED, TITLE_COLOR, new Color(20, 116, 138, 128));
         Border insideBorder = BorderFactory.createStrokeBorder(new BasicStroke(WIDTH_BORDER), HEADER_COLOR);
         super.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
         initHeaderPanel();
@@ -67,7 +67,7 @@ class ContentPane extends JComponent {
     // Метод инициализирующий панель заголовка
     private void initHeaderPanel() {
         headerPanel = new JPanel();
-        
+
         try {
             Font fontTitle = Font.createFont(Font.TRUETYPE_FONT,
                     new File(System.getProperty("user.dir") + "/fonts/Renfrew.ttf"))
@@ -94,25 +94,26 @@ class ContentPane extends JComponent {
         bnExit.setPressedIcon(new ImageIcon("images/button_exit_pressed.png"));
         bnExit.addActionListener(new ActionExit());
 
-        bnExpand = new JButton();
-        bnExpand.setAlignmentY(JButton.TOP_ALIGNMENT);
-        bnExpand.setPreferredSize(bnExitSize);
-        bnExpand.setMinimumSize(bnExitSize);
-        bnExpand.setMaximumSize(bnExitSize);
-        bnExpand.setIcon(new ImageIcon("images/button_expand_default.png"));
-        bnExpand.setRolloverIcon(new ImageIcon("images/button_expand_rollover.png"));
-        bnExpand.setPressedIcon(new ImageIcon("images/button_expand_pressed.png"));
-        bnExpand.addActionListener(new ActionExpand());
+        bnExtended = new JButton();
+        bnExtended.setAlignmentY(JButton.TOP_ALIGNMENT);
+        bnExtended.setPreferredSize(bnExitSize);
+        bnExtended.setMinimumSize(bnExitSize);
+        bnExtended.setMaximumSize(bnExitSize);
+        bnExtended.setIcon(new ImageIcon("images/button_expand_default.png"));
+        bnExtended.setRolloverIcon(new ImageIcon("images/button_expand_rollover.png"));
+        bnExtended.setPressedIcon(new ImageIcon("images/button_expand_pressed.png"));
+        bnExtended.addActionListener(new ActionExtended());
+        bnExtended.setEnabled(false);
 
-        bnTurn = new JButton();
-        bnTurn.setAlignmentY(JButton.TOP_ALIGNMENT);
-        bnTurn.setPreferredSize(bnExitSize);
-        bnTurn.setMinimumSize(bnExitSize);
-        bnTurn.setMaximumSize(bnExitSize);
-        bnTurn.setIcon(new ImageIcon("images/button_turn_default.png"));
-        bnTurn.setRolloverIcon(new ImageIcon("images/button_turn_rollover.png"));
-        bnTurn.setPressedIcon(new ImageIcon("images/button_turn_pressed.png"));
-        bnTurn.addActionListener(new ActionTurn());
+        bnIconified = new JButton();
+        bnIconified.setAlignmentY(JButton.TOP_ALIGNMENT);
+        bnIconified.setPreferredSize(bnExitSize);
+        bnIconified.setMinimumSize(bnExitSize);
+        bnIconified.setMaximumSize(bnExitSize);
+        bnIconified.setIcon(new ImageIcon("images/button_turn_default.png"));
+        bnIconified.setRolloverIcon(new ImageIcon("images/button_turn_rollover.png"));
+        bnIconified.setPressedIcon(new ImageIcon("images/button_turn_pressed.png"));
+        bnIconified.addActionListener(new ActionIconified());
 
         contentPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
@@ -125,9 +126,9 @@ class ContentPane extends JComponent {
         headerPanel.add(Box.createHorizontalStrut(2));
         headerPanel.add(title);
         headerPanel.add(Box.createHorizontalGlue());
-        headerPanel.add(bnTurn);
+        headerPanel.add(bnIconified);
         headerPanel.add(Box.createHorizontalStrut(2));
-        headerPanel.add(bnExpand);
+        headerPanel.add(bnExtended);
         headerPanel.add(Box.createHorizontalStrut(2));
         headerPanel.add(bnExit);
     }
@@ -194,20 +195,24 @@ class ContentPane extends JComponent {
     }
 
     // Класс реализующий команду развернуть окно на весь экран
-    private class ActionExpand implements ActionListener {
+    private class ActionExtended implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            if (Window.getInstance().getExtendedState() == Window.MAXIMIZED_BOTH) {
+                 Window.getInstance().setExtendedState(Window.NORMAL);
+            } else {
+                Window.getInstance().setExtendedState(Window.MAXIMIZED_BOTH);
+            }
         }
     }
 
     // Класс реализующий каманду свернуть окно
-    private class ActionTurn implements ActionListener {
+    private class ActionIconified implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            Window.getInstance().setState(Window.ICONIFIED);
         }
     }
 
