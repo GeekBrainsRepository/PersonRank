@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import ru.geekbrain.gbseeker.personrank.entities.CommonStatDB;
+import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 
 public class CommonStatsFragment extends Fragment {
@@ -21,8 +22,11 @@ public class CommonStatsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        commonStatDB=new CommonStatDB(getContext());
+        commonStatDB = new CommonStatDB(getContext());
+        RestAPI.getCommonStats(commonStatDB,
+                commonStatDB.getSiteID(commonStatDB.getSiteList().get(selectedSitePosition)));
     }
+
 
     @Nullable
     @Override

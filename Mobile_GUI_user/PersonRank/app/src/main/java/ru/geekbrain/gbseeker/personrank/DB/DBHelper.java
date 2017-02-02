@@ -363,21 +363,23 @@ public class DBHelper extends SQLiteOpenHelper {
                 null, null, null, null, null);
     }
 
-    public void addCommonStats(int site_id,int person_id,int stats) {
+    public void addCommonStats(int id,int site_id,int person_id,int stats) {
         ContentValues cv = new ContentValues();
+        cv.put(DB.COLUMNS.COMMON.ID, id);
         cv.put(DB.COLUMNS.COMMON.PERSON_REF, person_id);
         cv.put(DB.COLUMNS.COMMON.SITE_REF, site_id);
         cv.put(DB.COLUMNS.COMMON.STATS, stats);
         getDB().insert(DB.TABLES.COMMON, null, cv);
     }
-    public void updateCommonStats(int commonStatsID,int site_id,int person_id,int stats) {
+    public void updateCommonStats(int _id,int id,int site_id,int person_id,int stats) {
         ContentValues cv = new ContentValues();
+        cv.put(DB.COLUMNS.COMMON.ID, id);
         cv.put(DB.COLUMNS.COMMON.PERSON_REF, person_id);
         cv.put(DB.COLUMNS.COMMON.SITE_REF, site_id);
         cv.put(DB.COLUMNS.COMMON.STATS, stats);
-        getDB().update(DB.TABLES.COMMON, cv,DB.COLUMNS.COMMON.ID+"="+commonStatsID,null);
+        getDB().update(DB.TABLES.COMMON, cv,"_id="+_id,null);
     }
-    public void addOrUpdateCommonStatsWithCheck(String site,String person,int stats) {
+    public void addOrUpdateCommonStatsWithCheck(int id,String site,String person,int stats) {
  /*       int person_id = getPersonIDOrCreate(person);
         int site_id = getSiteIDOrCreate(site);
 
@@ -404,9 +406,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getCursorOfCommonStatsWithSite(String site) {
         int site_id = DBHelper.getInstance().getSiteID(site);
 
-        String table = " persons as PS inner join common_stats as CS  on PS._id=CS.person_id";
-        String columns[] = {"PS.person as person", "CS.stats as stats", " PS._id as _id"};
-        String selection = "CS.site_id=?";
+        String table = DB.TABLES.PERSON+" as PS inner join "+DB.TABLES.COMMON+" as CS  on PS."+DB.COLUMNS.PERSON.ID+"=CS."+DB.COLUMNS.COMMON.PERSON_REF;
+        String columns[] = {"PS."+DB.COLUMNS.PERSON.PERSON+" as "+DB.COLUMNS.PERSON.PERSON, "CS."+DB.COLUMNS.COMMON.STATS+" as "+DB.COLUMNS.COMMON.STATS, " PS._id as _id"};
+        String selection = "CS."+DB.COLUMNS.COMMON.SITE_REF+"=?";
         String[] selectionArgs = {"" + site_id};
         return DBHelper.getInstance().getDB().query(table, columns, selection, selectionArgs, null, null, null);
     }
