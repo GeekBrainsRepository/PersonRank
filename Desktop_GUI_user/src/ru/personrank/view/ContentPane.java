@@ -25,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.plaf.FontUIResource;
 
 /**
  * Класс реализует альтернативный вариант ContentPane для JFrame с новым
