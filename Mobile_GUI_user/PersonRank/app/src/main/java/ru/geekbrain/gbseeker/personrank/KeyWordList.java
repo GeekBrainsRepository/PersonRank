@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import ru.geekbrain.gbseeker.personrank.entities.KeywordListDB;
+import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 
 public class KeyWordList extends Fragment {
@@ -22,6 +23,8 @@ public class KeyWordList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         keywordListDB=new KeywordListDB(getContext());
+
+        RestAPI.getKeyword(keywordListDB);
     }
 
     @Nullable

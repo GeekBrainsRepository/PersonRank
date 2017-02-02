@@ -7,12 +7,19 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
+
+import org.json.JSONObject;
+
+import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
+import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
-public class PersonListDB  {
+public class PersonListDB  implements iNet2SQL {
     Context context;
     SimpleCursorAdapter scPersonAdapter;
+    private static final String TAG="SPersonListDB";
 
     public PersonListDB(Context context) {
         this.context = context;
@@ -30,7 +37,29 @@ public class PersonListDB  {
         return scPersonAdapter;
     }
 
-    public void update(){
+    @Override
+    public String getInfo() {
+        return TAG;
+    }
+
+    public void updateDB(String json) {
+        try {
+            JSONObject dataJsonObj = new JSONObject(json);
+            Iterator<String> iter=dataJsonObj.keys();
+            while(iter.hasNext()){
+                String k=iter.next();
+                String v=dataJsonObj.getString(k);
+                DBHelper.getInstance().addPersonWithCheck(Integer.parseInt(k),v);
+                Log.d(TAG,k+":"+v);
+            }
+        }
+        catch(Exception e){
+            Log.d(TAG,e.getMessage());
+        }
+
+    }
+
+    public void updateUI(){
         scPersonAdapter.swapCursor(DBHelper.getInstance().getCursorWithPersons());
         scPersonAdapter.notifyDataSetChanged();
     }

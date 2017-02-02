@@ -23,10 +23,10 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String content;
+        String content="";
+        Log.d(TAG,net2SQL.getInfo());
         try {
             content = getContent(params[0]);
-            //content="{'1':'qqq','2':'penta'}";
             net2SQL.updateDB(content);
         } catch (Exception ex) {
             content = ex.getMessage();

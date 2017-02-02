@@ -142,32 +142,37 @@ public class DBHelper extends SQLiteOpenHelper {
         getDB().insert(DB.TABLES.PERSON, null, cv);
     }
     public void addPersonWithCheck(int id,String person) {
+        getDB().execSQL("DELETE FROM "+DB.TABLES.COMMON+" WHERE  "+DB.COLUMNS.COMMON.PERSON_REF+" in "+
+                "(select "+DB.COLUMNS.PERSON.ID+" from "+DB.TABLES.PERSON +
+                " where (" + DB.COLUMNS.PERSON.PERSON + "!='" + person + "' AND " + DB.COLUMNS.PERSON.ID + "=" + id + ") " +
+                " OR " +
+                "(" + DB.COLUMNS.PERSON.PERSON + "='" + person+ "' AND " + DB.COLUMNS.PERSON.ID + "!=" + id + ")"+
+                ")");
+        getDB().execSQL("DELETE FROM "+DB.TABLES.DAILY+" WHERE  "+DB.COLUMNS.DAILY.PERSON_REF+" in " +
+                "(select "+DB.COLUMNS.PERSON.ID+" from "+DB.TABLES.PERSON +
+                " where (" + DB.COLUMNS.PERSON.PERSON + "!='" + person + "' AND " + DB.COLUMNS.PERSON.ID + "=" + id + ") " +
+                " OR " +
+                "(" + DB.COLUMNS.PERSON.PERSON + "='" + person+ "' AND " + DB.COLUMNS.PERSON.ID + "!=" + id + ")"+
+                ")");
+        getDB().execSQL("DELETE FROM "+DB.TABLES.KEYWORD+" WHERE  "+DB.COLUMNS.KEYWORD.PERSON_REF+" in " +
+                "(select "+DB.COLUMNS.PERSON.ID+" from "+DB.TABLES.PERSON +
+                " where (" + DB.COLUMNS.PERSON.PERSON + "!='" + person + "' AND " + DB.COLUMNS.PERSON.ID + "=" + id + ") " +
+                " OR " +
+                "(" + DB.COLUMNS.PERSON.PERSON + "='" + person+ "' AND " + DB.COLUMNS.PERSON.ID + "!=" + id + ")"+
+                ")");
+        getDB().execSQL("DELETE FROM "+DB.TABLES.PERSON+" WHERE  "+
+                " (" + DB.COLUMNS.PERSON.PERSON + "!='" + person + "' AND " + DB.COLUMNS.PERSON.ID + "=" + id + ") " +
+                " OR " +
+                "(" + DB.COLUMNS.PERSON.PERSON + "='" + person+ "' AND " + DB.COLUMNS.PERSON.ID + "!=" + id + ")");
+
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.PERSON, null,
-                    DB.COLUMNS.PERSON.PERSON + "='" + person + "' AND "+DB.COLUMNS.PERSON.ID+ "=" + id,
+                    DB.COLUMNS.PERSON.PERSON + "='" + person + "' AND " + DB.COLUMNS.PERSON.ID + "=" + id,
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
-            }else {
+            } else {
                 addPerson(id, person);
-            }
-        } finally {
-            if (cursor != null) cursor.close();
-            cursor=null;
-        }
-
-        try{
-            cursor = getDB().query(DB.TABLES.PERSON, null,
-                    "("+DB.COLUMNS.PERSON.PERSON + "!='" + person + "' AND "+DB.COLUMNS.PERSON.ID+  "=" + id +") OR "+
-                    "("+DB.COLUMNS.PERSON.PERSON +  "='" + person + "' AND "+DB.COLUMNS.PERSON.ID+ "!=" + id+")",
-                    null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                cursor.close();
-                cursor=null;
-                getDB().delete(DB.TABLES.PERSON,
-                        "("+DB.COLUMNS.PERSON.PERSON + "!='" + person + "' AND "+DB.COLUMNS.PERSON.ID+  "=" + id +") OR "+
-                        "("+DB.COLUMNS.PERSON.PERSON +  "='" + person + "' AND "+DB.COLUMNS.PERSON.ID+ "!=" + id+")",
-                        null);
             }
         } finally {
             if (cursor != null) cursor.close();
@@ -209,8 +214,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String table = DB.TABLES.PERSON+" as PS inner join "+DB.TABLES.DAILY+" as DS " +
                 " on PS."+DB.COLUMNS.PERSON.ID+"=DS."+DB.COLUMNS.DAILY.PERSON_REF;
-        String columns[] = {"PS.person as person", " PS._id as _id"};
-        String selection = "DS.site_id=?";
+        String columns[] = {"PS."+DB.COLUMNS.PERSON.PERSON+" as "+DB.COLUMNS.PERSON.PERSON, " PS._id as _id"};
+        String selection = "DS."+DB.COLUMNS.DAILY.SITE_REF+"=?";
         String[] selectionArgs = {"" + site_id};
 
         Cursor cursor = null;
@@ -308,26 +313,52 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.KEYWORD.KEYWORD, keyword);
         getDB().insert(DB.TABLES.KEYWORD, null, cv);
     }
-    public void addKeywordWithCheck(int id,String person,String keyword){
+    public void addKeywordWithCheck(int id,String person,String keyword) {
         int person_id = getPersonID(person);
+
+        getDB().execSQL("DELETE FROM " + DB.TABLES.COMMON + " WHERE  " + DB.COLUMNS.COMMON.PERSON_REF + " in " +
+                "(select " + DB.COLUMNS.KEYWORD.PERSON_REF + " from " + DB.TABLES.KEYWORD
+                + " where (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' OR " + DB.COLUMNS.KEYWORD.ID + "=" + id + " OR " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id + ") "
+                + " AND "
+                + " NOT (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND " + DB.COLUMNS.KEYWORD.ID + "=" + id + " AND " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id + ") "
+                + ")");
+        getDB().execSQL("DELETE FROM " + DB.TABLES.DAILY + " WHERE  " + DB.COLUMNS.DAILY.PERSON_REF + " in " +
+                "(select " + DB.COLUMNS.KEYWORD.PERSON_REF + " from " + DB.TABLES.KEYWORD
+                + " where (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' OR " + DB.COLUMNS.KEYWORD.ID + "=" + id + " OR " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id + ") "
+                + " AND "
+                + " NOT (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND " + DB.COLUMNS.KEYWORD.ID + "=" + id + " AND " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id + ") "
+                + ")");
+
+        getDB().execSQL("DELETE FROM " + DB.TABLES.PERSON + " WHERE  " + DB.COLUMNS.PERSON.ID + " in " +
+                "(select " + DB.COLUMNS.KEYWORD.PERSON_REF + " from " + DB.TABLES.KEYWORD
+                + " where (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' OR " + DB.COLUMNS.KEYWORD.ID + "=" + id + " OR " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id + ") "
+                + " AND "
+                + " NOT (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND " + DB.COLUMNS.KEYWORD.ID + "=" + id + " AND " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id + ") "
+                + ")");
+
+        getDB().execSQL("DELETE FROM " + DB.TABLES.KEYWORD + " WHERE  "
+                + "(" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' OR " + DB.COLUMNS.KEYWORD.ID + "=" + id + " OR " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id + ") "
+                + " AND "
+                + " NOT (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND " + DB.COLUMNS.KEYWORD.ID + "=" + id + " AND " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id + ") "
+                + ")");
+
 
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.KEYWORD, null,
-                    DB.COLUMNS.KEYWORD.KEYWORD+ "='" + keyword +"' AND "+DB.COLUMNS.KEYWORD.PERSON_REF+"="+person_id,
+                    DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND " + DB.COLUMNS.KEYWORD.ID + "=" + id + " AND " + DB.COLUMNS.KEYWORD.PERSON_REF + "=" + person_id,
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
-                return;
             } else {
-      //          addKeyword(person_id,keyword);
+                addKeyword(id, person_id, keyword);
             }
         } finally {
-            if(cursor!=null)cursor.close();
+            if (cursor != null) cursor.close();
         }
     }
     public Cursor getCursorOfKeywordWithPerson(String person){
-        int person_id=DBHelper.getInstance().getPersonID(person);
-        return DBHelper.getInstance().getDB().query(DBHelper.DB.TABLES.KEYWORD, null,
+        int person_id=getPersonID(person);
+        return getDB().query(DBHelper.DB.TABLES.KEYWORD, null,
                 DBHelper.DB.COLUMNS.KEYWORD.PERSON_REF+"="+person_id,
                 null, null, null, null, null);
     }

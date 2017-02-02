@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import ru.geekbrain.gbseeker.personrank.entities.PersonListDB;
+import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class PersonList extends Fragment {
     SimpleCursorAdapter scAdapter;
@@ -20,6 +21,7 @@ public class PersonList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         personListDB = new PersonListDB(getContext());
+        RestAPI.getPerson(personListDB);
     }
 
     @Nullable

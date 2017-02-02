@@ -37,6 +37,11 @@ public class SiteListDB implements iNet2SQL {
         return scSiteAdapter;
     }
 
+    @Override
+    public String getInfo() {
+        return TAG;
+    }
+
     public void updateDB(String json) {
         try {
             JSONObject dataJsonObj = new JSONObject(json);

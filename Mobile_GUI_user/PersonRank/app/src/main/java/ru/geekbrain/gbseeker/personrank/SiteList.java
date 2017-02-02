@@ -1,6 +1,5 @@
 package ru.geekbrain.gbseeker.personrank;
 
-import android.content.ContentValues;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.View;
 import android.widget.ListView;
 
-import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.entities.SiteListDB;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 

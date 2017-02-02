@@ -7,14 +7,21 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.widget.ArrayAdapter;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
+import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
-public class KeywordListDB {
+public class KeywordListDB implements iNet2SQL {
+    private static final String TAG="KeywordListDB";
+
     Context context;
     ArrayList<String> personList = new ArrayList<>();
     int selectedPerson = 0;
@@ -37,7 +44,30 @@ public class KeywordListDB {
         return personListAdapter;
     }
 
-    public void update(){
+     public void updateDB(String json) {
+/*        try {
+          JSONObject dataJsonObj = new JSONObject(json);
+            Iterator<String> iter=dataJsonObj.keys();
+            while(iter.hasNext()){
+                String k=iter.next();
+                String v=dataJsonObj.getString(k);
+                DBHelper.getInstance().addSiteWithCheck(Integer.parseInt(k),v);
+                Log.d(TAG,k+":"+v);
+
+             }
+        }
+        catch(Exception e){
+            Log.d(TAG,e.getMessage());
+        }
+*/
+    }
+
+    @Override
+    public String getInfo() {
+        return TAG;
+    }
+
+    public void updateUI(){
         String person=personList.get(selectedPerson);
 
         getPersonList();
