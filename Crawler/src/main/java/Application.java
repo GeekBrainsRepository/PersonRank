@@ -12,6 +12,6 @@ public class Application {
         for(int j = 0 ; j < pagesCreater.getLinks().size()/2; j++){
             i += Parser.searchWord("Трамп", pagesCreater.getLinks().get(j));
         }
-        System.out.println(i);//ну теперь более менее поделили, теперь подцепить надо будет бд
+        System.out.println(i);
     }
 }

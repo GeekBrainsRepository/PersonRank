@@ -7,19 +7,19 @@ public class Parser {
     private static String getPlainText(String url){
 
         StringBuffer result = new StringBuffer();
-        Document doc = null;
+        Document document = null;
         try{
-            doc = Jsoup.connect(url).get(); //todo рефактор
+            document = Jsoup.connect(url).get(); //todo рефактор
         } catch(IOException e){
             e.printStackTrace();
             System.out.println("Возникла ошибка при соединении: " + url);//todo логгер
         }
 
-        String titles = doc.select("title").text();
-        String paragraphText = doc.select("p").text();
-        String headerH1 = doc.select("h1").text();
-        String headerH2 = doc.select("h2").text();
-        String headerH3 = doc.select("h3").text();
+        String titles = document.select("title").text();
+        String paragraphText = document.select("p").text();
+        String headerH1 = document.select("h1").text();
+        String headerH2 = document.select("h2").text();
+        String headerH3 = document.select("h3").text();
         result.append(titles + "\n" + paragraphText + "\n" + headerH1 + "\n" + headerH2 + "\n" + headerH3);
         return result.toString();
     }
