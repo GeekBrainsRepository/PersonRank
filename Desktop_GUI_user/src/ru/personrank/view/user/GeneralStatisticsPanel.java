@@ -9,8 +9,6 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.border.EmptyBorder;
@@ -65,12 +63,12 @@ public class GeneralStatisticsPanel extends JPanel {
     private JTabbedPane createContentTabbedPanel() {
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
+        
         generalTableModel = new GeneralStaticTabelModel();
         generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
         JTable generalTable = new JTable(generalTableModel);
         generalTable.setRowHeight(30);
         JScrollPane tabTable = new JScrollPane(generalTable);
-        //tabTable.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
         tabbedPane.addTab("Таблица", tabTable);
         barChart = ChartFactory.createBarChart(
                 null,
@@ -79,7 +77,6 @@ public class GeneralStatisticsPanel extends JPanel {
                 createDatashet(),
                 PlotOrientation.VERTICAL, true, true, false);
         ChartPanel chartPanel = new ChartPanel(barChart);
-        //chartPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
         tabbedPane.addTab("Диаграмма", chartPanel);
         return tabbedPane;
     }

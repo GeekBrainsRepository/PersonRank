@@ -6,24 +6,27 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.plaf.FontUIResource;
 
 /**
  * Класс реализует альтернативный вариант ContentPane для JFrame с новым
@@ -33,22 +36,23 @@ import javax.swing.border.Border;
  *
  */
 class ContentPane extends JComponent {
-    
+
     // Константы класса
-    private static final Color HEADER_COLOR = new Color(130, 130, 130, 255);
+    private static final Color TITLE_COLOR = new Color(20,116,138,248);
+    private static final Color HEADER_COLOR = new Color(170, 170, 170, 255);
     private static final Color CONTENT_GRADIENT_A = new Color(130, 130, 130, 128);
     private static final Color CONTENT_GRADIENT_B = new Color(220, 220, 220, 64);
     private static final int HEIGHT_HEADER = 40;
     private static final float WIDTH_BORDER = 5.0f;
-    
+
     // Компоненты панели
-    private JComponent headerPanel; 
+    private JComponent headerPanel;
     private JLabel title;
     private JButton bnExit;
     private JButton bnExpand;
     private JButton bnTurn;
     private JComponent contentPanel;
-    
+
     // Конструктор класса
     public ContentPane() {
         super.setLayout(new BorderLayout());
@@ -65,14 +69,24 @@ class ContentPane extends JComponent {
     private void initHeaderPanel() {
         headerPanel = new JPanel();
         
-        title = new JLabel();
-        title.setAlignmentY(JLabel.TOP_ALIGNMENT);
-        title.setFont(new Font("TimesRoman", Font.BOLD,   30));
-        title.setForeground(Color.WHITE);
-        
+        try {
+            Font fontTitle = Font.createFont(Font.TRUETYPE_FONT,
+                    new File(System.getProperty("user.dir") + "/fonts/Renfrew.ttf"))
+                    .deriveFont(Font.PLAIN, 26);
+            title = new JLabel();
+            title.setAlignmentY(JLabel.TOP_ALIGNMENT);
+            title.setVerticalTextPosition(JLabel.BOTTOM);
+            title.setFont(fontTitle);
+            title.setForeground(TITLE_COLOR);
+        } catch (FontFormatException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
         bnExit = new JButton();
         bnExit.setAlignmentY(JButton.TOP_ALIGNMENT);
-        Dimension bnExitSize = new Dimension(32,32);
+        Dimension bnExitSize = new Dimension(32, 32);
         bnExit.setPreferredSize(bnExitSize);
         bnExit.setMinimumSize(bnExitSize);
         bnExit.setMaximumSize(bnExitSize);
@@ -80,7 +94,7 @@ class ContentPane extends JComponent {
         bnExit.setRolloverIcon(new ImageIcon("images/button_exit_rollover.png"));
         bnExit.setPressedIcon(new ImageIcon("images/button_exit_pressed.png"));
         bnExit.addActionListener(new ActionExit());
-        
+
         bnExpand = new JButton();
         bnExpand.setAlignmentY(JButton.TOP_ALIGNMENT);
         bnExpand.setPreferredSize(bnExitSize);
@@ -90,7 +104,7 @@ class ContentPane extends JComponent {
         bnExpand.setRolloverIcon(new ImageIcon("images/button_expand_rollover.png"));
         bnExpand.setPressedIcon(new ImageIcon("images/button_expand_pressed.png"));
         bnExpand.addActionListener(new ActionExpand());
-                
+
         bnTurn = new JButton();
         bnTurn.setAlignmentY(JButton.TOP_ALIGNMENT);
         bnTurn.setPreferredSize(bnExitSize);
@@ -100,7 +114,7 @@ class ContentPane extends JComponent {
         bnTurn.setRolloverIcon(new ImageIcon("images/button_turn_rollover.png"));
         bnTurn.setPressedIcon(new ImageIcon("images/button_turn_pressed.png"));
         bnTurn.addActionListener(new ActionTurn());
-        
+
         contentPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
         headerPanel.setOpaque(false);
@@ -108,8 +122,7 @@ class ContentPane extends JComponent {
         headerPanel.setPreferredSize(headerSize);
         headerPanel.setMaximumSize(headerSize);
         headerPanel.setMinimumSize(headerSize);
-        
-       
+
         headerPanel.add(Box.createHorizontalStrut(2));
         headerPanel.add(title);
         headerPanel.add(Box.createHorizontalGlue());
@@ -118,16 +131,14 @@ class ContentPane extends JComponent {
         headerPanel.add(bnExpand);
         headerPanel.add(Box.createHorizontalStrut(2));
         headerPanel.add(bnExit);
-//        headerPanel.setBorder(new LineBorder(Color.BLACK, 1));
     }
-    
+
     // Метод инициализирующий панель контента
     private void initContentPanel() {
         contentPanel.setLayout(new BorderLayout());
         contentPanel.setOpaque(false);
-//        contentPanel.setBorder(new LineBorder(Color.BLACK,1)); 
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -163,33 +174,41 @@ class ContentPane extends JComponent {
     public Component add(String name, Component comp) {
         return contentPanel.add(name, comp);
     }
-    
-    // Метод передает натпись в заголовок
+
+    // Метод устанавливает надпись в заголовок окна
     void setTitle(String title) {
         this.title.setText(title);
     }
-    
+
+    // Метод устанавливает иконку в заголовок окна
+    void setTitleIcon(ImageIcon imageIcon) {
+        title.setIcon(imageIcon);
+    }
+
     // Класс реализующий команду завершения работы приложения
     private class ActionExit implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
         }
     }
-    
+
     // Класс реализующий команду развернуть окно на весь экран
     private class ActionExpand implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+
         }
     }
-    
+
     // Класс реализующий каманду свернуть окно
     private class ActionTurn implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+
         }
     }
 
