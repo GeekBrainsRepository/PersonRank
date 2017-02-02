@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -42,20 +43,20 @@ public class DBHelper extends SQLiteOpenHelper {
             interface KEYWORD {
                 String ID = "id";
                 String KEYWORD = "keyword";
-                String PERSON_REF = "person_id";
+                String PERSON_REF = "person_ref";
             }
 
             interface COMMON {
                 String ID = "id";
-                String SITE_REF = "site_id";
-                String PERSON_REF = "person_id";
+                String SITE_REF = "site_ref";
+                String PERSON_REF = "person_ref";
                 String STATS = "stats";
             }
 
             interface DAILY {
                 String ID = "id";
-                String SITE_REF = "site_id";
-                String PERSON_REF = "person_id";
+                String SITE_REF = "site_ref";
+                String PERSON_REF = "person_ref";
                 String DATE = "date";
                 String STATS = "stats";
             }
@@ -236,6 +237,23 @@ public class DBHelper extends SQLiteOpenHelper {
         getDB().insert(DB.TABLES.SITE, null, cv);
     }
     public void addSiteWithCheck(int id,String site) {
+        getDB().execSQL("DELETE FROM "+DB.TABLES.COMMON+" WHERE  "+DB.COLUMNS.COMMON.SITE_REF+" in "+
+                "(select "+DB.COLUMNS.SITE.ID+" from "+DB.TABLES.SITE +
+                   " where (" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") " +
+                         " OR " +
+                          "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ")"+
+                ")");
+        getDB().execSQL("DELETE FROM "+DB.TABLES.DAILY+" WHERE  "+DB.COLUMNS.DAILY.SITE_REF+" in " +
+                "(select "+DB.COLUMNS.SITE.ID+" from "+DB.TABLES.SITE +
+                   " where (" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") " +
+                          "OR " +
+                          "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ")" +
+                ")");
+        getDB().execSQL("DELETE FROM "+DB.TABLES.SITE+" WHERE  "
+                +"(" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") " +
+                " OR " +
+                 "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ")");
+
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.SITE, null,
@@ -247,44 +265,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         } finally {
             if (cursor != null) cursor.close();
-            cursor=null;
         }
-
-        dumpTableSite();
-        try {
-            cursor = getDB().query(DB.TABLES.SITE, null,
-                    "(" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") OR " +
-                            "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ")",
-                    null, null, null, null);
-            if (cursor.moveToFirst()) {
-                int id0 = cursor.getColumnIndex("_id");
-                int id1 = cursor.getColumnIndex(DB.COLUMNS.SITE.ID);
-                int idname = cursor.getColumnIndex(DB.COLUMNS.SITE.SITE);
-                do {
-                    Log.d(TAG, "_id=" + cursor.getInt(id0) + ":ID=" + cursor.getInt(id1) + ":site=" + cursor.getString(idname));
-                } while (cursor.moveToNext());
-            }
-
-         /*   getDB().delete(DB.TABLES.SITE,
-                    "(" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") OR " +
-                            "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ")",
-                    null);*/
-        }
-        finally {
-            if (cursor != null) cursor.close();
-        }
-        dumpTableSite();
-        getDB().rawQuery("delete from " + DB.TABLES.COMMON + " where " + DB.COLUMNS.COMMON.SITE_REF + " in " +
-                        " (select " + DB.COLUMNS.SITE.ID + " from " + DB.COLUMNS.SITE.SITE +
-                        " where (" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") OR " +
-                        "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ") )",
-                null);
-
-/*        getDB().rawQuery("delete from " + DB.TABLES.DAILY + " where " + DB.COLUMNS.DAILY.SITE_REF + " in " +
-                        " (select " + DB.COLUMNS.SITE.ID + " from " + DB.COLUMNS.SITE.SITE +
-                        " where (" + DB.COLUMNS.SITE.SITE + "!='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ") OR " +
-                        "(" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "!=" + id + ") )",
-                null);*/
     }
     public int getSiteID(String site) {
         Cursor cursor = null;

@@ -25,8 +25,8 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         String content;
         try {
-            //content = getContent(params[0]);
-            content="{'1':'qqq','2':'penta'}";
+            content = getContent(params[0]);
+            //content="{'1':'qqq','2':'penta'}";
             net2SQL.updateDB(content);
         } catch (Exception ex) {
             content = ex.getMessage();
