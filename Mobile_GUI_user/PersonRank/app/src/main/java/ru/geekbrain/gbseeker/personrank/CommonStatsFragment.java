@@ -47,6 +47,8 @@ public class CommonStatsFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
+                RestAPI.getCommonStats(commonStatDB,
+                        commonStatDB.getSiteID(commonStatDB.getSiteList().get(position)));
                 commonStatDB.setSelectedSitePosition(position);
             }
             @Override

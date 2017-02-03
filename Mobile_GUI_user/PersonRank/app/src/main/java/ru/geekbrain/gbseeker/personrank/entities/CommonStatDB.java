@@ -56,7 +56,7 @@ public class CommonStatDB implements iNet2SQL {
             while(iter.hasNext()){
                 String k=iter.next();
                 int v=result.getInt(k);
-                DBHelper.getInstance().addOrUpdateCommonStatsWithCheck(,siteList.get(selectedSite),k,v);
+                DBHelper.getInstance().addOrUpdateCommonStatsWithCheck(siteList.get(selectedSite),k,v);
                 Log.d(TAG,k+":"+v);
             }
         }
