@@ -7,15 +7,22 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.widget.ArrayAdapter;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
+import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
-public class DailyStatsDB{
+public class DailyStatsDB  implements iNet2SQL {
+    private final String TAG="DailyStatsDB";
     Context context;
     ArrayList<String> siteList = new ArrayList<>();
     ArrayList<String> personList = new ArrayList<>();
@@ -24,10 +31,48 @@ public class DailyStatsDB{
     int selectedSite = 0;
     int selectedPerson = 0;
 
+    long dateFrom,dateTo;
+    private final long DAY_MILLISEC=3600*24*1000;
+
     SimpleCursorAdapter scAdapter;
 
     public DailyStatsDB(Context context) {
         this.context = context;
+    }
+
+    public int  getSiteID(String site) {
+        return DBHelper.getInstance().getSiteID(site);
+    }
+    public int  getPersonID(String person) {return DBHelper.getInstance().getPersonID(person); }
+
+    @Override
+    public void updateUI() {
+
+    }
+
+    @Override
+    public String getInfo() {
+        return null;
+    }
+
+    @Override
+    public void updateDB(String json) {
+        try {
+            JSONObject dataJsonObj = new JSONObject(json);
+            JSONArray result=dataJsonObj.getJSONArray("result");
+            for(int i=0;i<result.length();i++){
+                int v=result.getInt(i);
+                DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
+                        siteList.get(selectedSite),
+                        personList.get(selectedPerson),
+                        dateFrom+i*DAY_MILLISEC,v);
+                Log.d(TAG,i+":"+v);
+            }
+        }
+        catch(Exception e){
+            Log.d(TAG,e.getMessage());
+        }
+
     }
 
 

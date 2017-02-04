@@ -25,4 +25,10 @@ public class RestAPI {
         ConnectionWrapper p1 = new ConnectionWrapper(net2SQL);
         p1.execute("http://37.194.87.95:30000/statistic/common/" + site_id);
     }
+
+
+    public static void getDailyStats(iNet2SQL net2SQL,int site_id,int person_id,long from,long to) {
+        ConnectionWrapper p1 = new ConnectionWrapper(net2SQL);
+        p1.execute("http://37.194.87.95:30000/statistic/daily/"+site_id+"/"+person_id+"/"+from+"/"+to);
+    }
 }

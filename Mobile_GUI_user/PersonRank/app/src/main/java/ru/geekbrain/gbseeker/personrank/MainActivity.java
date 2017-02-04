@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
+import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,6 +45,14 @@ public class MainActivity extends AppCompatActivity
             fragment = new SiteList();
             fm.beginTransaction()
                     .add(R.id.FrameContainer, fragment)
+                    .commit();
+            fragment = new PersonList();
+            fm.beginTransaction()
+                    .replace(R.id.FrameContainer, fragment)
+                    .commit();
+            fragment = new CommonStatsFragment();
+            fm.beginTransaction()
+                    .replace(R.id.FrameContainer, fragment)
                     .commit();
         }
 

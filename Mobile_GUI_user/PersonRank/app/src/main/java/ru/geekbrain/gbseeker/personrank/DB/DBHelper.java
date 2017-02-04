@@ -407,7 +407,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.DAILY.PERSON_REF, person_id);
         cv.put(DB.COLUMNS.DAILY.SITE_REF, site_id);
         cv.put(DB.COLUMNS.DAILY.STATS, stats);
-        //SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         cv.put(DB.COLUMNS.DAILY.DATE, format.format(date));
         getDB().insert(DB.TABLES.DAILY, null, cv);
@@ -420,38 +419,39 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.DAILY.STATS, stats);
         getDB().update(DB.TABLES.DAILY, cv,"_id="+_id,null);
     }
-    public void addOrUpdateDailyStatsWithCheck(String site,String person,Date date,int stats) {
-  /*      int person_id = getPersonIDOrCreate(person);
-        int site_id = getSiteIDOrCreate(site);
+    public void addOrUpdateDailyStatsWithCheck(String site,String person,long  date,int stats) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        int person_id = getPersonID(person);
+        int site_id = getSiteID(site);
+        if(person_id==0 || site_id==0){
+            return;
+        }
 
         Cursor cursor = null;
         try {
+            Date d=new Date(date);
             cursor = getDB().query(DB.TABLES.DAILY, null,
                     DB.COLUMNS.DAILY.PERSON_REF + "=" + person_id + " AND " + DB.COLUMNS.DAILY.SITE_REF + "=" + site_id +
-                            " AND " + DB.COLUMNS.DAILY.DATE + "='" + date.toString()+"'",
+                            " AND " + DB.COLUMNS.DAILY.DATE + "='" + format.format(d)+"'",
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
-                int indexID = cursor.getColumnIndex(DB.COLUMNS.DAILY.ID);
-                int id = cursor.getInt(indexID);
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
                 int indexStats = cursor.getColumnIndex(DB.COLUMNS.DAILY.STATS);
                 if (cursor.getInt(indexStats) != stats) {
-                    updateDailyStats(id, site_id, person_id, date, stats);
+                    updateDailyStats(id, site_id, person_id, d, stats);
                 }
                 return;
 
             } else {
-                addDailyStats(site_id, person_id, date, stats);
+                addDailyStats(site_id, person_id, d, stats);
             }
         } finally {
             if (cursor != null) cursor.close();
-        }*/
+        }
     }
     public Cursor getCursorOfDailyStatsWithSite(String site,String person) {
         int site_id = DBHelper.getInstance().getSiteID(site);
         int person_id = DBHelper.getInstance().getPersonID(person);
-        dumpTablePerson();
-        dumpTableSite();
-        dumpTableDailyStats();
 
         return DBHelper.getInstance().getDB().query(DB.TABLES.DAILY, null,
                 DB.COLUMNS.DAILY.PERSON_REF+'='+person_id+" and "+DB.COLUMNS.DAILY.SITE_REF+'='+site_id,
