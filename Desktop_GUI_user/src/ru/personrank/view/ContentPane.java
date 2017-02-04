@@ -25,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.FontUIResource;
 
 /**

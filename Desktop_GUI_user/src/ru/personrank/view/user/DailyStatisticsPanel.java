@@ -36,6 +36,9 @@ import ru.personrank.data.dailystatistic.DailyStatisticSpecification;
 
 public class DailyStatisticsPanel extends JPanel {
 
+    private static final Color TABLE_GRID_COLOR = Color.LIGHT_GRAY;
+    private static final Color TABLE_SELECTION_BACKGROUND = new Color(20, 116, 138, 248);
+    
     private DailyStatisticOnSiteRepository dailyStatisticRepository;
     private JLabel saitLabel;
     private JLabel personLabel;
@@ -66,18 +69,15 @@ public class DailyStatisticsPanel extends JPanel {
         comboPerson = new JComboBox(comboPersonModel);
         labelPeriod = new JLabel();
         labelPo = new JLabel();
-        //DateFormat format = new SimpleDateFormat("DD.MM.YYYY");
         GregorianCalendar initDate = (GregorianCalendar) GregorianCalendar.getInstance();
         formattedTextFieldData1 = new JXDatePicker(new GregorianCalendar(
                                         initDate.get(Calendar.YEAR),
                                         initDate.get(Calendar.MONTH),
-                                        initDate.getMinimum(Calendar.DAY_OF_MONTH)).getTime());
+                                        initDate.getActualMinimum(Calendar.DAY_OF_MONTH)).getTime());
         formattedTextFieldData2 = new JXDatePicker(new GregorianCalendar(
                                         initDate.get(Calendar.YEAR),
                                         initDate.get(Calendar.MONTH),
-                                        initDate.getMaximum(Calendar.DAY_OF_MONTH)).getTime());
-        //formattedTextFieldData1.setFormats(formats); // При включенном форматировани некоректно отображается дата
-        //formattedTextFieldData2.setFormats(format);  // Видимо setFormat работает не корректно
+                                        initDate.getActualMaximum(Calendar.DAY_OF_MONTH)).getTime());
         buttonSend = new JButton();
         buttonSend.addActionListener(new ButtonSendListener());
         contentTabbedPane = new JTabbedPane(JTabbedPane.BOTTOM,
@@ -86,9 +86,13 @@ public class DailyStatisticsPanel extends JPanel {
         statisticTableModel = new StatisticTabelModel();
         statisticTableModel.setDataSource(formattedTextFieldData1.getDate(), formattedTextFieldData2.getDate());
         dailyTable = new JTable(statisticTableModel); 
+        dailyTable.setShowGrid(true);
+        dailyTable.setShowHorizontalLines(true);
+        dailyTable.setShowVerticalLines(true);
+        dailyTable.setGridColor(TABLE_GRID_COLOR);
         dailyTable.setRowHeight(30);
+        dailyTable.setSelectionBackground(TABLE_SELECTION_BACKGROUND);
         scrollPane = new JScrollPane(dailyTable);
-//        scrollPane.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
         contentTabbedPane.addTab("Таблица", scrollPane);
         lineChart = ChartFactory.createTimeSeriesChart(
                 null, 
@@ -96,8 +100,8 @@ public class DailyStatisticsPanel extends JPanel {
                 "к-во страниц", 
                 createDataset(), false, true, true);
         ChartPanel chartPanel = new ChartPanel(lineChart);
-//        chartPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK));
-        contentTabbedPane.addTab("Граффик", chartPanel);
+        chartPanel.setBorder(scrollPane.getBorder());
+        contentTabbedPane.addTab("График", chartPanel);
         setOpaque(false);
         contentPositioning();
         

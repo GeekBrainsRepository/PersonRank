@@ -9,8 +9,12 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -21,18 +25,22 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class GeneralStatisticsPanel extends JPanel {
 
+    private static final Color TABLE_GRID_COLOR = Color.LIGHT_GRAY;
+    private static final Color TABLE_SELECTION_BACKGROUND = new Color(20, 116, 138, 248);
+
     private GeneralStatisticOnSiteRepository statisticRepository;
     private JComboBox namesSitesComboBox;
+    private JLabel dateScanSite;
     private GeneralStaticTabelModel generalTableModel;
     private JFreeChart barChart;
-    
-    public GeneralStatisticsPanel() {        
+
+    public GeneralStatisticsPanel() {
         statisticRepository = GeneralStatisticOnSiteRepository.getInstance();
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(6, 6, 6, 6));
         setOpaque(false);
         add(createControlBox(), BorderLayout.NORTH);
-        add(createContentTabbedPanel(), BorderLayout.CENTER);
+        add(createContentPanel(), BorderLayout.CENTER);
     }
 
     private Box createControlBox() {
@@ -60,14 +68,31 @@ public class GeneralStatisticsPanel extends JPanel {
         return box;
     }
 
-    private JTabbedPane createContentTabbedPanel() {
+    private JPanel createContentPanel() {
+        dateScanSite = new JLabel("");
+        dateScanSite.setHorizontalTextPosition(JLabel.RIGHT);
+        dateScanSite.setHorizontalAlignment(JLabel.RIGHT);
+        dateScanSite.setFont(dateScanSite.getFont().deriveFont(Font.ITALIC));
+        List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.getInstance().
+                query(GeneralStatisticSpecification.findStatisticSite(namesSitesComboBox.getSelectedItem().toString()));
+        if (!list.isEmpty()) {
+            Date date = list.get(0).getReviewDate().getTime();
+            SimpleDateFormat formater = new SimpleDateFormat("Актуально на: (dd.MM.yyyy)");
+            dateScanSite.setText(formater.format(date));
+        }
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.add(dateScanSite, BorderLayout.NORTH);
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
-        
         generalTableModel = new GeneralStaticTabelModel();
         generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
         JTable generalTable = new JTable(generalTableModel);
+        generalTable.setShowGrid(true);
+        generalTable.setShowHorizontalLines(true);
+        generalTable.setShowVerticalLines(true);
+        generalTable.setGridColor(TABLE_GRID_COLOR);
         generalTable.setRowHeight(30);
+        generalTable.setSelectionBackground(TABLE_SELECTION_BACKGROUND);
         JScrollPane tabTable = new JScrollPane(generalTable);
         tabbedPane.addTab("Таблица", tabTable);
         barChart = ChartFactory.createBarChart(
@@ -77,8 +102,10 @@ public class GeneralStatisticsPanel extends JPanel {
                 createDatashet(),
                 PlotOrientation.VERTICAL, true, true, false);
         ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setBorder(tabTable.getBorder());
         tabbedPane.addTab("Диаграмма", chartPanel);
-        return tabbedPane;
+        contentPanel.add(tabbedPane, BorderLayout.CENTER);
+        return contentPanel;
     }
 
     private CategoryDataset createDatashet() {
@@ -184,6 +211,14 @@ public class GeneralStatisticsPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
             barChart.getCategoryPlot().setDataset(createDatashet());
+            List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.getInstance().
+                    query(GeneralStatisticSpecification.findStatisticSite(namesSitesComboBox.getSelectedItem().toString()));
+            if (!list.isEmpty()) {
+                Date date = list.get(0).getReviewDate().getTime();
+                SimpleDateFormat formater = new SimpleDateFormat("Актуально на: (dd.MM.yyyy)");
+
+                dateScanSite.setText(formater.format(date));
+            }
         }
     }
 
@@ -196,7 +231,6 @@ public class GeneralStatisticsPanel extends JPanel {
         g2d.setColor(getBackground());
         g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.dispose();
-}
-
+    }
 
 }
