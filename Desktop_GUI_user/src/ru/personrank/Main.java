@@ -50,8 +50,13 @@ public class Main {
         try {
             FontUIResource newFont = new FontUIResource(
                     Font.createFont(Font.TRUETYPE_FONT,
-                            new File(System.getProperty("user.dir") + "/fonts/" + fontFileName))
-                            .deriveFont(Font.PLAIN, fontSize));
+                    Main.class.getResourceAsStream("/ru/resources/fonts/" + fontFileName))
+                        .deriveFont(Font.PLAIN, fontSize));
+                    
+//                    Font.createFont(Font.TRUETYPE_FONT,
+//                            new File(System.getProperty("user.dir") + "/fonts/" + fontFileName))                           
+//                            .deriveFont(Font.PLAIN, fontSize));
+
             Enumeration<Object> keys = UIManager.getDefaults().keys();
             while (keys.hasMoreElements()) {
                 Object key = keys.nextElement();

@@ -70,9 +70,12 @@ class ContentPane extends JComponent {
         headerPanel = new JPanel();
 
         try {
-            Font fontTitle = Font.createFont(Font.TRUETYPE_FONT,
-                    new File(System.getProperty("user.dir") + "/fonts/Renfrew.ttf"))
+            Font fontTitle = Font.createFont(Font.TRUETYPE_FONT, 
+                    getClass().getResourceAsStream("/ru/resources/fonts/Renfrew.ttf"))
                     .deriveFont(Font.PLAIN, 26);
+//            Font fontTitle = Font.createFont(Font.TRUETYPE_FONT,
+//                    new File(System.getProperty("user.dir") + "/fonts/Renfrew.ttf"))
+//                    .deriveFont(Font.PLAIN, 26);
             title = new JLabel();
             title.setAlignmentY(JLabel.TOP_ALIGNMENT);
             title.setVerticalTextPosition(JLabel.BOTTOM);
@@ -90,9 +93,9 @@ class ContentPane extends JComponent {
         bnExit.setPreferredSize(bnExitSize);
         bnExit.setMinimumSize(bnExitSize);
         bnExit.setMaximumSize(bnExitSize);
-        bnExit.setIcon(new ImageIcon("images/button_exit_default.png"));
-        bnExit.setRolloverIcon(new ImageIcon("images/button_exit_rollover.png"));
-        bnExit.setPressedIcon(new ImageIcon("images/button_exit_pressed.png"));
+        bnExit.setIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_exit_default.png")));
+        bnExit.setRolloverIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_exit_rollover.png")));
+        bnExit.setPressedIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_exit_pressed.png")));
         bnExit.addActionListener(new ActionExit());
 
         bnExtended = new JButton();
@@ -100,9 +103,9 @@ class ContentPane extends JComponent {
         bnExtended.setPreferredSize(bnExitSize);
         bnExtended.setMinimumSize(bnExitSize);
         bnExtended.setMaximumSize(bnExitSize);
-        bnExtended.setIcon(new ImageIcon("images/button_expand_default.png"));
-        bnExtended.setRolloverIcon(new ImageIcon("images/button_expand_rollover.png"));
-        bnExtended.setPressedIcon(new ImageIcon("images/button_expand_pressed.png"));
+        bnExtended.setIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_expand_default.png")));
+        bnExtended.setRolloverIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_expand_rollover.png")));
+        bnExtended.setPressedIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_expand_pressed.png")));
         bnExtended.addActionListener(new ActionExtended());
         bnExtended.setEnabled(false);
 
@@ -111,9 +114,9 @@ class ContentPane extends JComponent {
         bnIconified.setPreferredSize(bnExitSize);
         bnIconified.setMinimumSize(bnExitSize);
         bnIconified.setMaximumSize(bnExitSize);
-        bnIconified.setIcon(new ImageIcon("images/button_turn_default.png"));
-        bnIconified.setRolloverIcon(new ImageIcon("images/button_turn_rollover.png"));
-        bnIconified.setPressedIcon(new ImageIcon("images/button_turn_pressed.png"));
+        bnIconified.setIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_turn_default.png")));
+        bnIconified.setRolloverIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_turn_rollover.png")));
+        bnIconified.setPressedIcon(new ImageIcon(getClass().getResource("/ru/resources/images/button_turn_pressed.png")));
         bnIconified.addActionListener(new ActionIconified());
 
         contentPanel = new JPanel();

@@ -22,7 +22,7 @@ public class Window extends JFrame {
         setUndecorated(true);
         setContentPane(new ContentPane());
         setTitle("Person Rank");
-        setIconImage(new ImageIcon("images/title_icon.png"));
+        setIconImage(new ImageIcon(getClass().getResource("/ru/resources/images/title_icon.png")));
         WindowDragger winDragger = new WindowDragger(this);
         addMouseListener(winDragger);
         addMouseMotionListener(winDragger);
