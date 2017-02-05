@@ -5,19 +5,20 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
+
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
 import ru.personrank.view.user.DailyStatisticsPanel;
 import ru.personrank.view.user.GeneralStatisticsPanel;
 
 public class Window extends JFrame {
-    
+
     private static final Window instance = new Window();
-    
+
     private JXTaskPaneContainer menu;
     private JPanel content;
 
-    private Window() {   
+    private Window() {
         setSize(750, 430);
         setUndecorated(true);
         setContentPane(new ContentPane());
@@ -31,14 +32,13 @@ public class Window extends JFrame {
         content = createContentContainer();
         getContentPane().add(content, BorderLayout.CENTER);
         getContentPane().add(menu, BorderLayout.WEST);
-        
     }
-    
+
     // Метод возвращающий экземпляр Window
     public static Window getInstance() {
         return instance;
     }
-    
+
     // Метод создающий левое меню программы
     private JXTaskPaneContainer createMainMenu() {
         JXTaskPaneContainer container = new JXTaskPaneContainer();
@@ -54,7 +54,6 @@ public class Window extends JFrame {
         reference.add(new JLabel("Сайты"));
         container.add(statistics);
         container.add(reference);
-
         return container;
     }
 
