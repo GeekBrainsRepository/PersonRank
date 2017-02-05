@@ -165,7 +165,7 @@ public class DailyStatisticsPanel extends JPanel {
                                                                 .addComponent(formattedTextFieldData2, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(buttonSend)))
-                                .addGap(27, 27, 27))
+                                .addGap(6, 6, 6))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
