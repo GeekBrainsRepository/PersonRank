@@ -25,6 +25,9 @@
 /keyword/{personId}
 Ответ: {"1":"Путин","2":"Путиным ","3":"Путина "}
 
+/authentication/{login}/{password}
+Ответ: "true" либо "false"
+
 Запросы PUT
 
 /person/{name}
