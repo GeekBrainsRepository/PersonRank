@@ -4,8 +4,8 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 
 public class Parser {
-    private static String getPlainText(String url){
 
+    private static String getPlainText(String url){
         StringBuffer result = new StringBuffer();
         Document document = null;
         try{
