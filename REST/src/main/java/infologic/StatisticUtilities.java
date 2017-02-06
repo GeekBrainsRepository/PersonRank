@@ -88,7 +88,7 @@ public class StatisticUtilities {
         return result;
     }
 
-    public static String authenticationUsers(String login, String password){
+    public static String authenticationUsers(String login, String password) {
         ArrayList<UsersEntity> result = new ArrayList<>();
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
@@ -99,10 +99,11 @@ public class StatisticUtilities {
         session.getTransaction().commit();
         session.close();
 
-        if (login.equals(result.get(0).getLogin()) & password.equals(result.get(0).getPassword())){
-            return "true";
-        }else{
-            return "false";
+        if (result.size() == 0) {
+                return "false";
+        } else if (login.equals(result.get(0).getLogin()) & password.equals(result.get(0).getPassword())) {
+                return "true";
         }
+        return "false";
     }
 }
