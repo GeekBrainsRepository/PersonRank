@@ -87,4 +87,22 @@ public class StatisticUtilities {
         }
         return result;
     }
+
+    public static String authenticationUsers(String login, String password){
+        ArrayList<UsersEntity> result = new ArrayList<>();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from UsersEntity as u where u.login = :login and u.password = :password");
+        query.setParameter("login", login);
+        query.setParameter("password", password);
+        result = (ArrayList<UsersEntity>) query.list();
+        session.getTransaction().commit();
+        session.close();
+
+        if (login.equals(result.get(0).getLogin()) & password.equals(result.get(0).getPassword())){
+            return "true";
+        }else{
+            return "false";
+        }
+    }
 }

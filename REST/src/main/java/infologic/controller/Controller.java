@@ -6,6 +6,7 @@ import infologic.repository.Repository;
 import infologic.repository.RepositoryInterface;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -126,5 +127,10 @@ public class Controller {
     @RequestMapping(method = RequestMethod.GET, path = "/daily/{siteId}/{personId}/{dateStart}/{dateEnd}")
     public Daily getDaily(@PathVariable Integer siteId, @PathVariable Integer personId, @PathVariable Long dateStart, @PathVariable Long dateEnd) {
         return StatisticUtilities.createDaily(siteId, personId, dateStart, dateEnd);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/authentication/{login}/{password}")
+    public String  authentication(@PathVariable("login") String login, @PathVariable("password") String password){
+        return StatisticUtilities.authenticationUsers(login,password);
     }
 }
