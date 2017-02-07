@@ -29,7 +29,7 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
         try {
             for(int i=0;i<params.length;i++) {
                 content = getContent(params[i]);
-                net2SQL.updateDB(content, i);
+                net2SQL.updateDB(content, params[i]);
             }
         } catch (Exception ex) {
             content = ex.getMessage();

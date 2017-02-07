@@ -44,17 +44,25 @@ public class KeywordListDB implements iNet2SQL {
         return personListAdapter;
     }
 
-     public void updateDB(String json,int id) {
+     public void updateDB(String json,String param) {
         try {
           JSONObject dataJsonObj = new JSONObject(json);
             Iterator<String> iter=dataJsonObj.keys();
-            while(iter.hasNext()){
-                String k=iter.next();
-                String v=dataJsonObj.getString(k);
-                DBHelper.getInstance().addSiteWithCheck(Integer.parseInt(k),v);
-                Log.d(TAG,k+":"+v);
-
-             }
+            if(param.contains("person")){ //persons
+                while (iter.hasNext()) {
+                    String k = iter.next();
+                    String v = dataJsonObj.getString(k);
+                    DBHelper.getInstance().addPersonWithCheck(Integer.parseInt(k), v);
+                    Log.d(TAG, k + ":" + v);
+                }
+            }else if(param.contains("keyword")) { //keywrods
+                while (iter.hasNext()) {
+                    String k = iter.next();
+                    String v = dataJsonObj.getString(k);
+                    DBHelper.getInstance().addKeywordWithCheck(Integer.parseInt(k), v);
+                    Log.d(TAG, k + ":" + v);
+                }
+            }
         }
         catch(Exception e){
             Log.d(TAG,e.getMessage());
