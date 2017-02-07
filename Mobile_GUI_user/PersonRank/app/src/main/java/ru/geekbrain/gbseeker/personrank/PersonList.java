@@ -13,7 +13,6 @@ import ru.geekbrain.gbseeker.personrank.entities.PersonListDB;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class PersonList extends Fragment {
-    SimpleCursorAdapter scAdapter;
     PersonListDB personListDB;
 
 
@@ -32,7 +31,7 @@ public class PersonList extends Fragment {
         getActivity().setTitle("Список персон");
 
         ListView list = (ListView) v.findViewById(R.id.PersonList);
-        scAdapter = personListDB.getAdapterWithPerson(getActivity().getSupportLoaderManager());
+        SimpleCursorAdapter scAdapter = personListDB.getAdapterWithPerson(getActivity().getSupportLoaderManager());
         list.setAdapter(scAdapter);
 
         return v;

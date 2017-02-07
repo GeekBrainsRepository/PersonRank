@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
+import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //RestAPI.authentication(new emptyINet2SQL());
 
         DBHelper.createDBHelper(this);
         DBHelper.getInstance().fillByFakeData();
@@ -46,14 +49,14 @@ public class MainActivity extends AppCompatActivity
             fm.beginTransaction()
                     .add(R.id.FrameContainer, fragment)
                     .commit();
-            fragment = new PersonList();
+          /*  fragment = new PersonList();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();
             fragment = new CommonStatsFragment();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
-                    .commit();
+                    .commit();*/
         }
 
     }
@@ -143,3 +146,8 @@ public class MainActivity extends AppCompatActivity
 }
 
 
+class emptyINet2SQL implements iNet2SQL {
+    public void updateDB(String json){}
+    public void updateUI(){}
+    public String getInfo(){return "MAIN";}
+}

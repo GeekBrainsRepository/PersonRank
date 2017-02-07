@@ -17,14 +17,13 @@ import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class CommonStatsFragment extends Fragment {
     CommonStatDB commonStatDB;
-    int selectedSitePosition = 0;
+    String selectedSite = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         commonStatDB = new CommonStatDB(getContext());
-        RestAPI.getCommonStats(commonStatDB,
-                commonStatDB.getSiteID(commonStatDB.getSiteList().get(selectedSitePosition)));
+        RestAPI.getCommonStats(commonStatDB,commonStatDB.getSiteID(selectedSite));
     }
 
 
@@ -39,7 +38,7 @@ public class CommonStatsFragment extends Fragment {
         spinner.setAdapter(commonStatDB.getAdapterWithSite());
 
         ListView list= (ListView) v.findViewById(R.id.common_stats_list);
-        SimpleCursorAdapter adapterStats = commonStatDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), selectedSitePosition);
+        SimpleCursorAdapter adapterStats = commonStatDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), selectedSite);
         list.setAdapter(adapterStats);
 
 

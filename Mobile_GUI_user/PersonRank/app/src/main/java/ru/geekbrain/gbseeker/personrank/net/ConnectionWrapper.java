@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,13 +27,18 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
         String content="";
         Log.d(TAG,net2SQL.getInfo());
         try {
-            content = getContent(params[0]);
-            net2SQL.updateDB(content);
+            for(int i=0;i<params.length;i++) {
+                content = getContent(params[i]);
+                net2SQL.updateDB(content, i);
+            }
         } catch (Exception ex) {
             content = ex.getMessage();
         }
-        Log.d(TAG,content);
-
+        if(content==null) {
+            Log.d(TAG,"NULLLLLLLLLL");
+        }
+        else
+            Log.d(TAG,content);
 
         return content;
 
@@ -52,6 +58,10 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             c.setRequestMethod("GET");
             c.setReadTimeout(100);
             c.connect();
+            int status = c.getResponseCode();
+            if(status!=200){
+
+            }
             reader = new BufferedReader(new InputStreamReader(c.getInputStream()));
             StringBuilder buf = new StringBuilder();
             String line = null;
@@ -59,11 +69,14 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
                 buf.append(line);
             }
             return (buf.toString());
+        }catch(Exception e){
+            Log.d(TAG,e.getMessage());
         } finally {
             if (reader != null) {
                 reader.close();
             }
         }
+        return null;
     }
 }
 

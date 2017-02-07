@@ -42,7 +42,7 @@ public class SiteListDB implements iNet2SQL {
         return TAG;
     }
 
-    public void updateDB(String json) {
+    public void updateDB(String json,int id) {
         try {
             JSONObject dataJsonObj = new JSONObject(json);
             Iterator<String> iter=dataJsonObj.keys();

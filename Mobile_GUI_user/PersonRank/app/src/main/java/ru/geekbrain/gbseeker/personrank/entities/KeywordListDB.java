@@ -24,7 +24,7 @@ public class KeywordListDB implements iNet2SQL {
 
     Context context;
     ArrayList<String> personList = new ArrayList<>();
-    int selectedPerson = 0;
+    String selectedPerson = "";
     ArrayAdapter<String> personListAdapter;
 
     SimpleCursorAdapter scKeywordAdapter;
@@ -34,7 +34,7 @@ public class KeywordListDB implements iNet2SQL {
     }
 
     public ArrayList<String> getPersonList() {
-        DBHelper.getInstance().getPersonList(personList);
+        DBHelper.getInstance().getPersonListFromKeyword(personList);
         return personList;
     }
 
@@ -44,8 +44,8 @@ public class KeywordListDB implements iNet2SQL {
         return personListAdapter;
     }
 
-     public void updateDB(String json) {
-/*        try {
+     public void updateDB(String json,int id) {
+        try {
           JSONObject dataJsonObj = new JSONObject(json);
             Iterator<String> iter=dataJsonObj.keys();
             while(iter.hasNext()){
@@ -68,25 +68,22 @@ public class KeywordListDB implements iNet2SQL {
     }
 
     public void updateUI(){
-        String person=personList.get(selectedPerson);
-
         getPersonList();
-
-        selectedPerson=personList.indexOf(person);
-        if(selectedPerson<0) selectedPerson=0;
-
         personListAdapter.notifyDataSetChanged();
-        setSelectedPersonPosition(selectedPerson);
+        setSelectedPersonPosition((personList.size()>0)?personList.indexOf(selectedPerson):-1);
     }
 
 
     public void setSelectedPersonPosition(int id) {
-        selectedPerson = id;
-        scKeywordAdapter.swapCursor(DBHelper.getInstance().getCursorOfKeywordWithPerson(personList.get(id)));
+        if (id >= 0 && id < personList.size())
+            selectedPerson = personList.get(id);
+        else
+            selectedPerson="";
+        scKeywordAdapter.swapCursor(DBHelper.getInstance().getCursorOfKeywordWithPerson(selectedPerson));
         scKeywordAdapter.notifyDataSetChanged();
     }
 
-    public SimpleCursorAdapter getAdapterWithWords(LoaderManager loaderManager, int selectedPerson) {
+    public SimpleCursorAdapter getAdapterWithWords(LoaderManager loaderManager, String selectedPerson) {
 
         String[] from = new String[]{DBHelper.DB.COLUMNS.KEYWORD.KEYWORD};
         int[] to = new int[]{android.R.id.text1};
@@ -95,7 +92,7 @@ public class KeywordListDB implements iNet2SQL {
 
         scKeywordAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_KEYWORDS.ordinal(), null,
-                new KeywordCursorLoaderManager(context, scKeywordAdapter,personList.get(selectedPerson)));
+                new KeywordCursorLoaderManager(context, scKeywordAdapter,selectedPerson));
 
         return scKeywordAdapter;
     }

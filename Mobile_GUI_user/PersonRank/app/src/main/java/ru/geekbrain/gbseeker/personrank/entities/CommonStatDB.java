@@ -24,7 +24,7 @@ public class CommonStatDB implements iNet2SQL {
 
     Context context;
     ArrayList<String> siteList= new ArrayList<>();
-    int selectedSite = 0;
+    String selectedSite = "";
     ArrayAdapter<String> siteListAdapter;
 
     SimpleCursorAdapter scCommonStatsAdapter;
@@ -56,7 +56,7 @@ public class CommonStatDB implements iNet2SQL {
             while(iter.hasNext()){
                 String k=iter.next();
                 int v=result.getInt(k);
-                DBHelper.getInstance().addOrUpdateCommonStatsWithCheck(siteList.get(selectedSite),k,v);
+                DBHelper.getInstance().addOrUpdateCommonStatsWithCheck(selectedSite,k,v);
                 Log.d(TAG,k+":"+v);
             }
         }
@@ -72,33 +72,31 @@ public class CommonStatDB implements iNet2SQL {
     }
 
     public void updateUI(){
-        String site=siteList.get(selectedSite);
-
         getSiteList();
 
-        selectedSite=siteList.indexOf(site);
-        if(selectedSite<0) selectedSite=0;
-
         siteListAdapter.notifyDataSetChanged();
-        setSelectedSitePosition(selectedSite);
+        setSelectedSitePosition( (siteList.size()>0) ? siteList.indexOf(selectedSite): -1);
     }
 
     public void setSelectedSitePosition(int id) {
-        selectedSite = id;
-        scCommonStatsAdapter.swapCursor(DBHelper.getInstance().getCursorOfCommonStatsWithSite(siteList.get(id)));
+        if (id >= 0 && id < siteList.size())
+            selectedSite = siteList.get(id);
+        else
+            selectedSite="";
+        scCommonStatsAdapter.swapCursor(DBHelper.getInstance().getCursorOfCommonStatsWithSite(selectedSite));
         scCommonStatsAdapter.notifyDataSetChanged();
     }
 
-    public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager, int selectedSite) {
+    public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager, String selectedSite) {
 
-        String[] from = new String[]{DBHelper.DB.COLUMNS.PERSON.PERSON, DBHelper.DB.COLUMNS.COMMON.STATS};
+        String[] from = new String[]{DBHelper.DB.COLUMNS.COMMON.PERSON, DBHelper.DB.COLUMNS.COMMON.STATS};
         int[] to = new int[]{R.id.text1, R.id.text2};
 
         this.selectedSite = selectedSite;
 
         scCommonStatsAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_COMMON_STATS.ordinal(), null,
-                new CommonStatsCursorLoaderManager(context, scCommonStatsAdapter, siteList.get(selectedSite)));
+                new CommonStatsCursorLoaderManager(context, scCommonStatsAdapter, selectedSite));
 
         return scCommonStatsAdapter;
     }

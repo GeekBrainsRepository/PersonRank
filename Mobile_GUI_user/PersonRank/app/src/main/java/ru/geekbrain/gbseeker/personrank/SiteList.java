@@ -13,7 +13,6 @@ import ru.geekbrain.gbseeker.personrank.entities.SiteListDB;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class SiteList extends Fragment {
-    SimpleCursorAdapter scSiteAdapter;
     SiteListDB siteListDB;
 
     @Override
@@ -21,7 +20,6 @@ public class SiteList extends Fragment {
         super.onCreate(savedInstanceState);
         siteListDB = new SiteListDB(getContext());
 
-        RestAPI.getSite(siteListDB);
     }
 
     @Nullable
@@ -32,8 +30,10 @@ public class SiteList extends Fragment {
         getActivity().setTitle("Список сайтов");
 
         ListView list = (ListView) v.findViewById(R.id.SiteList);
-        scSiteAdapter = siteListDB.getAdapterWithSite(getActivity().getSupportLoaderManager());
+        SimpleCursorAdapter scSiteAdapter = siteListDB.getAdapterWithSite(getActivity().getSupportLoaderManager());
         list.setAdapter(scSiteAdapter);
+
+        RestAPI.getSite(siteListDB);
 
         return v;
     }

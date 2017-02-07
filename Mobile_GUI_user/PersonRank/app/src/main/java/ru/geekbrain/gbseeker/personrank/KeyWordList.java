@@ -3,7 +3,6 @@ package ru.geekbrain.gbseeker.personrank;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +10,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.entities.KeywordListDB;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 
 public class KeyWordList extends Fragment {
     KeywordListDB keywordListDB;
-    int selectedPersonPosition = 0;
+    String selectedPerson="";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         keywordListDB=new KeywordListDB(getContext());
 
-        RestAPI.getKeyword(keywordListDB);
+        RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(selectedPerson));
     }
 
     @Nullable
@@ -38,7 +38,7 @@ public class KeyWordList extends Fragment {
         spinnerPerson.setAdapter(keywordListDB.getAdapterWithPerson());
 
         ListView keywordList= (ListView) v.findViewById(R.id.keyword_list);
-        keywordList.setAdapter(keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(), selectedPersonPosition));
+        keywordList.setAdapter(keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(), selectedPerson));
 
 
         spinnerPerson.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
