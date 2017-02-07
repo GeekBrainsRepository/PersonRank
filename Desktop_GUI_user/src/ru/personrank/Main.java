@@ -23,6 +23,7 @@ public class Main {
             public void run() {
                 // панель авторизаций
                 final JXLoginPane loginPane = new JXLoginPane(new LoginService() {
+                    @Override
                     public boolean authenticate(String name, char[] password,
                                                 String server) throws Exception {
 

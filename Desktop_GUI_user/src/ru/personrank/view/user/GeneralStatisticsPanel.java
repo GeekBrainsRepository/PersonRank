@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import org.jfree.chart.ChartFactory;
@@ -22,6 +24,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import ru.personrank.data.UpdatingRepositoryEvent;
+import ru.personrank.data.UpdatingRepositoryListener;
 
 public class GeneralStatisticsPanel extends JPanel {
 
@@ -30,17 +34,25 @@ public class GeneralStatisticsPanel extends JPanel {
 
     private GeneralStatisticOnSiteRepository statisticRepository;
     private JComboBox namesSitesComboBox;
-    private JLabel dateScanSite;
+    private NamesSitesComboBoxModel namesSitesComboBoxModel;
+    private JLabel dateScanSite;  
     private GeneralStaticTabelModel generalTableModel;
     private JFreeChart barChart;
 
     public GeneralStatisticsPanel() {
         statisticRepository = GeneralStatisticOnSiteRepository.getInstance();
+        statisticRepository.addUpdatingRepositoryListener(new UpdatingRepositoryListener() {
+            @Override
+            public void repositoryUpdated(UpdatingRepositoryEvent event) {
+                namesSitesComboBoxModel.setDataSource();
+                generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
+            }
+        });
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(6, 6, 6, 6));
         setOpaque(false);
         add(createControlBox(), BorderLayout.NORTH);
-        add(createContentPanel(), BorderLayout.CENTER);
+        add(createContentPanel(), BorderLayout.CENTER);       
     }
 
     private Box createControlBox() {
@@ -53,7 +65,8 @@ public class GeneralStatisticsPanel extends JPanel {
         box.add(labelSite);
         box.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        namesSitesComboBox = new JComboBox(new NamesSitesComboBoxModel());
+        namesSitesComboBoxModel = new NamesSitesComboBoxModel();
+        namesSitesComboBox = new JComboBox(namesSitesComboBoxModel);
         box.add(namesSitesComboBox);
         box.add(Box.createRigidArea(new Dimension(15, 0)));
 
@@ -123,8 +136,13 @@ public class GeneralStatisticsPanel extends JPanel {
     private class NamesSitesComboBoxModel extends DefaultComboBoxModel {
 
         NamesSitesComboBoxModel() {
+            setDataSource();
+        }
+
+        private void setDataSource() {
             List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.getInstance().
                     query(GeneralStatisticSpecification.getAllStatisticSite());
+            removeAllElements();
             for (GeneralStatisticOnSite gsos : list) {
                 addElement(gsos.getSiteName());
             }
@@ -216,7 +234,6 @@ public class GeneralStatisticsPanel extends JPanel {
             if (!list.isEmpty()) {
                 Date date = list.get(0).getReviewDate().getTime();
                 SimpleDateFormat formater = new SimpleDateFormat("Актуально на: (dd.MM.yyyy)");
-
                 dateScanSite.setText(formater.format(date));
             }
         }
