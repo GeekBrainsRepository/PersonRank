@@ -1,12 +1,11 @@
-package infologic.controller;
+package ru.infologic.controller;
 
-import infologic.StatisticUtilities;
-import infologic.model.*;
-import infologic.repository.Repository;
-import infologic.repository.RepositoryInterface;
+import ru.infologic.StatisticUtilities;
+import ru.infologic.model.*;
+import ru.infologic.repository.Repository;
+import ru.infologic.repository.RepositoryInterface;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController

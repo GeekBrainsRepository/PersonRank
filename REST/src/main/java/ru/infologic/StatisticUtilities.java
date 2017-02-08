@@ -1,9 +1,9 @@
-package infologic;
+package ru.infologic;
 
 
-import infologic.model.*;
-import infologic.repository.RepositoryInterface;
-import infologic.repository.Specification;
+import ru.infologic.model.*;
+import ru.infologic.repository.RepositoryInterface;
+import ru.infologic.repository.Specification;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 

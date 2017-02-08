@@ -1,4 +1,4 @@
-package infologic.model;
+package ru.infologic.model;
 
 /**
  * Created by lWeRl on 31.01.2017.

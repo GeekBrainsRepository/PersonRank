@@ -1,4 +1,4 @@
-package infologic.model;
+package ru.infologic.model;
 
 import javax.persistence.*;
 
