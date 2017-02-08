@@ -1,4 +1,4 @@
-package infologic.repository;
+package ru.infologic.repository;
 
 /**
  * Created by lWeRl on 31.01.2017.

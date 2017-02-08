@@ -13,12 +13,12 @@
     <property name="connection.password">personrank</property>
     <property name="show_sql">true</property>
 
-     <mapping class="infologic.model.KeywordsEntity" />
-     <mapping class="infologic.model.PagesEntity" />
-     <mapping class="infologic.model.PersonPageRankEntity" />
-     <mapping class="infologic.model.PersonsEntity" />
-     <mapping class="infologic.model.SitesEntity" />
-      <mapping class="infologic.model.UsersEntity" />
+     <mapping class="ru.infologic.model.KeywordsEntity" />
+     <mapping class="ru.infologic.model.PagesEntity" />
+     <mapping class="ru.infologic.model.PersonPageRankEntity" />
+     <mapping class="ru.infologic.model.PersonsEntity" />
+     <mapping class="ru.infologic.model.SitesEntity" />
+      <mapping class="ru.infologic.model.UsersEntity" />
 
   </session-factory>
 </hibernate-configuration>

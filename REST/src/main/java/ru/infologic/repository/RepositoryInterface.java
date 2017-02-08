@@ -1,4 +1,4 @@
-package infologic.repository;
+package ru.infologic.repository;
 
 import java.util.List;
 

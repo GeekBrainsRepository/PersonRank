@@ -1,18 +1,15 @@
-package infologic.repository;
+package ru.infologic.repository;
 
-import infologic.HibernateUtil;
-import infologic.model.Dictionary;
-import infologic.model.KeywordsEntity;
-import infologic.model.PersonsEntity;
-import infologic.model.SitesEntity;
+import ru.infologic.HibernateUtil;
+import ru.infologic.model.Dictionary;
+import ru.infologic.model.KeywordsEntity;
+import ru.infologic.model.PersonsEntity;
+import ru.infologic.model.SitesEntity;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
 
-/**
- * Created by lWeRl on 31.01.2017.
- */
 public class Repository implements RepositoryInterface<Dictionary> {
     private Session session;
 
@@ -21,7 +18,8 @@ public class Repository implements RepositoryInterface<Dictionary> {
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.save(pattern);
-        closeSession(session);
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -29,7 +27,8 @@ public class Repository implements RepositoryInterface<Dictionary> {
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.delete(pattern);
-        closeSession(session);
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -37,39 +36,44 @@ public class Repository implements RepositoryInterface<Dictionary> {
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.saveOrUpdate(pattern);
-        closeSession(session);
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
     public List<? extends Dictionary> query(Specification specification, Object... args) {
         session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<? extends Dictionary> result = null;
         switch (specification) {
             case getPersons: {
+                session.beginTransaction();
                 Query<PersonsEntity> query = session.createQuery("FROM PersonsEntity", PersonsEntity.class);
                 if (query != null) result = query.list();
+                session.getTransaction().commit();
+                session.close();
                 break;
             }
             case getSites: {
+                session.beginTransaction();
                 Query<SitesEntity> query = session.createQuery("FROM SitesEntity", SitesEntity.class);
                 if (query != null) result = query.list();
+                session.getTransaction().commit();
+                session.close();
                 break;
             }
             case getKeywords: {
+                session.beginTransaction();
                 Query<KeywordsEntity> query = null;
                 if (args.length == 0) query = session.createQuery("FROM KeywordsEntity", KeywordsEntity.class);
                 else if (args.length == 1 && args[0] instanceof Integer)
                     query = session.createQuery("FROM KeywordsEntity ke WHERE ke.personId=:personId", KeywordsEntity.class).setParameter("personId", args[0]);
                 if (query != null) result = query.list();
+                session.getTransaction().commit();
+                session.close();
                 break;
             }
         }
         return result;
     }
 
-    private void closeSession(Session session) {
-        session.getTransaction().commit();
-        session.close();
-    }
 }

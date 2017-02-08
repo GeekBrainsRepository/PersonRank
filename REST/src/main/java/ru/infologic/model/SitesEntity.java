@@ -1,14 +1,14 @@
-package infologic.model;
+package ru.infologic.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
-@Table(name = "Keywords", schema = "personrank", catalog = "")
-public class KeywordsEntity implements Dictionary {
+@Table(name = "Sites", schema = "personrank", catalog = "")
+public class SitesEntity implements Dictionary {
     private int id;
     private String name;
-    private int personId;
-    private PersonsEntity personsByPersonId;
+    private Collection<PagesEntity> pagesById;
 
     @Id
     @Column(name = "ID")
@@ -30,25 +30,14 @@ public class KeywordsEntity implements Dictionary {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "PersonID", insertable = false, updatable = false)
-    public int getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(int personId) {
-        this.personId = personId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        KeywordsEntity that = (KeywordsEntity) o;
+        SitesEntity that = (SitesEntity) o;
 
         if (id != that.id) return false;
-        if (personId != that.personId) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
         return true;
@@ -58,17 +47,15 @@ public class KeywordsEntity implements Dictionary {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + personId;
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "PersonID", referencedColumnName = "ID", nullable = false)
-    public PersonsEntity getPersonsByPersonId() {
-        return personsByPersonId;
+    @OneToMany(mappedBy = "sitesBySiteId")
+    public Collection<PagesEntity> getPagesById() {
+        return pagesById;
     }
 
-    public void setPersonsByPersonId(PersonsEntity personsByPersonId) {
-        this.personsByPersonId = personsByPersonId;
+    public void setPagesById(Collection<PagesEntity> pagesById) {
+        this.pagesById = pagesById;
     }
 }

@@ -1,14 +1,15 @@
-package infologic.model;
+package ru.infologic.model;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "Sites", schema = "personrank", catalog = "")
-public class SitesEntity implements Dictionary {
+@Table(name = "Persons", schema = "personrank", catalog = "")
+public class PersonsEntity implements Dictionary {
     private int id;
     private String name;
-    private Collection<PagesEntity> pagesById;
+    private Collection<KeywordsEntity> keywordsesById;
+    private Collection<PersonPageRankEntity> personPageRanksById;
 
     @Id
     @Column(name = "ID")
@@ -35,7 +36,7 @@ public class SitesEntity implements Dictionary {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SitesEntity that = (SitesEntity) o;
+        PersonsEntity that = (PersonsEntity) o;
 
         if (id != that.id) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
@@ -50,12 +51,21 @@ public class SitesEntity implements Dictionary {
         return result;
     }
 
-    @OneToMany(mappedBy = "sitesBySiteId")
-    public Collection<PagesEntity> getPagesById() {
-        return pagesById;
+    @OneToMany(mappedBy = "personsByPersonId")
+    public Collection<KeywordsEntity> getKeywordsesById() {
+        return keywordsesById;
     }
 
-    public void setPagesById(Collection<PagesEntity> pagesById) {
-        this.pagesById = pagesById;
+    public void setKeywordsesById(Collection<KeywordsEntity> keywordsesById) {
+        this.keywordsesById = keywordsesById;
+    }
+
+    @OneToMany(mappedBy = "personsByPersonId")
+    public Collection<PersonPageRankEntity> getPersonPageRanksById() {
+        return personPageRanksById;
+    }
+
+    public void setPersonPageRanksById(Collection<PersonPageRankEntity> personPageRanksById) {
+        this.personPageRanksById = personPageRanksById;
     }
 }
