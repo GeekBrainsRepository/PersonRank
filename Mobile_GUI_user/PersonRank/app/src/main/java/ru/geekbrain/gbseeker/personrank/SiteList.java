@@ -19,7 +19,6 @@ public class SiteList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         siteListDB = new SiteListDB(getContext());
-
     }
 
     @Nullable

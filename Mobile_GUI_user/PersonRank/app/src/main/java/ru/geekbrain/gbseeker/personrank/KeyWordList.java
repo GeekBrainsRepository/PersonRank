@@ -22,9 +22,7 @@ public class KeyWordList extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        keywordListDB=new KeywordListDB(getContext());
-
-        RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(selectedPerson));
+        keywordListDB = new KeywordListDB(getContext());
     }
 
     @Nullable
@@ -39,6 +37,8 @@ public class KeyWordList extends Fragment {
 
         ListView keywordList= (ListView) v.findViewById(R.id.keyword_list);
         keywordList.setAdapter(keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(), selectedPerson));
+
+        RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(selectedPerson));
 
 
         spinnerPerson.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

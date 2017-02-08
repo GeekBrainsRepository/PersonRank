@@ -20,7 +20,6 @@ public class PersonList extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         personListDB = new PersonListDB(getContext());
-        RestAPI.getPerson(personListDB);
     }
 
     @Nullable
@@ -33,6 +32,8 @@ public class PersonList extends Fragment {
         ListView list = (ListView) v.findViewById(R.id.PersonList);
         SimpleCursorAdapter scAdapter = personListDB.getAdapterWithPerson(getActivity().getSupportLoaderManager());
         list.setAdapter(scAdapter);
+
+        RestAPI.getPerson(personListDB);
 
         return v;
     }

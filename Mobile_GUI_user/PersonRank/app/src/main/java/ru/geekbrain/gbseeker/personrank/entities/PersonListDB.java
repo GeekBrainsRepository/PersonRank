@@ -42,7 +42,7 @@ public class PersonListDB  implements iNet2SQL {
         return TAG;
     }
 
-    public void updateDB(String json,int id) {
+    public void updateDB(String json,String param) {
         try {
             JSONObject dataJsonObj = new JSONObject(json);
             Iterator<String> iter=dataJsonObj.keys();
