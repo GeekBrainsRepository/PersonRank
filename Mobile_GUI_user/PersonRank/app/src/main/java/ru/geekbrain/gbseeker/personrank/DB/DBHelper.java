@@ -269,13 +269,13 @@ public class DBHelper extends SQLiteOpenHelper {
         getDB().insert(DB.TABLES.KEYWORD, null, cv);
     }
     public void addKeywordWithCheck(String person,String keyword) {
-        getDB().execSQL("DELETE FROM " + DB.TABLES.KEYWORD + " WHERE  "
+   /*     getDB().execSQL("DELETE FROM " + DB.TABLES.KEYWORD + " WHERE  "
                 + "(" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' OR " + DB.COLUMNS.KEYWORD.PERSON + "='" + person + "') "
                 + " AND "
                 + " NOT (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND "  + DB.COLUMNS.KEYWORD.PERSON + "='" + person + "') "
-                + ")");
+                );
 
-
+*/
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.KEYWORD, null,
@@ -290,6 +290,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
     public Cursor getCursorOfKeywordWithPerson(String person){
+        dumpTableKeyword();
         return getDB().query(DBHelper.DB.TABLES.KEYWORD, null,
                 DBHelper.DB.COLUMNS.KEYWORD.PERSON+"='"+person+"'",
                 null, null, null, null, null);
@@ -326,6 +327,7 @@ public class DBHelper extends SQLiteOpenHelper {
         getDB().update(DB.TABLES.COMMON, cv,"_id="+_id,null);
     }
     public void addOrUpdateCommonStatsWithCheck(String site,String person,int stats) {
+        dumpTableCommonStats();
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.COMMON, null,

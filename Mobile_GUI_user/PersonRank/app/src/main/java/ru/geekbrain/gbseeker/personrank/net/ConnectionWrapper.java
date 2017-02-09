@@ -35,7 +35,8 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
         try {
             for(int i=0;i<params.length;i++) {
                 Log.d(TAG,net2SQL.getInfo()+": param i="+i+" "+params[i]);
-                content = getContent(params[i]);
+                //content = getContent(params[i]);
+                content = getFakeContent(params[i]);
                 Log.d(TAG,net2SQL.getInfo()+": content i="+i+" "+content);
                 net2SQL.updateDB(content, params[i]);
             }
@@ -85,6 +86,30 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             }
         }
         return null;
+    }
+
+    private String getFakeContent(String path) throws IOException {
+        if(path.contains("site")) {
+            String s = "{\"1\":\"www.1.test\",\"2\":\"www.2.test\",\"3\":\"www.3.test\",\"4\":\"www.4.test\",\"7\":\"TEST_SITE\",\"8\":\"site1\"}";
+            return s;
+        }
+        else if(path.contains("person")){
+            String s="{\"1\":\"Путин\",\"2\":\"Медведев\",\"5\":\"TEST_PERSON\"}";
+            return s;
+        }
+        else if(path.contains("keyword/1")){
+            String s="{\"1\":\"Путин\",\"2\":\"Путиным \",\"3\":\"Путина \"}";
+            return s;
+        }
+        else if(path.contains("common/1")) {
+            String s = "{\"date\":1486515600000,\"result\":{\"Путин\":16,\"Медведев\":20}}";
+            return s;
+        }
+        else if(path.contains("daily/1")) {
+            String s = "{\"date\":1486515600000,\"result\":{\"Путин\":16,\"Медведев\":20}}";
+            return s;
+        }
+        return "";
     }
 }
 

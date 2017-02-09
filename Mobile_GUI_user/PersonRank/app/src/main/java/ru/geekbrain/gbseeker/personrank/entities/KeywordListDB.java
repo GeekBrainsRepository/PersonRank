@@ -41,8 +41,13 @@ public class KeywordListDB implements iNet2SQL {
 
     public ArrayAdapter<String> getAdapterWithPerson() {
         personListAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonList());
-        if(selectedPerson.equals("") && personList.size()>0){
-            selectedPerson=personList.get(0);
+        if(personList.size()>0){
+            if(selectedPerson.equals("") || personList.indexOf(selectedPerson)<0){
+                selectedPerson=personList.get(0);
+            }
+        }
+        else{
+            selectedPerson="";
         }
         personListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return personListAdapter;

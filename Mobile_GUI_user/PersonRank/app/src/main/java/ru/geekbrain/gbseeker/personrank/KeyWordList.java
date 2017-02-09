@@ -44,8 +44,8 @@ public class KeyWordList extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(keywordListDB.getSelectedPerson()));
                 keywordListDB.setSelectedPersonPosition(position);
+                RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(keywordListDB.getSelectedPerson()));
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
