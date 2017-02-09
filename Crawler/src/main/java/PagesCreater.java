@@ -5,18 +5,22 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
 import services.PagesService;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+@ContextConfiguration(locations = "/mainContext.xml")
 public class PagesCreater {
-    private static Pages pages = new Pages();
+    @Autowired
     private static PagesService pagesService;
 
-
+    private static Pages pages = new Pages();
     private static ArrayList<String> links = new ArrayList<>();
     private static final String USER_AGENT =
             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
@@ -24,7 +28,9 @@ public class PagesCreater {
     private static Elements linksOnPage;
     private static final Logger log = Logger.getLogger(PagesCreater.class);
 
-    public synchronized ArrayList<String> parseForLinks(String url, int siteId)  {
+    public synchronized void parseForLinks(String url, int siteId)  {
+        ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
+        pagesService = (PagesService) context.getBean("pagesService");
             try{
             Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);// todo сделать try с ресурсами, будет проще
             htmlDocument = connection.get();
@@ -40,16 +46,14 @@ public class PagesCreater {
             for(Element link : linksOnPage){
                 pages.setSiteId(siteId);
                 pages.setUrl(link.absUrl("href"));
-                pages.setFoundDateTime((Date)Calendar.getInstance().getTime());
+                pages.setFoundDateTime((Date) new Date(Calendar.getInstance().getTime().getTime()));
                 pagesService.insertPage(pages);
                 this.links.add(link.absUrl("href"));
                 print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));
             }
-            return links;
         } catch(IOException e){
             e.printStackTrace();
                 log.error("Ошибка при посещении адреса " + url);
-            return null;
         }
     }
 

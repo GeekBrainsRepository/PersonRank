@@ -22,6 +22,11 @@ public class PagesService implements IPagesMapper {
     }
 
     @Override
+    public List<Pages> getPagesWhithLastScanNull() {
+        return iPagesMapper.getPagesWhithLastScanNull();
+    }
+
+    @Override
     public void insertPage(Pages page) {
         iPagesMapper.insertPage(page);
     }
