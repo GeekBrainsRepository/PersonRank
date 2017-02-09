@@ -43,6 +43,7 @@ public class Application {
         PersonPageRank personPageRank = new PersonPageRank();
         for (Pages page : pagesList) {
             for (Keywords keyword : keywordsList) {
+                personPageRank.setPersonId(keyword.getPersonId());
                 personPageRank.setPageId(page.getId());
                 personPageRank.setRank(Parser.searchWord(keyword.getName(),page.getUrl()));
                 personPageRankService.setInsertPersonPageRank(personPageRank);
@@ -54,6 +55,7 @@ public class Application {
         }
         for (Pages page : pagesList) {
             for (Keywords keyword : keywordsList) {
+                personPageRank.setPersonId(keyword.getPersonId());
                 personPageRank.setPageId(page.getId());
                 personPageRank.setRank(Parser.searchWord(keyword.getName(),page.getUrl()));
                 personPageRankService.setInsertPersonPageRank(personPageRank);

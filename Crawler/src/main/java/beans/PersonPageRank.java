@@ -5,10 +5,18 @@ package beans;
  */
 public class PersonPageRank {
 
+    private int id;
     private int personId;
     private int pageId;
     private int rank;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     public int getPersonId() {
         return personId;
     }
