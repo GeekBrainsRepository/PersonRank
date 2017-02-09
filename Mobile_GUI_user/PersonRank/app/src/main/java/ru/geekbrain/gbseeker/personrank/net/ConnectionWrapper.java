@@ -31,10 +31,12 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         String content="";
-        Log.d(TAG,net2SQL.getInfo());
+        Log.d(TAG,net2SQL.getInfo()+": param length="+params.length);
         try {
             for(int i=0;i<params.length;i++) {
+                Log.d(TAG,net2SQL.getInfo()+": param i="+i+" "+params[i]);
                 content = getContent(params[i]);
+                Log.d(TAG,net2SQL.getInfo()+": content i="+i+" "+content);
                 net2SQL.updateDB(content, params[i]);
             }
         } catch (Exception ex) {

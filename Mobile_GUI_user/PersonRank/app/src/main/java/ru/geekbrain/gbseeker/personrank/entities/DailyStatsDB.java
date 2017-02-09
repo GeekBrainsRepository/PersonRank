@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
@@ -28,8 +27,8 @@ public class DailyStatsDB  implements iNet2SQL {
     ArrayList<String> personList = new ArrayList<>();
     ArrayAdapter<String> personAdapter;
     ArrayAdapter<String> adapterSite;
-    int selectedSite = 0;
-    int selectedPerson = 0;
+    String selectedSite = "";
+    String selectedPerson = "";
 
     long dateFrom,dateTo;
     private final long DAY_MILLISEC=3600*24*1000;
@@ -46,18 +45,14 @@ public class DailyStatsDB  implements iNet2SQL {
     public int  getPersonID(String person) {return DBHelper.getInstance().getPersonID(person); }
 
     @Override
-    public void init() {
-
-    }
+    public void init() {}
 
     @Override
-    public void updateUI() {
-
-    }
+    public void updateUI() {}
 
     @Override
     public String getInfo() {
-        return null;
+        return TAG;
     }
 
     @Override
@@ -67,10 +62,10 @@ public class DailyStatsDB  implements iNet2SQL {
             JSONArray result=dataJsonObj.getJSONArray("result");
             for(int i=0;i<result.length();i++){
                 int v=result.getInt(i);
-                DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
+             /*   DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
                         siteList.get(selectedSite),
                         personList.get(selectedPerson),
-                        dateFrom+i*DAY_MILLISEC,v);
+                        dateFrom+i*DAY_MILLISEC,v);*/
                 Log.d(TAG,i+":"+v);
             }
         }
@@ -91,25 +86,25 @@ public class DailyStatsDB  implements iNet2SQL {
         return adapterSite;
     }
 
-    public ArrayList<String> getPersonListOnSite() {
-        DBHelper.getInstance().getPersonListOnSite(personList, (siteList.size() == 0) ? "" : siteList.get(selectedSite));
+    public ArrayList<String> getPersonList() {
+        DBHelper.getInstance().getPersonList(personList);
         return personList;
     }
     public ArrayAdapter<String> getAdapterWithPersonOnSite() {
-        personAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonListOnSite());
+        personAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonList());
         personAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return personAdapter;
     }
 
 
     public void setSelectedSitePosition(int id) {
-        selectedSite = id;
-        personList = getPersonListOnSite();
-        personAdapter.notifyDataSetChanged();
+   /*     selectedSite = id;
+        personList = getPersonList();
+        personAdapter.notifyDataSetChanged();*/
     }
 
     public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager, int selectedSite, int selectedPerson) {
-        String[] from = new String[]{DBHelper.DB.COLUMNS.DAILY.DATE, DBHelper.DB.COLUMNS.DAILY.STATS};
+       /* String[] from = new String[]{DBHelper.DB.COLUMNS.DAILY.DATE, DBHelper.DB.COLUMNS.DAILY.STATS};
         int[] to = new int[]{R.id.text1, R.id.text2};
         this.selectedSite = selectedSite;
         this.selectedPerson = selectedPerson;
@@ -119,28 +114,12 @@ public class DailyStatsDB  implements iNet2SQL {
                 new DailyStatsCursorLoaderManager(context, scAdapter,
                         siteList.get(selectedSite),
                         personList.get(selectedPerson))
-        );
+        );*/
         return scAdapter;
+
     }
 
-    public ArrayList<String> getMinMaxDate(int selectedSite, int selectedPerson) {
-        ArrayList<String> dates = new ArrayList<>();
-        Cursor cursor = null;
-        try {
-            cursor = DBHelper.getInstance().getCursorOfDailyStatsWithSite(siteList.get(selectedSite), personList.get(selectedPerson));
-            if (cursor.moveToFirst()) {
-                int indexID = cursor.getColumnIndex(DBHelper.DB.COLUMNS.DAILY.DATE);
-                do {
-                    dates.add(cursor.getString(indexID));
-                } while (cursor.moveToNext());
-                Collections.sort(dates);
-            }
 
-        } finally {
-            cursor.close();
-        }
-        return dates;
-    }
 }
 
 class DailyStatsCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor> {

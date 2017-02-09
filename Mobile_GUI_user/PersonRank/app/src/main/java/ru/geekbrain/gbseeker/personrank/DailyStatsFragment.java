@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +41,7 @@ public class DailyStatsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dailyStatsDB=new DailyStatsDB(getContext());
- /*       RestAPI.getDailyStats(dailyStatsDB,
-                dailyStatsDB.getSiteID(dailyStatsDB.getSiteList().get(selectedSitePosition)),
-                dailyStatsDB.getPersonID(dailyStatsDB.getPersonListOnSite().get(selectedPersonPosition)),
-                dateFrom,dateTo
-                );
-                */
-    }
+     }
 
     @Nullable
     @Override
@@ -62,10 +57,16 @@ public class DailyStatsFragment extends Fragment {
         spinnerPersonOnSite.setAdapter(dailyStatsDB.getAdapterWithPersonOnSite());
 
         ListView list= (ListView) v.findViewById(R.id.daily_stats_list);
-//        SimpleCursorAdapter adapterStats = dailyStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), selectedSitePosition,selectedPersonPosition);
-//        list.setAdapter(adapterStats);
+        SimpleCursorAdapter adapterStats = dailyStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), selectedSitePosition,selectedPersonPosition);
+        list.setAdapter(adapterStats);
 
- //       dates=dailyStatsDB.getMinMaxDate(selectedSitePosition,selectedPersonPosition);
+       //dates=dailyStatsDB.getMinMaxDate(selectedSitePosition,selectedPersonPosition);
+
+        RestAPI.getDailyStats(dailyStatsDB,
+                dailyStatsDB.getSiteID(dailyStatsDB.getSiteList().get(selectedSitePosition)),
+                dailyStatsDB.getPersonID(dailyStatsDB.getPersonList().get(selectedPersonPosition)),
+                dateFrom,dateTo
+                );
 
         butFrom = (Button) v.findViewById(R.id.date_from);
         butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dateFrom)));

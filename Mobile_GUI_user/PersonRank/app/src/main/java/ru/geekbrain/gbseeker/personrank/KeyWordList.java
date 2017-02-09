@@ -17,7 +17,6 @@ import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class KeyWordList extends Fragment {
     KeywordListDB keywordListDB;
-    String selectedPerson="";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,15 +35,16 @@ public class KeyWordList extends Fragment {
         spinnerPerson.setAdapter(keywordListDB.getAdapterWithPerson());
 
         ListView keywordList= (ListView) v.findViewById(R.id.keyword_list);
-        keywordList.setAdapter(keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager(), selectedPerson));
+        keywordList.setAdapter(keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager()));
 
-        RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(selectedPerson));
+        RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(keywordListDB.getSelectedPerson()));
 
 
         spinnerPerson.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
+                RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(keywordListDB.getSelectedPerson()));
                 keywordListDB.setSelectedPersonPosition(position);
             }
             @Override

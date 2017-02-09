@@ -41,6 +41,9 @@ public class KeywordListDB implements iNet2SQL {
 
     public ArrayAdapter<String> getAdapterWithPerson() {
         personListAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonList());
+        if(selectedPerson.equals("") && personList.size()>0){
+            selectedPerson=personList.get(0);
+        }
         personListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return personListAdapter;
     }
@@ -98,13 +101,13 @@ public class KeywordListDB implements iNet2SQL {
         scKeywordAdapter.swapCursor(DBHelper.getInstance().getCursorOfKeywordWithPerson(selectedPerson));
         scKeywordAdapter.notifyDataSetChanged();
     }
-
-    public SimpleCursorAdapter getAdapterWithWords(LoaderManager loaderManager, String selectedPerson) {
+    public String getSelectedPerson() {
+        return selectedPerson;
+    }
+    public SimpleCursorAdapter getAdapterWithWords(LoaderManager loaderManager) {
 
         String[] from = new String[]{DBHelper.DB.COLUMNS.KEYWORD.KEYWORD};
         int[] to = new int[]{android.R.id.text1};
-
-        this.selectedPerson = selectedPerson;
 
         scKeywordAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_KEYWORDS.ordinal(), null,

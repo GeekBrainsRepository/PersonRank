@@ -270,16 +270,16 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public void addKeywordWithCheck(String person,String keyword) {
         getDB().execSQL("DELETE FROM " + DB.TABLES.KEYWORD + " WHERE  "
-                + "(" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' OR " + DB.COLUMNS.KEYWORD.PERSON + "=" + person + ") "
+                + "(" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' OR " + DB.COLUMNS.KEYWORD.PERSON + "='" + person + "') "
                 + " AND "
-                + " NOT (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND "  + DB.COLUMNS.KEYWORD.PERSON + "=" + person + ") "
+                + " NOT (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND "  + DB.COLUMNS.KEYWORD.PERSON + "='" + person + "') "
                 + ")");
 
 
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.KEYWORD, null,
-                    DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND " + DB.COLUMNS.KEYWORD.PERSON + "=" + person,
+                    DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND " + DB.COLUMNS.KEYWORD.PERSON + "='" + person+"'",
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
             } else {
