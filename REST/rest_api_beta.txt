@@ -45,3 +45,24 @@
 /person/{id}/{name}
 /site/{id}/{name}
 /keyword/{id}/{name}/{personId}
+
+/registration
+принимает String[] где первое значение логин второе пароль
+возвращает HttpStatus.CREATED
+
+пример запроса на регистрацию
+public static void reg(String login, String password){
+        final String url = "http://37.194.87.95:30000/registration";
+
+        String[] strings = new String[2];
+        strings[0] = login;
+        strings[1] = password;
+
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+        restTemplate.postForObject(url, strings, String[].class);
+        } catch (final HttpClientErrorException e) {
+            System.out.println(e.getStatusCode());
+            System.out.println(e.getResponseBodyAsString());
+        }
+    }
