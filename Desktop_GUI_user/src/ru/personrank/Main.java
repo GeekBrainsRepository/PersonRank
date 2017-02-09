@@ -10,6 +10,8 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginService;
+import org.jdesktop.swingx.plaf.LoginPaneUI;
+import org.jdesktop.swingx.plaf.UIManagerExt;
 import ru.personrank.view.Window;
 
 public class Main {
@@ -18,7 +20,8 @@ public class Main {
 
         setLookAndFeel("Nimbus");
         setDefaultUIFont("Tahoma.ttf", 12);
-
+        setLocalLoginPane();
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 // панель авторизаций
@@ -35,8 +38,6 @@ public class Main {
                         }
                     }
                 });
-
-                loginPane.setErrorMessage("Неправильный логин или пароль");
                 final JFrame loginFrame = JXLoginPane.showLoginFrame(loginPane);
                 loginFrame.setTitle("Авторизация");
                 loginFrame.setVisible(true);
@@ -90,5 +91,15 @@ public class Main {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    // Локализация панели авторизации
+    private static void setLocalLoginPane () {
+        UIManager.put("JXLoginPane.bannerString", "Person Rank");
+        UIManager.put("JXLoginPane.nameString", "Имя пользователя:");
+        UIManager.put("JXLoginPane.passwordString", "Пароль:");
+        UIManager.put("JXLoginPane.loginString", "Ок");
+        UIManager.put("JXLoginPane.cancelString", "Отмена");
+        UIManager.put("JXLoginPane.errorMessage", "Неправильный логин или пароль");
     }
 }
