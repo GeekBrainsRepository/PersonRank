@@ -23,7 +23,6 @@ public class CommonStatsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         commonStatDB = new CommonStatDB(getContext());
-        RestAPI.getCommonStats(commonStatDB,commonStatDB.getSiteID(selectedSite));
     }
 
 
@@ -41,13 +40,14 @@ public class CommonStatsFragment extends Fragment {
         SimpleCursorAdapter adapterStats = commonStatDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), selectedSite);
         list.setAdapter(adapterStats);
 
+        RestAPI.getCommonStats(commonStatDB,commonStatDB.getSiteID(selectedSite));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 RestAPI.getCommonStats(commonStatDB,
-                        commonStatDB.getSiteID(commonStatDB.getSiteList().get(position)));
+                        commonStatDB.getSiteID(commonStatDB.getCurrentSiteList().get(position)));
                 commonStatDB.setSelectedSitePosition(position);
             }
             @Override

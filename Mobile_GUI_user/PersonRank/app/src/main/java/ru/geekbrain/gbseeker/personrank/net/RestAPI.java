@@ -26,7 +26,7 @@ public class RestAPI {
 
     public static void getCommonStats(iNet2SQL net2SQL,int site_id) {
         ConnectionWrapper p1 = new ConnectionWrapper(net2SQL);
-        p1.execute(server + "/statistic/common/" + site_id);
+        p1.execute(server + "/site",server + "/common/" + site_id);
     }
 
     public static void getDailyStats(iNet2SQL net2SQL,int site_id,int person_id,long from,long to) {

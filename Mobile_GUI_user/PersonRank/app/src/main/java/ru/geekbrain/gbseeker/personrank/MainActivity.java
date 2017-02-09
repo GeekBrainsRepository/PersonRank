@@ -147,7 +147,12 @@ public class MainActivity extends AppCompatActivity
 
 
 class emptyINet2SQL implements iNet2SQL {
-    public void updateDB(String json){}
+    @Override
+    public void updateDB(String json,String param){}
+    @Override
     public void updateUI(){}
+    @Override
     public String getInfo(){return "MAIN";}
+    @Override
+    public void init() {}
 }

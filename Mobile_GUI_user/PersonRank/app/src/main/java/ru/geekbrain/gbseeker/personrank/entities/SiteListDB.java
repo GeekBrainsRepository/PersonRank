@@ -38,6 +38,11 @@ public class SiteListDB implements iNet2SQL {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public String getInfo() {
         return TAG;
     }
@@ -48,9 +53,10 @@ public class SiteListDB implements iNet2SQL {
             Iterator<String> iter=dataJsonObj.keys();
             while(iter.hasNext()){
                 String k=iter.next();
-                String v=dataJsonObj.getString(k);
-                DBHelper.getInstance().addSiteWithCheck(Integer.parseInt(k),v);
-                Log.d(TAG,k+":"+v);
+                int id=Integer.parseInt(k);
+                String site=dataJsonObj.getString(k);
+                DBHelper.getInstance().addSiteWithCheck(id,site);
+                Log.d(TAG,k+":"+site);
             }
         }
         catch(Exception e){

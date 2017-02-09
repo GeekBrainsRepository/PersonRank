@@ -23,6 +23,12 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
     }
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        net2SQL.init();
+    }
+
+    @Override
     protected String doInBackground(String... params) {
         String content="";
         Log.d(TAG,net2SQL.getInfo());

@@ -25,6 +25,7 @@ public class KeywordListDB implements iNet2SQL {
     Context context;
     ArrayList<String> personList = new ArrayList<>();
     String selectedPerson = "";
+    String saveSelectedPerson = "";
     ArrayAdapter<String> personListAdapter;
 
     SimpleCursorAdapter scKeywordAdapter;
@@ -34,7 +35,7 @@ public class KeywordListDB implements iNet2SQL {
     }
 
     public ArrayList<String> getPersonList() {
-        DBHelper.getInstance().getPersonListFromKeyword(personList);
+        DBHelper.getInstance().getPersonList(personList);
         return personList;
     }
 
@@ -44,30 +45,37 @@ public class KeywordListDB implements iNet2SQL {
         return personListAdapter;
     }
 
-     public void updateDB(String json,String param) {
+    @Override
+    public void init() {
+        saveSelectedPerson=selectedPerson;
+    }
+
+    @Override
+    public void updateDB(String json, String param) {
         try {
           JSONObject dataJsonObj = new JSONObject(json);
             Iterator<String> iter=dataJsonObj.keys();
             if(param.contains("person")){ //persons
                 while (iter.hasNext()) {
                     String k = iter.next();
-                    String v = dataJsonObj.getString(k);
-                    DBHelper.getInstance().addPersonWithCheck(Integer.parseInt(k), v);
-                    Log.d(TAG, k + ":" + v);
+                    int id=Integer.parseInt(k);
+                    String person = dataJsonObj.getString(k);
+                    DBHelper.getInstance().addPersonWithCheck(id,person);
+                    Log.d(TAG, k + ":" + person);
                 }
             }else if(param.contains("keyword")) { //keywrods
                 while (iter.hasNext()) {
                     String k = iter.next();
-                    String v = dataJsonObj.getString(k);
-                    DBHelper.getInstance().addKeywordWithCheck(Integer.parseInt(k), v);
-                    Log.d(TAG, k + ":" + v);
+                    String keyword= dataJsonObj.getString(k);
+                    DBHelper.getInstance().addKeywordWithCheck(saveSelectedPerson,keyword);
+                    Log.d(TAG, k + ":" + keyword);
                 }
             }
         }
         catch(Exception e){
             Log.d(TAG,e.getMessage());
         }
-*/
+
     }
 
     @Override

@@ -46,6 +46,11 @@ public class DailyStatsDB  implements iNet2SQL {
     public int  getPersonID(String person) {return DBHelper.getInstance().getPersonID(person); }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void updateUI() {
 
     }
@@ -56,7 +61,7 @@ public class DailyStatsDB  implements iNet2SQL {
     }
 
     @Override
-    public void updateDB(String json) {
+    public void updateDB(String json,String param) {
         try {
             JSONObject dataJsonObj = new JSONObject(json);
             JSONArray result=dataJsonObj.getJSONArray("result");

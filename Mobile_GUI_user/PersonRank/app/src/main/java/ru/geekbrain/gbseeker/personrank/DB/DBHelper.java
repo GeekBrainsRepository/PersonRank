@@ -291,7 +291,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public Cursor getCursorOfKeywordWithPerson(String person){
         return getDB().query(DBHelper.DB.TABLES.KEYWORD, null,
-                DBHelper.DB.COLUMNS.KEYWORD.PERSON+"="+person,
+                DBHelper.DB.COLUMNS.KEYWORD.PERSON+"='"+person+"'",
                 null, null, null, null, null);
     }
 
@@ -348,8 +348,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public Cursor getCursorOfCommonStatsWithSite(String site) {
         String table = DB.TABLES.COMMON;
-        String columns[] = {DB.COLUMNS.COMMON.PERSON, DB.COLUMNS.COMMON.STATS};
-        String selection = "CS."+DB.COLUMNS.COMMON.SITE+"='"+site+"'";
+        String columns[] = {DB.COLUMNS.COMMON.PERSON, DB.COLUMNS.COMMON.STATS,"_id"};
+        String selection = DB.COLUMNS.COMMON.SITE+"='"+site+"'";
         return DBHelper.getInstance().getDB().query(table, columns, selection, null, null, null, null);
     }
 

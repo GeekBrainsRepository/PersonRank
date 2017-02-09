@@ -25,6 +25,7 @@ public class CommonStatDB implements iNet2SQL {
     Context context;
     ArrayList<String> siteList= new ArrayList<>();
     String selectedSite = "";
+    String saveSelectedSite="";
     ArrayAdapter<String> siteListAdapter;
 
     SimpleCursorAdapter scCommonStatsAdapter;
@@ -33,6 +34,9 @@ public class CommonStatDB implements iNet2SQL {
         this.context = context;
     }
 
+    public ArrayList<String> getCurrentSiteList() {
+        return siteList;
+    }
     public ArrayList<String> getSiteList() {
         DBHelper.getInstance().getSiteList(siteList);
         return siteList;
@@ -48,16 +52,36 @@ public class CommonStatDB implements iNet2SQL {
     }
 
     @Override
-    public void updateDB(String json) {
+    public void init() {
+        saveSelectedSite=selectedSite;
+    }
+
+    @Override
+    public void updateDB(String json,String param) {
         try {
-            JSONObject dataJsonObj = new JSONObject(json);
-            JSONObject result=dataJsonObj.getJSONObject("result");
-            Iterator<String> iter=result.keys();
-            while(iter.hasNext()){
-                String k=iter.next();
-                int v=result.getInt(k);
-                DBHelper.getInstance().addOrUpdateCommonStatsWithCheck(selectedSite,k,v);
-                Log.d(TAG,k+":"+v);
+            if(param.contains("site")) {
+                JSONObject result = new JSONObject(json);
+                Iterator<String> iter = result.keys();
+                while (iter.hasNext()) {
+                    String k = iter.next();
+                    int id=Integer.parseInt(k);
+                    String site = result.getString(k);
+                    DBHelper.getInstance().addSiteWithCheck(id,site);
+                    Log.d(TAG, id+ ":" + site);
+                }
+            }
+            else if(param.contains("common")){
+                JSONObject dataJsonObj = new JSONObject(json);
+                JSONObject result = dataJsonObj.getJSONObject("result");
+                Iterator<String> iter = result.keys();
+                while (iter.hasNext()) {
+                    String k = iter.next();
+                    String person = k;
+                    int stats = result.getInt(k);
+                    DBHelper.getInstance().addOrUpdateCommonStatsWithCheck(saveSelectedSite, person, stats);
+                    Log.d(TAG, person + ":" + stats);
+                }
+
             }
         }
         catch(Exception e){
@@ -73,7 +97,6 @@ public class CommonStatDB implements iNet2SQL {
 
     public void updateUI(){
         getSiteList();
-
         siteListAdapter.notifyDataSetChanged();
         setSelectedSitePosition( (siteList.size()>0) ? siteList.indexOf(selectedSite): -1);
     }

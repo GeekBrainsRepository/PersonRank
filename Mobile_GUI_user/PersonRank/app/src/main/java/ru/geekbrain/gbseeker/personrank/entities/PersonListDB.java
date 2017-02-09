@@ -38,6 +38,11 @@ public class PersonListDB  implements iNet2SQL {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public String getInfo() {
         return TAG;
     }
@@ -48,9 +53,10 @@ public class PersonListDB  implements iNet2SQL {
             Iterator<String> iter=dataJsonObj.keys();
             while(iter.hasNext()){
                 String k=iter.next();
-                String v=dataJsonObj.getString(k);
-                DBHelper.getInstance().addPersonWithCheck(Integer.parseInt(k),v);
-                Log.d(TAG,k+":"+v);
+                int id =Integer.parseInt(k);
+                String person=dataJsonObj.getString(k);
+                DBHelper.getInstance().addPersonWithCheck(id,person);
+                Log.d(TAG,id+":"+person);
             }
         }
         catch(Exception e){
