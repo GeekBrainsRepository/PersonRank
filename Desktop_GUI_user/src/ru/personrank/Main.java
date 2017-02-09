@@ -4,14 +4,11 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Locale;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginService;
-import org.jdesktop.swingx.plaf.LoginPaneUI;
-import org.jdesktop.swingx.plaf.UIManagerExt;
 import ru.personrank.view.Window;
 
 public class Main {
@@ -21,29 +18,21 @@ public class Main {
         setLookAndFeel("Nimbus");
         setDefaultUIFont("Tahoma.ttf", 12);
         setLocalLoginPane();
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                // панель авторизаций
-                final JXLoginPane loginPane = new JXLoginPane(new LoginService() {
-                    @Override
-                    public boolean authenticate(String name, char[] password,
-                                                String server) throws Exception {
-
-                        if (name.equalsIgnoreCase("user") && String.valueOf(password).equalsIgnoreCase("user")) {
-                            Window.getInstance().setVisible(true);
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                });
-                final JFrame loginFrame = JXLoginPane.showLoginFrame(loginPane);
-                loginFrame.setTitle("Авторизация");
-                loginFrame.setVisible(true);
+                showLoginWindow();
             }
-        });
 
+        });
+    }
+
+    // Метод отображает окно авторизации
+    private static void showLoginWindow() {
+        JXLoginPane loginPane = new JXLoginPane(new LoginServiceImpl());
+        JFrame loginFrame = JXLoginPane.showLoginFrame(loginPane);
+        loginFrame.setTitle("Авторизация");
+        loginFrame.setVisible(true);
     }
 
     // Метод устанавливает для приложения менеджер отображения 
@@ -77,7 +66,6 @@ public class Main {
 //                    Font.createFont(Font.TRUETYPE_FONT,
 //                            new File(System.getProperty("user.dir") + "/fonts/" + fontFileName))                           
 //                            .deriveFont(Font.PLAIN, fontSize));
-
             Enumeration<Object> keys = UIManager.getDefaults().keys();
             while (keys.hasMoreElements()) {
                 Object key = keys.nextElement();
@@ -92,9 +80,9 @@ public class Main {
             ex.printStackTrace();
         }
     }
-    
+
     // Локализация панели авторизации
-    private static void setLocalLoginPane () {
+    private static void setLocalLoginPane() {
         UIManager.put("JXLoginPane.bannerString", "Person Rank");
         UIManager.put("JXLoginPane.nameString", "Имя пользователя:");
         UIManager.put("JXLoginPane.passwordString", "Пароль:");
@@ -102,4 +90,21 @@ public class Main {
         UIManager.put("JXLoginPane.cancelString", "Отмена");
         UIManager.put("JXLoginPane.errorMessage", "Неправильный логин или пароль");
     }
+
+    //***
+    static class LoginServiceImpl extends LoginService {
+
+        @Override
+        public boolean authenticate(String name, char[] password,
+                String server) throws Exception {
+
+            if (name.equalsIgnoreCase("user") && String.valueOf(password).equalsIgnoreCase("user")) {
+                Window.getInstance().setVisible(true);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
 }

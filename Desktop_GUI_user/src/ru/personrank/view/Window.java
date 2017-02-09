@@ -13,7 +13,7 @@ import ru.personrank.view.user.GeneralStatisticsPanel;
 
 public class Window extends JFrame {
 
-    private static final Window instance = new Window();
+    private static final Window INSTANCE = new Window();
 
     private JXTaskPaneContainer menu;
     private JPanel content;
@@ -36,7 +36,7 @@ public class Window extends JFrame {
 
     // Метод возвращающий экземпляр Window
     public static Window getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     // Метод создающий левое меню программы
