@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_keys) {
             FragmentManager fm = getSupportFragmentManager();
             Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new KeyWordList();
+            fragment = new Keywords();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();

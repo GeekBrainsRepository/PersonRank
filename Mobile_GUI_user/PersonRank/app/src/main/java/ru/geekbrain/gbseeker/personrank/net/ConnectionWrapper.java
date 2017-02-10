@@ -107,13 +107,13 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             }
         }
         else if(path.contains("person")){
-            SystemClock.sleep(3000);
             if(true) return getContent(path);
             String s="{\"1\":\"Путин\",\"2\":\"Медведев\",\"5\":\"TEST_PERSON\"}";
             return s;
         }
-        else if(path.contains("keyword/1")){
+        else if(path.contains("keyword")){
             String s="{\"1\":\"Путин\",\"2\":\"Путиным \",\"3\":\"Путина \"}";
+            s=getContent(path);
             return s;
         }
         else if(path.contains("common/1")) {

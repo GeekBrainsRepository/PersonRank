@@ -11,17 +11,18 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
-import ru.geekbrain.gbseeker.personrank.entities.KeywordListDB;
+import ru.geekbrain.gbseeker.personrank.entities.KeywordsDB;
+import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 
-public class KeyWordList extends Fragment {
-    KeywordListDB keywordListDB;
+public class Keywords extends Fragment implements ReloadFromNet {
+    KeywordsDB keywordsDB;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        keywordListDB = new KeywordListDB(getContext());
+        keywordsDB = new KeywordsDB(getContext());
     }
 
     @Nullable
@@ -29,30 +30,34 @@ public class KeyWordList extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.keyword_list,container,false);
 
-        getActivity().setTitle("Справочник - ключевые слова");
+        getActivity().setTitle("Ключевые слова");
 
         Spinner spinnerPerson = (Spinner) v.findViewById(R.id.keyword_person);
-        spinnerPerson.setAdapter(keywordListDB.getAdapterWithPerson());
+        spinnerPerson.setAdapter(keywordsDB.getAdapterWithPerson());
 
         ListView keywordList= (ListView) v.findViewById(R.id.keyword_list);
-        keywordList.setAdapter(keywordListDB.getAdapterWithWords(getActivity().getSupportLoaderManager()));
-
-        RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(keywordListDB.getSelectedPerson()));
-
+        keywordList.setAdapter(keywordsDB.getAdapterWithWords(getActivity().getSupportLoaderManager()));
 
         spinnerPerson.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                keywordListDB.setSelectedPersonPosition(position);
-                RestAPI.getKeyword(keywordListDB, DBHelper.getInstance().getPersonID(keywordListDB.getSelectedPerson()));
+                keywordsDB.setSelectedPersonPosition((String)parent.getItemAtPosition(position));
+                reload();
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
 
+        reload();
+
         return v;
+    }
+
+    @Override
+    public void reload() {
+        RestAPI.getKeyword(keywordsDB, DBHelper.getInstance().getPersonID(keywordsDB.getSelectedPerson()));
     }
 }
 

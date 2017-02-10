@@ -13,30 +13,33 @@ import android.widget.ArrayAdapter;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
-public class KeywordListDB implements iNet2SQL {
-    private static final String TAG="KeywordListDB";
+public class KeywordsDB implements iNet2SQL {
+    private static final String TAG="KeywordsDB";
 
     Context context;
     ArrayList<String> personList = new ArrayList<>();
     String selectedPerson = "";
-    String saveSelectedPerson = "";
     ArrayAdapter<String> personListAdapter;
 
     SimpleCursorAdapter scKeywordAdapter;
 
-    public KeywordListDB(Context context) {
+    String saveSelectedPerson = "";
+
+    public KeywordsDB(Context context) {
         this.context = context;
     }
 
     public ArrayList<String> getPersonList() {
         DBHelper.getInstance().getPersonList(personList);
         return personList;
+    }
+    public String getSelectedPerson() {
+        return selectedPerson;
     }
 
     public ArrayAdapter<String> getAdapterWithPerson() {
@@ -61,27 +64,37 @@ public class KeywordListDB implements iNet2SQL {
     @Override
     public void updateDB(String json, String param) {
         try {
-          JSONObject dataJsonObj = new JSONObject(json);
-            Iterator<String> iter=dataJsonObj.keys();
-            if(param.contains("person")){ //persons
+            JSONObject dataJsonObj = new JSONObject(json);
+            Iterator<String> iter = dataJsonObj.keys();
+            if (param.contains("/person")) { //persons
                 while (iter.hasNext()) {
                     String k = iter.next();
-                    int id=Integer.parseInt(k);
+
+                    int id = Integer.parseInt(k);
                     String person = dataJsonObj.getString(k);
-                    DBHelper.getInstance().addPersonWithCheck(id,person);
-                    Log.d(TAG, k + ":" + person);
+
+                    DBHelper.getInstance().addPersonWithCheck(id, person);
+                    Log.d(TAG, id + ":" + person);
                 }
-            }else if(param.contains("keyword")) { //keywrods
+                DBHelper.getInstance().cleanKeywordDB();
+                DBHelper.getInstance().dumpTableKeyword();
+            }
+            else if (param.contains("/keyword")) { //keywrods
+                ArrayList<String> usedKeywods=new ArrayList<>();
                 while (iter.hasNext()) {
                     String k = iter.next();
-                    String keyword= dataJsonObj.getString(k);
-                    DBHelper.getInstance().addKeywordWithCheck(saveSelectedPerson,keyword);
+
+                    String keyword = dataJsonObj.getString(k);
+                    DBHelper.getInstance().addKeywordWithCheck(saveSelectedPerson, keyword);
+
+                    usedKeywods.add(keyword);
                     Log.d(TAG, k + ":" + keyword);
                 }
+                DBHelper.getInstance().cleanKeywordDB(saveSelectedPerson,usedKeywods);
+                DBHelper.getInstance().dumpTableKeyword();
             }
-        }
-        catch(Exception e){
-            Log.d(TAG,e.getMessage());
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
         }
 
     }
@@ -94,21 +107,19 @@ public class KeywordListDB implements iNet2SQL {
     public void updateUI(){
         getPersonList();
         personListAdapter.notifyDataSetChanged();
-        setSelectedPersonPosition((personList.size()>0)?personList.indexOf(selectedPerson):-1);
+        setSelectedPersonPosition(saveSelectedPerson);
     }
 
 
-    public void setSelectedPersonPosition(int id) {
-        if (id >= 0 && id < personList.size())
-            selectedPerson = personList.get(id);
+    public void setSelectedPersonPosition(String person) {
+        if ( personList.size()>0 && personList.indexOf(person)>=0)
+            selectedPerson = person;
         else
             selectedPerson="";
         scKeywordAdapter.swapCursor(DBHelper.getInstance().getCursorOfKeywordWithPerson(selectedPerson));
         scKeywordAdapter.notifyDataSetChanged();
     }
-    public String getSelectedPerson() {
-        return selectedPerson;
-    }
+
     public SimpleCursorAdapter getAdapterWithWords(LoaderManager loaderManager) {
 
         String[] from = new String[]{DBHelper.DB.COLUMNS.KEYWORD.KEYWORD};

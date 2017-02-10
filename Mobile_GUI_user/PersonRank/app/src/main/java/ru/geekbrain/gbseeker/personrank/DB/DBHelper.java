@@ -282,14 +282,20 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.KEYWORD.KEYWORD, keyword);
         getDB().insert(DB.TABLES.KEYWORD, null, cv);
     }
+    public void cleanKeywordDB(String person, ArrayList<String> usedKeywords) {
+        String keywords="'"+TextUtils.join("','",usedKeywords)+"'";
+        getDB().execSQL("DELETE FROM " + DB.TABLES.KEYWORD + " WHERE  "
+                + DB.COLUMNS.KEYWORD.KEYWORD + " NOT IN (" + keywords + ") AND " + DB.COLUMNS.KEYWORD.PERSON + "='" + person + "' "
+        );
+    }
+    public void cleanKeywordDB() {
+        //TODO need to fix
+        getDB().execSQL("DELETE FROM " + DB.TABLES.KEYWORD + " WHERE  "
+                + DB.COLUMNS.KEYWORD.PERSON + " NOT IN ( select "+DB.COLUMNS.PERSON.PERSON+" from "+DB.TABLES.PERSON+")"
+        );
+    }
     public void addKeywordWithCheck(String person,String keyword) {
-   /*     getDB().execSQL("DELETE FROM " + DB.TABLES.KEYWORD + " WHERE  "
-                + "(" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' OR " + DB.COLUMNS.KEYWORD.PERSON + "='" + person + "') "
-                + " AND "
-                + " NOT (" + DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND "  + DB.COLUMNS.KEYWORD.PERSON + "='" + person + "') "
-                );
 
-*/
         Cursor cursor = null;
         try {
             cursor = getDB().query(DB.TABLES.KEYWORD, null,
@@ -308,22 +314,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return getDB().query(DBHelper.DB.TABLES.KEYWORD, null,
                 DBHelper.DB.COLUMNS.KEYWORD.PERSON+"='"+person+"'",
                 null, null, null, null, null);
-    }
-
-    public void getPersonListFromKeyword(ArrayList<String> personList) {
-        personList.clear();
-        Cursor cursor = null;
-        try {
-            cursor = DBHelper.getInstance().getDB().query(true,DB.TABLES.KEYWORD, new String[]{DB.COLUMNS.KEYWORD.PERSON}, null, null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                int index = cursor.getColumnIndex(DB.COLUMNS.KEYWORD.PERSON);
-                do {
-                    personList.add(cursor.getString(index));
-                } while (cursor.moveToNext());
-            }
-        } finally {
-            if (cursor != null) cursor.close();
-        }
     }
 
     public void addCommonStats(String site,String person,int stats) {
