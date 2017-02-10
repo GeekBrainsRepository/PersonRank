@@ -13,36 +13,54 @@ import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 
 import org.jdesktop.swingx.JXLoginPane;
+import org.jdesktop.swingx.auth.LoginAdapter;
+import org.jdesktop.swingx.auth.LoginEvent;
+import org.jdesktop.swingx.auth.LoginListener;
 import org.jdesktop.swingx.auth.LoginService;
 import ru.personrank.view.Window;
 
+/**
+ * 
+ * @author Мартынов Евгений
+ * @author Андрей
+ * @author Федор
+ */
 public class Main {
 
     private static final String URL_GET_AUTH = "http://37.194.87.95:30000/authentication/";
 
+    /**
+     * Точка входа в приложение
+     * @param args - список аргументов
+     */
     public static void main(String[] args) {
-
         setLookAndFeel("Nimbus");
         setDefaultUIFont("Tahoma.ttf", 12);
         setLocalLoginPane();
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-
                 showLoginWindow();
             }
         });
     }
 
-    // Метод отображает окно авторизации
+    /**
+     * Отображает окно авторизации
+     */
     private static void showLoginWindow() {
-        JXLoginPane loginPane = new JXLoginPane(new LoginServiceImpl());
+        LoginService loginServise = new MyLoginService();
+        loginServise.addLoginListener(new MyLoginListener());
+        JXLoginPane loginPane = new JXLoginPane(loginServise);
         JFrame loginFrame = JXLoginPane.showLoginFrame(loginPane);
         loginFrame.setTitle("Авторизация");
         loginFrame.setVisible(true);
     }
 
-    // Метод устанавливает для приложения менеджер отображения 
+    /**
+     * Устанавливает менеджер отображения для приложения
+     * @param name - название менеджера
+     */ 
     private static void setLookAndFeel(String name) {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -62,17 +80,17 @@ public class Main {
         }
     }
 
-    // Метод устанавливает шрифт для приложения
+    /**
+     * Устанавливает стандартный шрифт для приложения
+     * @param fontFileName - имя файла шрифта
+     * @param fontSize - размер шрифта
+     */
     private static void setDefaultUIFont(String fontFileName, int fontSize) {
         try {
             FontUIResource newFont = new FontUIResource(
                     Font.createFont(Font.TRUETYPE_FONT,
                             Main.class.getResourceAsStream("/ru/resources/fonts/" + fontFileName))
                             .deriveFont(Font.PLAIN, fontSize));
-
-//                    Font.createFont(Font.TRUETYPE_FONT,
-//                            new File(System.getProperty("user.dir") + "/fonts/" + fontFileName))                           
-//                            .deriveFont(Font.PLAIN, fontSize));
             Enumeration<Object> keys = UIManager.getDefaults().keys();
             while (keys.hasMoreElements()) {
                 Object key = keys.nextElement();
@@ -88,7 +106,9 @@ public class Main {
         }
     }
 
-    // Локализация панели авторизации
+    /**
+     *
+     */
     private static void setLocalLoginPane() {
         UIManager.put("JXLoginPane.bannerString", "Person Rank");
         UIManager.put("JXLoginPane.nameString", "Имя пользователя:");
@@ -98,19 +118,15 @@ public class Main {
         UIManager.put("JXLoginPane.errorMessage", "Неправильный логин или пароль");
     }
 
-    //***
-    static class LoginServiceImpl extends LoginService {
+    /**
+     *
+     */
+    static class MyLoginService extends LoginService {
 
         @Override
         public boolean authenticate(String name, char[] password,
-                                    String server) throws Exception {
-
-            if (chechUserLogin(name, String.valueOf(password))) {
-                Window.getInstance().setVisible(true);
-                return true;
-            } else {
-                return false;
-            }
+                String server) throws Exception {
+            return chechUserLogin(name, String.valueOf(password));
         }
 
         private boolean chechUserLogin(String user, String login) {
@@ -140,6 +156,23 @@ public class Main {
             }
             return false;
         }
+    }
+
+    /**
+     * Класс слушатель панели авторизации, реализует логику работы при 
+     * прохождении авторизации 
+     */
+    static class MyLoginListener extends LoginAdapter {
+
+        /**
+         * Действия при удачном прохождении авторизациии
+         * @param source 
+         */
+        @Override
+        public void loginSucceeded(LoginEvent source) {
+            Window.getInstance().setVisible(true);
+        }
+
     }
 
 }

@@ -4,6 +4,7 @@
 package ru.personrank.data.generalstatistic;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,12 +20,16 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 import org.json.JSONObject;
 import ru.personrank.data.Repository;
 import ru.personrank.data.Specification;
 import ru.personrank.data.UpdatingRepositoryEvent;
 import ru.personrank.data.UpdatingRepositoryListener;
+import ru.personrank.view.Window;
 
 /**
  * Класс служит для хранения данных таблицы "Общая статистика" получаемых от
@@ -103,12 +108,13 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      * @param statistic - список элементов статистики в виде коллекции List
      */
     private void save(List<GeneralStatisticOnSite> statistic) {
-        try (ObjectOutputStream objOStrm = new ObjectOutputStream(
-                new FileOutputStream("General_statistic.dp"))) {
-            objOStrm.writeObject(statistic);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+            try (ObjectOutputStream objOStrm = new ObjectOutputStream(
+                    new FileOutputStream("General_statistic.dp"))) {
+                objOStrm.writeObject(statistic);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        
     }
 
     /**
@@ -141,18 +147,26 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         try {
             URL source = new URL(url);
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(source.openStream()));
+                    new InputStreamReader(source.openStream(), "UTF-8"));
             String inputLine;
             StringBuilder sb = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 sb.append(inputLine);
             }
+            //System.out.println(sb.);
             json = new JSONObject(sb.toString());
             in.close();
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException ex) {           
             ex.printStackTrace();
-        } catch (IOException ex) {
+        } catch (IOException ex ) {
+            JOptionPane.showMessageDialog(Window.getInstance(), "Не удалось получить информацию "
+                    + "от сервера! Повторный запрос будет отправлен через " + 
+                    FREQUENCY_OF_UPDATES_REPOSITORY + " сек.", "Сервер не "
+                            + "доступен", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
+        }
+        if(json == null) {
+            return new JSONObject();
         }
         return json;
     }
@@ -244,7 +258,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         return newList;
     }
 
-    // Тестовый метод !!!Удалить
+    /**
+     *  Тестовый метод для заполнения списка тестовыми данными.
+     */
     private static List<GeneralStatisticOnSite> getNewStatistic() {
         List<GeneralStatisticOnSite> newStatistic = new ArrayList<>();
         String siteName1 = "lenta.ru";
@@ -329,7 +345,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
                     Thread.sleep(FREQUENCY_OF_UPDATES_REPOSITORY * 1000);
                     System.out.println("Обновление статистики!");
                     List<GeneralStatisticOnSite> newStatistic = new ArrayList<>();
-                    //newStatistic = getNewStatistic();
+                    // На случай недоступности сервера, тестовые данные!
+                     newStatistic = getNewStatistic();
+                    //
                     Iterator<Map.Entry<String, Object>> entries = getSiteMap().entrySet().iterator();
                     while (entries.hasNext()) {
                         Map.Entry<String, Object> entry = entries.next();
@@ -354,45 +372,4 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         }
 
     }
-//    // Тестовые данные
-//        // Начало
-//        String siteName1 = "lenta.ru";
-//        ArrayList<String> persons1 = new ArrayList<>();
-//        persons1.add("Путин");
-//        persons1.add("Трамп");
-//        persons1.add("Обама");
-//        persons1.add("Меркиль");
-//        persons1.add("Оланд");
-//        persons1.add("Навальный");
-//        persons1.add("Жириновский");
-//        ArrayList<Integer> allRanks1 = new ArrayList<>();
-//        allRanks1.add(1227);
-//        allRanks1.add(1820);
-//        allRanks1.add(987);
-//        allRanks1.add(681);
-//        allRanks1.add(5787);
-//        allRanks1.add(57);
-//        allRanks1.add(121);
-//        generalStatisticOnSite.add(new GeneralStatisticOnSite(siteName1, persons1, allRanks1));
-//
-//        String siteName2 = "komersant.ru";
-//        ArrayList<String> persons2 = new ArrayList<>();
-//        persons2.add("Путин");
-//        persons2.add("Трамп");
-//        persons2.add("Обама");
-//        persons2.add("Меркиль");
-//        persons2.add("Оланд");
-//        persons2.add("Навальный");
-//        persons2.add("Жириновский");
-//        ArrayList<Integer> allRanks2 = new ArrayList<>();
-//        allRanks2.add(1147);
-//        allRanks2.add(1745);
-//        allRanks2.add(1001);
-//        allRanks2.add(791);
-//        allRanks2.add(670);
-//        allRanks2.add(100);
-//        allRanks2.add(189);
-//        generalStatisticOnSite.add(new GeneralStatisticOnSite(siteName2, persons2, allRanks2));
-//        // Конец
-//
 }
