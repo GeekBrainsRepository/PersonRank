@@ -138,6 +138,10 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.PERSON.PERSON, person);
         getDB().insert(DB.TABLES.PERSON, null, cv);
     }
+    public void cleanPersonDB(ArrayList<Integer> usedIds){
+        String ids=TextUtils.join(",",usedIds);
+        getDB().execSQL("DELETE FROM "+DB.TABLES.PERSON+" WHERE  " + DB.COLUMNS.SITE.ID + " not in (" + ids+")");
+    }
     public void addPersonWithCheck(int id,String person) {
         getDB().execSQL("DELETE FROM "+DB.TABLES.PERSON+" WHERE  "+
                 " (" + DB.COLUMNS.PERSON.PERSON + "='" + person + "' OR " + DB.COLUMNS.PERSON.ID + "=" + id + ") " +

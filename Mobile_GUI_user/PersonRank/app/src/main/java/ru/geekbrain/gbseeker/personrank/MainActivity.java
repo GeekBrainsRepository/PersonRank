@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
             fm.beginTransaction()
                     .add(R.id.FrameContainer, fragment)
                     .commit();
-          /*  fragment = new PersonList();
+          /*  fragment = new Persons();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_persons) {
             FragmentManager fm = getSupportFragmentManager();
             Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new PersonList();
+            fragment = new Persons();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();

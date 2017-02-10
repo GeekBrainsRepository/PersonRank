@@ -9,17 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import ru.geekbrain.gbseeker.personrank.entities.PersonListDB;
+import ru.geekbrain.gbseeker.personrank.entities.PersonsDB;
+import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
-public class PersonList extends Fragment {
-    PersonListDB personListDB;
+public class Persons extends Fragment implements ReloadFromNet {
+    PersonsDB personsDB;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        personListDB = new PersonListDB(getContext());
+        personsDB = new PersonsDB(getContext());
     }
 
     @Nullable
@@ -30,12 +31,17 @@ public class PersonList extends Fragment {
         getActivity().setTitle("Список персон");
 
         ListView list = (ListView) v.findViewById(R.id.PersonList);
-        SimpleCursorAdapter scAdapter = personListDB.getAdapterWithPerson(getActivity().getSupportLoaderManager());
+        SimpleCursorAdapter scAdapter = personsDB.getAdapterWithPerson(getActivity().getSupportLoaderManager());
         list.setAdapter(scAdapter);
 
-        RestAPI.getPerson(personListDB);
+        reload();
 
         return v;
+    }
+
+    @Override
+    public void reload() {
+        RestAPI.getPerson(personsDB);
     }
 }
 
