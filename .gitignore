@@ -4,7 +4,6 @@
 *.idea/
 *.iml
 *.class
-*out/
 *.MF
 
 #################
@@ -223,6 +222,11 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 
 
 #############
@@ -252,3 +256,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
+>>>>>>> master
