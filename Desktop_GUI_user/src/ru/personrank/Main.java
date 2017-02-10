@@ -22,8 +22,8 @@ import ru.personrank.view.Window;
  * Главный класс программы
  * 
  * @author Мартынов Евгений
+ * @author Митков Федор
  * @author Андрей
- * @author Федор
  */
 public class Main {
 
