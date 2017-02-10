@@ -25,17 +25,13 @@ import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class DailyStatsFragment extends Fragment {
 
-    long dateFrom=Calendar.getInstance().getTimeInMillis();
+    long dateFrom=Calendar.getInstance().getTimeInMillis()-8*3600*24*1000;
     long dateTo=Calendar.getInstance().getTimeInMillis();
 
     Button butFrom;
     Button butTo;
 
     DailyStatsDB dailyStatsDB;
-    int selectedSitePosition = 0;
-    int selectedPersonPosition = 0;
-
-    ArrayList<String> dates=new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,16 +53,10 @@ public class DailyStatsFragment extends Fragment {
         spinnerPersonOnSite.setAdapter(dailyStatsDB.getAdapterWithPersonOnSite());
 
         ListView list= (ListView) v.findViewById(R.id.daily_stats_list);
-        SimpleCursorAdapter adapterStats = dailyStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), selectedSitePosition,selectedPersonPosition);
+        SimpleCursorAdapter adapterStats = dailyStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager());
         list.setAdapter(adapterStats);
 
-       //dates=dailyStatsDB.getMinMaxDate(selectedSitePosition,selectedPersonPosition);
 
-        RestAPI.getDailyStats(dailyStatsDB,
-                dailyStatsDB.getSiteID(dailyStatsDB.getSiteList().get(selectedSitePosition)),
-                dailyStatsDB.getPersonID(dailyStatsDB.getPersonList().get(selectedPersonPosition)),
-                dateFrom,dateTo
-                );
 
         butFrom = (Button) v.findViewById(R.id.date_from);
         butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dateFrom)));
@@ -126,7 +116,6 @@ public class DailyStatsFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                // показываем позиция нажатого элемента
                 dailyStatsDB.setSelectedSitePosition(position);
             }
             @Override
@@ -137,14 +126,18 @@ public class DailyStatsFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                // показываем позиция нажатого элемента
-                Toast.makeText(getActivity(), "person = " + position, Toast.LENGTH_SHORT).show();
+                dailyStatsDB.setSelectedPersonPosition(position);
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
+        dailyStatsDB.setDate(dateFrom,dateTo);
+        RestAPI.getDailyStats(dailyStatsDB,
+                dailyStatsDB.getSiteID(dailyStatsDB.getSelectedSite()),
+                dailyStatsDB.getPersonID(dailyStatsDB.getSelectedPerson()),
+                dateFrom,dateTo
+        );
         return v;
     }
 }

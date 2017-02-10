@@ -105,8 +105,8 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             String s = "{\"date\":1486515600000,\"result\":{\"Путин\":16,\"Медведев\":20}}";
             return s;
         }
-        else if(path.contains("daily/1")) {
-            String s = "{\"date\":1486515600000,\"result\":{\"Путин\":16,\"Медведев\":20}}";
+        else if(path.contains("daily")) {
+            String s ="{\"result\":[0,10,50,3,1,0,0,4]}";
             return s;
         }
         return "";

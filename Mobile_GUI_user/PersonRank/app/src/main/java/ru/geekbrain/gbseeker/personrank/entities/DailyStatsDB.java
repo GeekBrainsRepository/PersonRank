@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
@@ -29,12 +30,19 @@ public class DailyStatsDB  implements iNet2SQL {
     ArrayAdapter<String> adapterSite;
     String selectedSite = "";
     String selectedPerson = "";
+    String saveSelectedSite = "";
+    String saveSelectedPerson = "";
 
     long dateFrom,dateTo;
-    private final long DAY_MILLISEC=3600*24*1000;
+    long saveDateFrom,saveDateTo;
 
+    private final long DAY_MILLISEC=3600*24*1000;
     SimpleCursorAdapter scAdapter;
 
+    public void setDate(long from,long to) {
+        dateFrom=from;
+        dateTo=to;
+    }
     public DailyStatsDB(Context context) {
         this.context = context;
     }
@@ -45,7 +53,12 @@ public class DailyStatsDB  implements iNet2SQL {
     public int  getPersonID(String person) {return DBHelper.getInstance().getPersonID(person); }
 
     @Override
-    public void init() {}
+    public void init() {
+        saveDateFrom=dateFrom;
+        saveDateTo=dateTo;
+        saveSelectedPerson=selectedPerson;
+        saveSelectedSite=selectedSite;
+    }
 
     @Override
     public void updateUI() {}
@@ -58,15 +71,38 @@ public class DailyStatsDB  implements iNet2SQL {
     @Override
     public void updateDB(String json,String param) {
         try {
-            JSONObject dataJsonObj = new JSONObject(json);
-            JSONArray result=dataJsonObj.getJSONArray("result");
-            for(int i=0;i<result.length();i++){
-                int v=result.getInt(i);
-             /*   DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
-                        siteList.get(selectedSite),
-                        personList.get(selectedPerson),
-                        dateFrom+i*DAY_MILLISEC,v);*/
-                Log.d(TAG,i+":"+v);
+            if(param.contains("/site")) {
+                JSONObject result = new JSONObject(json);
+                Iterator<String> iter = result.keys();
+                while (iter.hasNext()) {
+                    String k = iter.next();
+                    int id=Integer.parseInt(k);
+                    String site = result.getString(k);
+                    DBHelper.getInstance().addSiteWithCheck(id,site);
+                    Log.d(TAG, id+ ":" + site);
+                }
+            }else if(param.contains("/person")) {
+                JSONObject result = new JSONObject(json);
+                Iterator<String> iter = result.keys();
+                while (iter.hasNext()) {
+                    String k = iter.next();
+                    int id=Integer.parseInt(k);
+                    String person = result.getString(k);
+                    DBHelper.getInstance().addPersonWithCheck(id,person);
+                    Log.d(TAG, id+ ":" + person);
+                }
+            }else if(param.contains("/daily")) {
+                JSONObject dataJsonObj = new JSONObject(json);
+                JSONArray result = dataJsonObj.getJSONArray("result");
+                for (int i = 0; i < result.length(); i++) {
+                    long time=saveDateFrom+i*DAY_MILLISEC;
+                    int v = result.getInt(i);
+                    DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
+                            saveSelectedSite,
+                            saveSelectedPerson,
+                            time,v);
+                    Log.d(TAG, i + ":" + v);
+                }
             }
         }
         catch(Exception e){
@@ -82,6 +118,9 @@ public class DailyStatsDB  implements iNet2SQL {
     }
     public ArrayAdapter<String> getAdapterWithSite() {
         adapterSite = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSiteList());
+        if(selectedSite.equals("") && siteList.size()>0){
+            selectedSite=siteList.get(0);
+        }
         adapterSite.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return adapterSite;
     }
@@ -92,29 +131,48 @@ public class DailyStatsDB  implements iNet2SQL {
     }
     public ArrayAdapter<String> getAdapterWithPersonOnSite() {
         personAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonList());
+        if(selectedPerson.equals("") && personList.size()>0){
+            selectedPerson=personList.get(0);
+        }
         personAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return personAdapter;
     }
 
-
-    public void setSelectedSitePosition(int id) {
-   /*     selectedSite = id;
-        personList = getPersonList();
-        personAdapter.notifyDataSetChanged();*/
+    public String getSelectedSite() {
+        return selectedSite;
     }
 
-    public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager, int selectedSite, int selectedPerson) {
-       /* String[] from = new String[]{DBHelper.DB.COLUMNS.DAILY.DATE, DBHelper.DB.COLUMNS.DAILY.STATS};
+    public String getSelectedPerson() {
+        return selectedPerson;
+    }
+
+    public void setSelectedSitePosition(int id) {
+        if (id >= 0 && id < siteList.size())
+            selectedSite = siteList.get(id);
+        else
+            selectedSite="";
+
+        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite,selectedPerson));
+        scAdapter.notifyDataSetChanged();
+    }
+    public void setSelectedPersonPosition(int id) {
+        if (id >= 0 && id < personList.size())
+            selectedPerson = personList.get(id);
+        else
+            selectedPerson ="";
+
+        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite,selectedPerson));
+        scAdapter.notifyDataSetChanged();
+    }
+
+    public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager) {
+        String[] from = new String[]{DBHelper.DB.COLUMNS.DAILY.DATE, DBHelper.DB.COLUMNS.DAILY.STATS,"_id"};
         int[] to = new int[]{R.id.text1, R.id.text2};
-        this.selectedSite = selectedSite;
-        this.selectedPerson = selectedPerson;
 
         scAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_DAILY_STATS.ordinal(), null,
-                new DailyStatsCursorLoaderManager(context, scAdapter,
-                        siteList.get(selectedSite),
-                        personList.get(selectedPerson))
-        );*/
+                new DailyStatsCursorLoaderManager(context, scAdapter,selectedSite,selectedPerson)
+        );
         return scAdapter;
 
     }

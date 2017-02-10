@@ -34,6 +34,10 @@ public class CommonStatDB implements iNet2SQL {
         this.context = context;
     }
 
+    public String getSelectedSite() {
+        return selectedSite;
+    }
+
     public ArrayList<String> getCurrentSiteList() {
         return siteList;
     }
@@ -47,6 +51,8 @@ public class CommonStatDB implements iNet2SQL {
 
     public ArrayAdapter<String> getAdapterWithSite() {
         siteListAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSiteList());
+        if(selectedSite.equals("") && siteList.size()>0)
+            selectedSite=siteList.get(0);
         siteListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return siteListAdapter;
     }

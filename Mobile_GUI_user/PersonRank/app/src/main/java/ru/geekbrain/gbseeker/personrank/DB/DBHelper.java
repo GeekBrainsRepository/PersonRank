@@ -172,9 +172,9 @@ public class DBHelper extends SQLiteOpenHelper {
         personList.clear();
         Cursor cursor = null;
         try {
-            cursor = DBHelper.getInstance().getDB().query(DBHelper.DB.TABLES.PERSON, null, null, null, null, null, null, null);
+            cursor = DBHelper.getInstance().getDB().query(DB.TABLES.PERSON, null, null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
-                int index = cursor.getColumnIndex(DBHelper.DB.COLUMNS.PERSON.PERSON);
+                int index = cursor.getColumnIndex(DB.COLUMNS.PERSON.PERSON);
                 do {
                     personList.add(cursor.getString(index));
                 } while (cursor.moveToNext());
@@ -398,8 +398,9 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
     public Cursor getCursorOfDailyStatsWithSite(String site,String person) {
+        dumpTableDailyStats();
         return DBHelper.getInstance().getDB().query(DB.TABLES.DAILY, null,
-                DB.COLUMNS.DAILY.PERSON+'='+person+"' AND "+DB.COLUMNS.DAILY.SITE+'='+site+"'",
+                DB.COLUMNS.DAILY.PERSON+"='"+person+"' AND "+DB.COLUMNS.DAILY.SITE+"='"+site+"'",
                 null, null, null, null);
     }
 
