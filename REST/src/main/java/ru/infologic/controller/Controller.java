@@ -1,5 +1,7 @@
 package ru.infologic.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import ru.infologic.StatisticUtilities;
 import ru.infologic.model.*;
 import ru.infologic.repository.Repository;
@@ -102,6 +104,14 @@ public class Controller {
         repository.update(pattern);
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/registration")
+    public ResponseEntity registration(@RequestBody String[] strings){
+        String login = strings[0];
+        String password = strings[1];
+        StatisticUtilities.registration(login, password);
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
+
     ////////////////////////////////////////GET
     @RequestMapping(method = RequestMethod.GET, path = "/person")
     public Map<Integer, String> getPersons() {
@@ -132,4 +142,6 @@ public class Controller {
     public String  authentication(@PathVariable("login") String login, @PathVariable("password") String password){
         return StatisticUtilities.authenticationUsers(login,password);
     }
+
+
 }

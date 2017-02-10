@@ -106,4 +106,18 @@ public class StatisticUtilities {
         }
         return "false";
     }
+
+    public static void registration(String login, String password){
+        ArrayList<UsersEntity> result = new ArrayList<>();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        UsersEntity newUser = new UsersEntity();
+        newUser.setLogin(login);
+        newUser.setPassword(password);
+
+
+        session.save(newUser);
+        session.getTransaction().commit();
+        session.close();
+    }
 }

@@ -22,12 +22,17 @@ public class PagesService implements IPagesMapper {
     }
 
     @Override
+    public List<Pages> getPagesWhithLastScanNull() {
+        return iPagesMapper.getPagesWhithLastScanNull();
+    }
+
+    @Override
     public void insertPage(Pages page) {
         iPagesMapper.insertPage(page);
     }
 
     @Override
-    public void setUpdateLastScanDate(final Date lastScanDate) {
-        this.iPagesMapper.setUpdateLastScanDate(lastScanDate);
+    public void setUpdateLastScanDate(int id, final Date lastScanDate) {
+        this.iPagesMapper.setUpdateLastScanDate(id, lastScanDate);
     }
 }

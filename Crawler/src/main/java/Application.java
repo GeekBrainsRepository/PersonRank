@@ -5,19 +5,21 @@ import beans.Sites;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
 import services.KeywordsService;
 import services.PagesService;
 import services.PersonPageRankService;
 import services.SitesService;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * main class for run
  */
-
+@ContextConfiguration(locations = "/mainContext.xml")
 public class Application {
     @Autowired
     private static SitesService sitesService;
@@ -28,13 +30,12 @@ public class Application {
     @Autowired
     private static PagesService pagesService;
 
-    public static void main(String[] args) throws IOException, ParseException {
-
+    public static void main(String[] args) throws IOException {
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
-        sitesService = (SitesService)context.getBean("sitesService");
-        keywordsService = (KeywordsService)context.getBean("keywordsService");
+        sitesService = (SitesService) context.getBean("sitesService");
+        keywordsService = (KeywordsService) context.getBean("keywordsService");
         personPageRankService = (PersonPageRankService) context.getBean("personPageRankService");
-        pagesService = (PagesService)context.getBean("pagesService");
+        pagesService = (PagesService) context.getBean("pagesService");
 
         List<Sites> sites = sitesService.getSites();
         List<Keywords> keywordsList = keywordsService.getKeywords();
@@ -44,15 +45,16 @@ public class Application {
         PersonPageRank personPageRank = new PersonPageRank();
 
         for (Sites site : sites) {
-            System.out.println(site.getName() + " " + site.getId());
             pagesCreater.parseForLinks(site.getName(),site.getId());
         }
 
         for (Pages page : pagesList) {
             for (Keywords keyword : keywordsList) {
+                personPageRank.setPersonId(keyword.getPersonId());
                 personPageRank.setPageId(page.getId());
                 personPageRank.setRank(Parser.searchWord(keyword.getName(),page.getUrl()));
                 personPageRankService.setInsertPersonPageRank(personPageRank);
+                pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
             }
         }
     }
