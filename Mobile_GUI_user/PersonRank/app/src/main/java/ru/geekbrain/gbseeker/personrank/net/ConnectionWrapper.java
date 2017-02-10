@@ -116,8 +116,9 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             s=getContent(path);
             return s;
         }
-        else if(path.contains("common/1")) {
+        else if(path.contains("common")) {
             String s = "{\"date\":1486515600000,\"result\":{\"Путин\":16,\"Медведев\":20}}";
+            s=getContent(path);
             return s;
         }
         else if(path.contains("daily")) {

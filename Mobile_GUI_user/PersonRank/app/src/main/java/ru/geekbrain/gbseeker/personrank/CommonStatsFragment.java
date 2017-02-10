@@ -12,10 +12,11 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import ru.geekbrain.gbseeker.personrank.entities.CommonStatDB;
+import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 
-public class CommonStatsFragment extends Fragment {
+public class CommonStatsFragment extends Fragment  implements ReloadFromNet {
     CommonStatDB commonStatDB;
 
     @Override
@@ -36,18 +37,16 @@ public class CommonStatsFragment extends Fragment {
         spinner.setAdapter(commonStatDB.getAdapterWithSite());
 
         ListView list= (ListView) v.findViewById(R.id.common_stats_list);
-        SimpleCursorAdapter adapterStats = commonStatDB.getAdapterWithStats(getActivity().getSupportLoaderManager(), commonStatDB.getSelectedSite());
+        SimpleCursorAdapter adapterStats = commonStatDB.getAdapterWithStats(getActivity().getSupportLoaderManager(),
+                commonStatDB.getSelectedSite());
         list.setAdapter(adapterStats);
-
-        RestAPI.getCommonStats(commonStatDB,commonStatDB.getSiteID(commonStatDB.getSelectedSite()));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                RestAPI.getCommonStats(commonStatDB,
-                        commonStatDB.getSiteID(commonStatDB.getCurrentSiteList().get(position)));
-                commonStatDB.setSelectedSitePosition(position);
+                commonStatDB.setSelectedSitePosition((String) parent.getItemAtPosition(position));
+                reload();
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -55,6 +54,11 @@ public class CommonStatsFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void reload() {
+        RestAPI.getCommonStats(commonStatDB,commonStatDB.getSiteID(commonStatDB.getSelectedSite()));
     }
 }
 

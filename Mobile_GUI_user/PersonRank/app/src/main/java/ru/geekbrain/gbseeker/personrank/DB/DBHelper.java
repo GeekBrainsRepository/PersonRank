@@ -330,6 +330,18 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.COMMON.STATS, stats);
         getDB().update(DB.TABLES.COMMON, cv,"_id="+_id,null);
     }
+    public void cleanCommonStatsDB(ArrayList<String> usedSite) {
+        String sites="'"+TextUtils.join("','",usedSite)+"'";
+        getDB().execSQL("DELETE FROM " + DB.TABLES.COMMON + " WHERE  "
+                + DB.COLUMNS.COMMON.SITE + " NOT IN (" + sites + ") "
+        );
+    }
+    public void cleanCommonStatsDB(String site,ArrayList<String> usedPerson) {
+        String persons="'"+TextUtils.join("','",usedPerson)+"'";
+        getDB().execSQL("DELETE FROM " + DB.TABLES.COMMON + " WHERE  "
+                + DB.COLUMNS.COMMON.PERSON + " NOT IN (" + persons + ") AND "+DB.COLUMNS.COMMON.SITE+"='"+site+"'"
+        );
+    }
     public void addOrUpdateCommonStatsWithCheck(String site,String person,int stats) {
         dumpTableCommonStats();
         Cursor cursor = null;
