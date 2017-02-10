@@ -15,11 +15,11 @@ import javax.swing.plaf.FontUIResource;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.auth.LoginAdapter;
 import org.jdesktop.swingx.auth.LoginEvent;
-import org.jdesktop.swingx.auth.LoginListener;
 import org.jdesktop.swingx.auth.LoginService;
 import ru.personrank.view.Window;
 
 /**
+ * Главный класс программы
  * 
  * @author Мартынов Евгений
  * @author Андрей

@@ -33,13 +33,14 @@ import ru.personrank.view.Window;
 
 /**
  * Класс служит для хранения данных таблицы "Общая статистика" получаемых от
- * сервера. 
- * 
+ * сервера.
+ *
  * Класс реализует паттерн "Репозиторий". Хранит обьекты класса
- * <b>GeneralStatisticOnSite</b> в виде списка. Делает переодические запросы 
- * к веб-сервису для обновления данных, при удачном запросе обнавляет данные
- * в списке и записывает их файл. Если сервер недоступен при создании обьекта
- * в список загружаются данные из файла. 
+ * <b>GeneralStatisticOnSite</b> в виде списка. Делает переодические запросы к
+ * веб-сервису для обновления данных, при удачном запросе обнавляет данные в
+ * списке и записывает их файл. Если сервер недоступен при создании обьекта в
+ * список загружаются данные из файла.
+ *
  * @author Мартынов Евгений
  * @version 1.0
  */
@@ -47,34 +48,34 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     private static final long FREQUENCY_OF_UPDATES_REPOSITORY = 10; //в секундах
     private static final String URL_GET_SITE_MAP = "http://37.194.87.95:30000/site";
-    private static final String URL_GET_GENERAL_STATISTIC_ON_SITE = "http://37.194.87.95:30000/common/";      
+    private static final String URL_GET_GENERAL_STATISTIC_ON_SITE = "http://37.194.87.95:30000/common/";
     private static final GeneralStatisticOnSiteRepository INSTANCE = new GeneralStatisticOnSiteRepository();
- 
+
     private List listenerList;
     private List<GeneralStatisticOnSite> generalStatisticOnSite;
-    
-    /** 
-     * Создает новый обьект класса <b>GeneralStatisticOnSiteRepository</b>  
+
+    /**
+     * Создает новый обьект класса <b>GeneralStatisticOnSiteRepository</b>
      */
     private GeneralStatisticOnSiteRepository() {
         generalStatisticOnSite = load();
         listenerList = new ArrayList();
         new MakerGeneralStatistic();
     }
-    
+
     /**
      * Возвращает обьект класса.
-     * 
+     *
      * @return обьект GeneralStatisticOnSiteRepository
      */
     public static GeneralStatisticOnSiteRepository getInstance() {
         return INSTANCE;
     }
-    
+
     /**
      * Добавляет одного слушателя репозитория.
-     * 
-     * @param listener 
+     *
+     * @param listener
      */
     public void addUpdatingRepositoryListener(UpdatingRepositoryListener listener) {
         listenerList.add(listener);
@@ -82,8 +83,8 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Удаляет одного слушателя репозитория.
-     * 
-     * @param listener 
+     *
+     * @param listener
      */
     public void removeUpdatingRepositoryListener(UpdatingRepositoryListener listener) {
         listenerList.remove(listener);
@@ -103,42 +104,65 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Сохраняет список обьектов <b>GeneralStatisticOnSite</b> в файл.
-     * 
-     * Сохраняет список сайтов, переданный в качестве аргумента, в файл. 
+     *
+     * Сохраняет список сайтов, переданный в качестве аргумента, в файл.
+     *
      * @param statistic - список элементов статистики в виде коллекции List
      */
     private void save(List<GeneralStatisticOnSite> statistic) {
-            try (ObjectOutputStream objOStrm = new ObjectOutputStream(
-                    new FileOutputStream("General_statistic.dp"))) {
-                objOStrm.writeObject(statistic);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        
+        try (ObjectOutputStream objOStrm = new ObjectOutputStream(
+                new FileOutputStream("General_statistic.dp"))) {
+            objOStrm.writeObject(statistic);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
     }
 
     /**
      * Загружает список сайтов из файла.
-     * 
+     *
      * @return список элементов статистики в виде коллекции List
      */
     private List<GeneralStatisticOnSite> load() {
-        try (ObjectInputStream objIStr = new ObjectInputStream(new FileInputStream("General_statistic.dp"))) {
-            List<GeneralStatisticOnSite> list = (List<GeneralStatisticOnSite>) objIStr.readObject();
-            return list;
-        } catch (FileNotFoundException ex) {
-            return new ArrayList<>();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+        File file = new File("General_statistic.dp");
+        if (file.exists()) {
+            
+            if(file.length() == 0) {
+                return new ArrayList<>();
+            }
+            
+            try (ObjectInputStream objIStr = new ObjectInputStream(new FileInputStream(file))) {
+                List<GeneralStatisticOnSite> list = (List<GeneralStatisticOnSite>) objIStr.readObject();
+                return list;
+            } catch (FileNotFoundException ex) {
+                // Возникновение исключения маловероятно,
+                // потому что предварительно проверяется наличае файла, 
+                // и в случае его отсутствия создается новый.
+                ex.printStackTrace();
+                return new ArrayList<>();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return new ArrayList<>();
+            } catch (ClassNotFoundException ex) {
+                ex.printStackTrace();
+                return new ArrayList<>();
+            }
+        } else {
+            try {
+                file.createNewFile();
+                return new ArrayList<>();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
+
         return new ArrayList<>();
     }
-    
+
     /**
      * Возвращает обьект json по url адресу ресурса.
-     * 
+     *
      * @param url - адресс ресурса(веб-сервера)
      * @return json элемент статистики в виде json обьекта
      */
@@ -156,16 +180,16 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
             //System.out.println(sb.);
             json = new JSONObject(sb.toString());
             in.close();
-        } catch (MalformedURLException ex) {           
+        } catch (MalformedURLException ex) {
             ex.printStackTrace();
-        } catch (IOException ex ) {
+        } catch (IOException ex) {
             JOptionPane.showMessageDialog(Window.getInstance(), "Не удалось получить информацию "
-                    + "от сервера! Повторный запрос будет отправлен через " + 
-                    FREQUENCY_OF_UPDATES_REPOSITORY + " сек.", "Сервер не "
-                            + "доступен", JOptionPane.ERROR_MESSAGE);
+                    + "от сервера! Повторный запрос будет отправлен через "
+                    + FREQUENCY_OF_UPDATES_REPOSITORY + " сек.", "Сервер не "
+                    + "доступен", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
-        if(json == null) {
+        if (json == null) {
             return new JSONObject();
         }
         return json;
@@ -173,17 +197,17 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Возвращает карту сайтов.
-     * 
+     *
      * @return карта сайтов в виде пар ключ - значения колекции Map
      */
     private static Map<String, Object> getSiteMap() {
         JSONObject json = getJSON(URL_GET_SITE_MAP);
         return json.toMap();
     }
-    
+
     /**
      * Возвращает дату последнего обновления статистики сайта.
-     * 
+     *
      * @param siteID - ключ обозначающий определенный сайт
      * @return дата в виде обьекта <b>Calendar</b>
      */
@@ -196,9 +220,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Возвращает список персон сайта.
-     * 
+     *
      * @param siteID - ключ обозначающий определенный сайт
-     * @return список в виде коллекции List с именами персон 
+     * @return список в виде коллекции List с именами персон
      */
     private static List<String> getPersonsList(String siteID) {
         List<String> persons = new ArrayList<>();
@@ -211,9 +235,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     * 
+     *
      * @param siteID - ключ обозначающий определенный сайт
-     * @return список в виде коллекции List с рейтингом персон 
+     * @return список в виде коллекции List с рейтингом персон
      */
     private static List<Integer> getRanksList(String siteID) {
         List<Integer> ranks = new ArrayList<>();
@@ -241,9 +265,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     * Делает выборку необходимых сайтов по параметрам переданным в виде
-     * класса <b>Specification</b>.
-     * 
+     * Делает выборку необходимых сайтов по параметрам переданным в виде класса
+     * <b>Specification</b>.
+     *
      * @param specification - условия для выборки
      * @return список элементов статистики в виде коллекции List
      */
@@ -259,7 +283,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     *  Тестовый метод для заполнения списка тестовыми данными.
+     * Тестовый метод для заполнения списка тестовыми данными.
      */
     private static List<GeneralStatisticOnSite> getNewStatistic() {
         List<GeneralStatisticOnSite> newStatistic = new ArrayList<>();
@@ -323,10 +347,10 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Класс служит для обновления статистики по сайтам, и записи оной в файл.
-     * 
-     * Подкласс GeneralStatisticOnSiteRepository. Переодически опрашивает сервис,
-     * при возврате данных обновляет список статистики сайтов и переписывает данные
-     * в файле на новые.
+     *
+     * Подкласс GeneralStatisticOnSiteRepository. Переодически опрашивает
+     * сервис, при возврате данных обновляет список статистики сайтов и
+     * переписывает данные в файле на новые.
      */
     private class MakerGeneralStatistic implements Runnable {
 
@@ -346,7 +370,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
                     System.out.println("Обновление статистики!");
                     List<GeneralStatisticOnSite> newStatistic = new ArrayList<>();
                     // На случай недоступности сервера, тестовые данные!
-                     newStatistic = getNewStatistic();
+                    newStatistic = getNewStatistic();
                     //
                     Iterator<Map.Entry<String, Object>> entries = getSiteMap().entrySet().iterator();
                     while (entries.hasNext()) {

@@ -35,7 +35,7 @@ public class GeneralStatisticsPanel extends JPanel {
     private GeneralStatisticOnSiteRepository statisticRepository;
     private JComboBox namesSitesComboBox;
     private NamesSitesComboBoxModel namesSitesComboBoxModel;
-    private JLabel dateScanSite;  
+    private JLabel dateScanSite;
     private GeneralStaticTabelModel generalTableModel;
     private JFreeChart barChart;
 
@@ -52,7 +52,7 @@ public class GeneralStatisticsPanel extends JPanel {
         setBorder(new EmptyBorder(6, 6, 6, 6));
         setOpaque(false);
         add(createControlBox(), BorderLayout.NORTH);
-        add(createContentPanel(), BorderLayout.CENTER);       
+        add(createContentPanel(), BorderLayout.CENTER);
     }
 
     private Box createControlBox() {
@@ -86,19 +86,24 @@ public class GeneralStatisticsPanel extends JPanel {
         dateScanSite.setHorizontalTextPosition(JLabel.RIGHT);
         dateScanSite.setHorizontalAlignment(JLabel.RIGHT);
         dateScanSite.setFont(dateScanSite.getFont().deriveFont(Font.ITALIC));
-        List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.getInstance().
-                query(GeneralStatisticSpecification.findStatisticSite(namesSitesComboBox.getSelectedItem().toString()));
-        if (!list.isEmpty()) {
-            Date date = list.get(0).getReviewDate().getTime();
-            SimpleDateFormat formater = new SimpleDateFormat("Актуально на: (dd.MM.yyyy)");
-            dateScanSite.setText(formater.format(date));
+        if (namesSitesComboBox.getSelectedItem() != null) {
+            List<GeneralStatisticOnSite> list = statisticRepository.
+                    query(GeneralStatisticSpecification.findStatisticSite(
+                            namesSitesComboBox.getSelectedItem().toString()));
+            if (!list.isEmpty()) {
+                Date date = list.get(0).getReviewDate().getTime();
+                SimpleDateFormat formater = new SimpleDateFormat("Актуально на: (dd.MM.yyyy)");
+                dateScanSite.setText(formater.format(date));
+            }
         }
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.add(dateScanSite, BorderLayout.NORTH);
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
         generalTableModel = new GeneralStaticTabelModel();
-        generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
+        if (namesSitesComboBox.getSelectedItem() != null) {
+            generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
+        }
         JTable generalTable = new JTable(generalTableModel);
         generalTable.setShowGrid(true);
         generalTable.setShowHorizontalLines(true);
@@ -123,12 +128,14 @@ public class GeneralStatisticsPanel extends JPanel {
 
     private CategoryDataset createDatashet() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        List<GeneralStatisticOnSite> list = statisticRepository.query(GeneralStatisticSpecification.findStatisticSite(
-                namesSitesComboBox.getSelectedItem().toString()));
-        List<String> person = list.get(0).getPersonNames();
-        List<Integer> rank = list.get(0).getAllPersonRanks();
-        for (int i = 0; i < person.size(); i++) {
-            dataset.addValue(rank.get(i), person.get(i), "Персоны");
+        if (namesSitesComboBox.getSelectedItem() != null) {
+            List<GeneralStatisticOnSite> list = statisticRepository.query(GeneralStatisticSpecification.findStatisticSite(
+                    namesSitesComboBox.getSelectedItem().toString()));
+            List<String> person = list.get(0).getPersonNames();
+            List<Integer> rank = list.get(0).getAllPersonRanks();
+            for (int i = 0; i < person.size(); i++) {
+                dataset.addValue(rank.get(i), person.get(i), "Персоны");
+            }
         }
         return dataset;
     }
@@ -202,7 +209,8 @@ public class GeneralStatisticsPanel extends JPanel {
             ArrayList row = null;
             ArrayList<String> personNames = null;
             ArrayList<Integer> personRank = null;
-            List<GeneralStatisticOnSite> list = statisticRepository.query(GeneralStatisticSpecification.findStatisticSite(nameSite));
+            List<GeneralStatisticOnSite> list = statisticRepository.query(
+                    GeneralStatisticSpecification.findStatisticSite(nameSite));
             personNames = (ArrayList<String>) list.get(0).getPersonNames();
             personRank = (ArrayList<Integer>) list.get(0).getAllPersonRanks();
             for (int i = 0; i < personNames.size(); i++) {
@@ -227,14 +235,16 @@ public class GeneralStatisticsPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
-            barChart.getCategoryPlot().setDataset(createDatashet());
-            List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.getInstance().
-                    query(GeneralStatisticSpecification.findStatisticSite(namesSitesComboBox.getSelectedItem().toString()));
-            if (!list.isEmpty()) {
-                Date date = list.get(0).getReviewDate().getTime();
-                SimpleDateFormat formater = new SimpleDateFormat("Актуально на: (dd.MM.yyyy)");
-                dateScanSite.setText(formater.format(date));
+            if (namesSitesComboBox.getSelectedItem() != null) {
+                generalTableModel.setDataSource(namesSitesComboBox.getSelectedItem().toString());
+                barChart.getCategoryPlot().setDataset(createDatashet());
+                List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.getInstance().
+                        query(GeneralStatisticSpecification.findStatisticSite(namesSitesComboBox.getSelectedItem().toString()));
+                if (!list.isEmpty()) {
+                    Date date = list.get(0).getReviewDate().getTime();
+                    SimpleDateFormat formater = new SimpleDateFormat("Актуально на: (dd.MM.yyyy)");
+                    dateScanSite.setText(formater.format(date));
+                }
             }
         }
     }
