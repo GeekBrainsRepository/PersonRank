@@ -25,7 +25,7 @@ public class Parser {
     }
 
     public static int searchWord(String word, String url){
-        int rank = 0;
+        int rank = 0; //todo предусмотреть что ищем на одной странице по одной персоне несколько ключевых слов
         String regex = word + "*";
         String text = getPlainText(url);
         for(int i = 0 ; i < text.length(); i++){

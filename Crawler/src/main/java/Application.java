@@ -12,6 +12,8 @@ import services.PersonPageRankService;
 import services.SitesService;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -41,24 +43,18 @@ public class Application {
 
         PagesCreater pagesCreater = new PagesCreater();
         PersonPageRank personPageRank = new PersonPageRank();
-        for (Pages page : pagesList) {
-            for (Keywords keyword : keywordsList) {
-                personPageRank.setPersonId(keyword.getPersonId());
-                personPageRank.setPageId(page.getId());
-                personPageRank.setRank(Parser.searchWord(keyword.getName(),page.getUrl()));
-                personPageRankService.setInsertPersonPageRank(personPageRank);
-            }
-        }
 
         for (Sites site : sites) {
             pagesCreater.parseForLinks(site.getName(),site.getId());
         }
+
         for (Pages page : pagesList) {
             for (Keywords keyword : keywordsList) {
                 personPageRank.setPersonId(keyword.getPersonId());
                 personPageRank.setPageId(page.getId());
                 personPageRank.setRank(Parser.searchWord(keyword.getName(),page.getUrl()));
                 personPageRankService.setInsertPersonPageRank(personPageRank);
+                pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
             }
         }
     }

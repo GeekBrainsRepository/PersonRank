@@ -46,7 +46,7 @@ public class PagesCreater {
             for(Element link : linksOnPage){
                 pages.setSiteId(siteId);
                 pages.setUrl(link.absUrl("href"));
-                pages.setFoundDateTime((Date) new Date(Calendar.getInstance().getTime().getTime()));
+                pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
                 pagesService.insertPage(pages);
                 this.links.add(link.absUrl("href"));
                 print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));

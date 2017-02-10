@@ -32,7 +32,7 @@ public class PagesService implements IPagesMapper {
     }
 
     @Override
-    public void setUpdateLastScanDate(final Date lastScanDate) {
-        this.iPagesMapper.setUpdateLastScanDate(lastScanDate);
+    public void setUpdateLastScanDate(int id, final Date lastScanDate) {
+        this.iPagesMapper.setUpdateLastScanDate(id, lastScanDate);
     }
 }

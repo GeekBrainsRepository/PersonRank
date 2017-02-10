@@ -1,10 +1,7 @@
 package mappers;
 
 import beans.Pages;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.sql.Date;
 import java.util.List;
@@ -33,5 +30,5 @@ public interface IPagesMapper {
     void insertPage(Pages page);
 
     @Update(UPDATE_LAST_SCAN_DATE)
-    void setUpdateLastScanDate(final Date lastScanDate);
+    void setUpdateLastScanDate(@Param("id") int id, @Param("lastScanDate")final Date lastScanDate);
 }
