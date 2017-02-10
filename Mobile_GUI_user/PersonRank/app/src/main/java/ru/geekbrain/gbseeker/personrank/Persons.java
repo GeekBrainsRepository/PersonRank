@@ -41,7 +41,7 @@ public class Persons extends Fragment implements ReloadFromNet {
 
     @Override
     public void reload() {
-        RestAPI.getPerson(personsDB);
+        RestAPI.getPersons(personsDB);
     }
 }
 

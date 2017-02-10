@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //RestAPI.authentication(new emptyINet2SQL());
-
         DBHelper.createDBHelper(this);
         DBHelper.getInstance().fillByFakeData();
 
@@ -49,14 +47,6 @@ public class MainActivity extends AppCompatActivity
             fm.beginTransaction()
                     .add(R.id.FrameContainer, fragment)
                     .commit();
-          /*  fragment = new Persons();
-            fm.beginTransaction()
-                    .replace(R.id.FrameContainer, fragment)
-                    .commit();
-            fragment = new CommonStatsFragment();
-            fm.beginTransaction()
-                    .replace(R.id.FrameContainer, fragment)
-                    .commit();*/
         }
 
     }
@@ -107,7 +97,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.common_stats_menu) {
             FragmentManager fm = getSupportFragmentManager();
             Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new CommonStatsFragment();
+            fragment = new CommonStats();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();

@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
@@ -38,8 +39,8 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
         try {
             for(int i=0;i<params.length;i++) {
                 Log.d(TAG,net2SQL.getInfo()+": param i="+i+" "+params[i]);
-                //content = getContent(params[i]);
-                content = getFakeContent(params[i]);
+                content = getContent(params[i]);
+                //content = getFakeContent(params[i]);
                 Log.d(TAG,net2SQL.getInfo()+": content i="+i+" "+content);
                 net2SQL.updateDB(content, params[i]);
             }
@@ -70,6 +71,36 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             HttpURLConnection c = (HttpURLConnection) url.openConnection();
             c.setRequestMethod("GET");
             c.setReadTimeout(100);
+            c.connect();
+            int status = c.getResponseCode();
+            if(status!=200){
+
+            }
+            reader = new BufferedReader(new InputStreamReader(c.getInputStream()));
+            StringBuilder buf = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                buf.append(line);
+            }
+            return (buf.toString());
+        }catch(Exception e){
+            Log.d(TAG,e.getMessage());
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+        return null;
+    }
+    private String getContentPOST(String path) throws IOException {
+        BufferedReader reader = null;
+        try {
+            URL url = new URL(path);
+            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+            c.setRequestMethod("POST");
+            c.setReadTimeout(100);
+
+            c.addRequestProperty();
             c.connect();
             int status = c.getResponseCode();
             if(status!=200){
@@ -124,6 +155,9 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
         else if(path.contains("daily")) {
             String s ="{\"result\":[0,10,50,3,1,0,0,4]}";
             return s;
+        }
+        else{
+            return getContent(path);
         }
         return "";
     }

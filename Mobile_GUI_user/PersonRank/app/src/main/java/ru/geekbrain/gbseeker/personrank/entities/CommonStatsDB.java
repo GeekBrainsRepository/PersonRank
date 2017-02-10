@@ -19,8 +19,8 @@ import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
-public class CommonStatDB implements iNet2SQL {
-    private static final String TAG="CommonStatDB";
+public class CommonStatsDB implements iNet2SQL {
+    private static final String TAG="CommonStatsDB";
 
     Context context;
     ArrayList<String> siteList= new ArrayList<>();
@@ -30,7 +30,7 @@ public class CommonStatDB implements iNet2SQL {
 
     SimpleCursorAdapter scCommonStatsAdapter;
 
-    public CommonStatDB(Context context) {
+    public CommonStatsDB(Context context) {
         this.context = context;
     }
 
