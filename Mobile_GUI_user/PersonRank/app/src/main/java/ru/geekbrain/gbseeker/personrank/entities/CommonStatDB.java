@@ -72,7 +72,7 @@ public class CommonStatDB implements iNet2SQL {
                     String k = iter.next();
                     int id=Integer.parseInt(k);
                     String site = result.getString(k);
-                    DBHelper.getInstance().addSiteWithCheck(id,site);
+                    DBHelper.getInstance().addSiteDBWithCheck(id,site);
                     Log.d(TAG, id+ ":" + site);
                 }
             }

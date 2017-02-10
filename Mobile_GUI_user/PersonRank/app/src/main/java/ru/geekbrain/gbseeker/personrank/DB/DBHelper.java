@@ -5,10 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 
@@ -204,17 +207,24 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void addSite(int id,String site) {
+    public void addSiteDB(int id, String site) {
         ContentValues cv = new ContentValues();
         cv.put(DB.COLUMNS.SITE.ID, id);
         cv.put(DB.COLUMNS.SITE.SITE, site);
         getDB().insert(DB.TABLES.SITE, null, cv);
     }
-    public void addSiteWithCheck(int id,String site) {
+    public void deleteWrongSitesDB(int id,String site){
         getDB().execSQL("DELETE FROM "+DB.TABLES.SITE+" WHERE  "
                 +"(" + DB.COLUMNS.SITE.SITE + "='" + site + "' OR " + DB.COLUMNS.SITE.ID + "=" + id + ") " +
                 " AND " +
-                 " NOT (" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ")");
+                " NOT (" + DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id + ")");
+    }
+    public void cleanSiteDB(ArrayList<Integer> usedIds){
+        String ids=TextUtils.join(",",usedIds);
+        getDB().execSQL("DELETE FROM "+DB.TABLES.SITE+" WHERE  " + DB.COLUMNS.SITE.ID + " not in (" + ids+")");
+    }
+    public void addSiteDBWithCheck(int id, String site) {
+        deleteWrongSitesDB(id,site);
 
         Cursor cursor = null;
         try {
@@ -223,7 +233,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {
             } else {
-                addSite(id, site);
+                addSiteDB(id, site);
             }
         } finally {
             if (cursor != null) cursor.close();
@@ -416,9 +426,9 @@ public class DBHelper extends SQLiteOpenHelper {
         addPersonWithCheck("Вася");
         addPersonWithCheck("Оля");
 
-        addSiteWithCheck("lenta.ru");
-        addSiteWithCheck("mail.ru");
-        addSiteWithCheck("yandex.ru");
+        addSiteDBWithCheck("lenta.ru");
+        addSiteDBWithCheck("mail.ru");
+        addSiteDBWithCheck("yandex.ru");
 
         dumpTablePerson();
         dumpTableSite();

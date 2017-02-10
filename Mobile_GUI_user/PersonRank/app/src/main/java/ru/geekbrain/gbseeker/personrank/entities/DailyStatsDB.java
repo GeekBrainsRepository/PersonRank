@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
@@ -78,7 +77,7 @@ public class DailyStatsDB  implements iNet2SQL {
                     String k = iter.next();
                     int id=Integer.parseInt(k);
                     String site = result.getString(k);
-                    DBHelper.getInstance().addSiteWithCheck(id,site);
+                    DBHelper.getInstance().addSiteDBWithCheck(id,site);
                     Log.d(TAG, id+ ":" + site);
                 }
             }else if(param.contains("/person")) {

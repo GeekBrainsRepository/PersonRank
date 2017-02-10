@@ -1,7 +1,9 @@
 package ru.geekbrain.gbseeker.personrank.net;
 
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.Log;
+import android.util.TimeUtils;
 
 import org.json.JSONObject;
 
@@ -17,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
     final String TAG="ConnectionWrapper";
     iNet2SQL net2SQL;
+    static int count=0;
 
     public ConnectionWrapper(iNet2SQL net2SQL) {
         this.net2SQL=net2SQL;
@@ -89,9 +92,18 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
     }
 
     private String getFakeContent(String path) throws IOException {
+        count++;
         if(path.contains("site")) {
-            String s = "{\"1\":\"www.1.test\",\"2\":\"www.2.test\",\"3\":\"www.3.test\",\"4\":\"www.4.test\",\"7\":\"TEST_SITE\",\"8\":\"site1\"}";
-            return s;
+            if(true) return getContent(path);
+            if (count == 1) {
+                SystemClock.sleep(3000);
+                String s = "{\"1\":\"www.1.test\",\"2\":\"www.2.test\",\"3\":\"www.3.test\",\"4\":\"www.4.test\",\"7\":\"TEST_SITE\",\"8\":\"site1\"}";
+                return s;
+            } else if (count >= 2) {
+                SystemClock.sleep(3000);
+                String s = "{\"1\":\"www.1.test\",\"2\":\"www.2.test\",\"3\":\"www.3.test\",\"4\":\"www.4.test\",\"7\":\"TEST_SITE\",\"8\":\"site1\",\"9\":\"site11111\"}";
+                return s;
+            }
         }
         else if(path.contains("person")){
             String s="{\"1\":\"Путин\",\"2\":\"Медведев\",\"5\":\"TEST_PERSON\"}";

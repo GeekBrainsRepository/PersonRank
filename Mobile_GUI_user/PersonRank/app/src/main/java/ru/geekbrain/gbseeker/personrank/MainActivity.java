@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
-import ru.geekbrain.gbseeker.personrank.net.RestAPI;
+import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
 public class MainActivity extends AppCompatActivity
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
         if (fragment == null) {
-            fragment = new SiteList();
+            fragment = new Sites();
             fm.beginTransaction()
                     .add(R.id.FrameContainer, fragment)
                     .commit();
@@ -87,6 +87,11 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
+            if(fragment!=null){
+                ((ReloadFromNet)fragment).reload();
+            }
             return true;
         }
 
@@ -131,7 +136,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_sites) {
             FragmentManager fm = getSupportFragmentManager();
             Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new SiteList();
+            fragment = new Sites();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();

@@ -11,35 +11,37 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
-public class SiteListDB implements iNet2SQL {
-    Context context;
-    SimpleCursorAdapter scSiteAdapter;
-    private static final String TAG="SiteListDB";
+public class SitesDB implements iNet2SQL {
+    private static final String TAG="SitesDB";
 
-    public SiteListDB(Context context) {
+    Context context;
+    SimpleCursorAdapter scSitesAdapter;
+
+    public SitesDB(Context context) {
         this.context = context;
     }
 
-    public SimpleCursorAdapter getAdapterWithSite(LoaderManager loaderManager) {
+    public SimpleCursorAdapter getAdapterWithSites(LoaderManager loaderManager) {
 
         String[] from = new String[]{DBHelper.DB.COLUMNS.SITE.SITE};
         int[] to = new int[]{android.R.id.text1};
 
-        scSiteAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
+        scSitesAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_SITES.ordinal(), null,
-                new SiteListCursorLoaderManager(context, scSiteAdapter));
+                new SiteListCursorLoaderManager(context, scSitesAdapter));
 
-        return scSiteAdapter;
+        return scSitesAdapter;
     }
+
 
     @Override
     public void init() {
-
     }
 
     @Override
@@ -48,16 +50,22 @@ public class SiteListDB implements iNet2SQL {
     }
 
     public void updateDB(String json,String param) {
+        ArrayList<Integer> usedIds=new ArrayList<>();
         try {
             JSONObject dataJsonObj = new JSONObject(json);
             Iterator<String> iter=dataJsonObj.keys();
             while(iter.hasNext()){
                 String k=iter.next();
+
                 int id=Integer.parseInt(k);
                 String site=dataJsonObj.getString(k);
-                DBHelper.getInstance().addSiteWithCheck(id,site);
+                DBHelper.getInstance().addSiteDBWithCheck(id,site);
+
+                usedIds.add(id);
                 Log.d(TAG,k+":"+site);
             }
+            DBHelper.getInstance().cleanSiteDB(usedIds);
+            DBHelper.getInstance().dumpTableSite();
         }
         catch(Exception e){
             Log.d(TAG,e.getMessage());
@@ -65,8 +73,8 @@ public class SiteListDB implements iNet2SQL {
 
     }
     public void updateUI(){
-        scSiteAdapter.swapCursor(DBHelper.getInstance().getCursorWithSites());
-        scSiteAdapter.notifyDataSetChanged();
+        scSitesAdapter.swapCursor(DBHelper.getInstance().getCursorWithSites());
+        scSitesAdapter.notifyDataSetChanged();
     }
 }
 
