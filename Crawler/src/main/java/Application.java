@@ -13,7 +13,7 @@ import services.PersonPageRankService;
 import services.SitesService;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
@@ -34,7 +34,7 @@ public class Application {
     @Autowired
     private static PagesService pagesService;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
         sitesService = (SitesService) context.getBean("sitesService");
         keywordsService = (KeywordsService) context.getBean("keywordsService");
@@ -54,17 +54,19 @@ public class Application {
 
         for (Pages page : pagesList) {
             for (Keywords keyword : keywordsList) {
-                System.out.println("|" + page.getUrl()+"|");
-                System.out.println(InetAddress.getByName("facebook.com") == null);
-                //Connection.Response connection = Jsoup.connect(page.getUrl()).userAgent(USER_AGENT).execute();
-                System.out.println(Jsoup.connect(page.getUrl()).ignoreHttpErrors(true).execute().statusCode());
-                if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) { //todo проверка на доступность страницы, вылетает
-                    personPageRank.setPersonId(keyword.getPersonId());
-                    personPageRank.setPageId(page.getId());
-                    personPageRank.setRank(Parser.searchWord(keyword.getName(), page.getUrl()));
-                    personPageRankService.setInsertPersonPageRank(personPageRank);
-                    System.out.println(personPageRank.toString());
-                    pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
+                try {
+                    if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) { //todo проверка на доступность страницы, вылетает
+                        personPageRank.setPersonId(keyword.getPersonId());
+                        personPageRank.setPageId(page.getId());
+                        personPageRank.setRank(Parser.searchWord(keyword.getName(), page.getUrl()));
+                        personPageRankService.setInsertPersonPageRank(personPageRank);
+                        System.out.println(personPageRank.toString());
+                        pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
+                    }
+                } catch (UnknownHostException u) {
+                    System.out.println("host problem -" + page.getUrl());
+                } catch (IOException e) {
+                    System.out.println("connect problem - " + page.getUrl() + keyword.getName());
                 }
             }
         }
