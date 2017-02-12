@@ -31,10 +31,10 @@ public class PagesCreater {
     public synchronized void parseForLinks(String url, int siteId)  {
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
         pagesService = (PagesService) context.getBean("pagesService");
-            try{
+        try {
             Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);// todo сделать try с ресурсами, будет проще
             htmlDocument = connection.get();
-            if(connection.response().statusCode() == 200){
+            if(connection.response().statusCode() == 200){ //todo проверка ничего не дает, страницы все равно получаются
                 log.info("\n Посещаем страницу: " + url);
             }
             if(! connection.response().contentType().contains("text/html")){
@@ -43,12 +43,12 @@ public class PagesCreater {
             linksOnPage = htmlDocument.select("a[href]");
 
             log.info("Найдено (" + linksOnPage.size() + ") ссылок");
-            for(Element link : linksOnPage){
+            for(Element link : linksOnPage){ //todo сделать проверку на наличие уже добавленных страниц с одним именем
                 pages.setSiteId(siteId);
                 pages.setUrl(link.absUrl("href"));
                 pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
                 pagesService.insertPage(pages);
-                this.links.add(link.absUrl("href"));
+                links.add(link.absUrl("href"));
                 print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));
             }
         } catch(IOException e){
