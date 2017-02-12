@@ -1,23 +1,15 @@
 package ru.geekbrain.gbseeker.personrank;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
@@ -36,7 +28,7 @@ public class AuthorizationActivity extends AppCompatActivity {
         loginText = (EditText) findViewById(R.id.login);
         passwdText = (EditText) findViewById(R.id.password);
         enterButton = (Button) findViewById(R.id.enter);
-        regisrationButton = (Button) findViewById(R.id.registration);
+        //regisrationButton = (Button) findViewById(R.id.registration);
 
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,12 +36,12 @@ public class AuthorizationActivity extends AppCompatActivity {
                 runAuthentication();
             }
         });
-        regisrationButton.setOnClickListener(new View.OnClickListener() {
+        /*regisrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 runRegistration();
             }
-        });
+        });*/
     }
 
     public void runAuthentication() {
@@ -70,6 +62,7 @@ public class AuthorizationActivity extends AppCompatActivity {
     public void successfulEnter(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 }
 
