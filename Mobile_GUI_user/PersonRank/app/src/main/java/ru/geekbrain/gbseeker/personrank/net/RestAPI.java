@@ -4,22 +4,26 @@ package ru.geekbrain.gbseeker.personrank.net;
 public class RestAPI {
     static final private String server="http://37.194.87.95:30000";
 
-    public static void authentication(iNet2SQL net2SQL) {
+    public static void authentication(iNet2SQL net2SQL,String user,String pass) {
         ConnectionWrapper p = new ConnectionWrapper(net2SQL);
-        p.execute(server+"/authentication/user/user");
+        p.execute(server+"/authentication/"+user+"/"+pass);
+    }
+    public static void registration(iNet2SQL net2SQL,String user,String pass) {
+        ConnectionWrapper p = new ConnectionWrapper(net2SQL);
+        p.execute(server+"/registration/"+user+"/"+pass);
     }
 
-    public static void getSite(iNet2SQL net2SQL) {
+    public static void getSites(iNet2SQL net2SQL) {
         ConnectionWrapper p = new ConnectionWrapper(net2SQL);
         p.execute(server+"/site");
     }
 
-    public static void getPerson(iNet2SQL net2SQL) {
+    public static void getPersons(iNet2SQL net2SQL) {
         ConnectionWrapper p1 = new ConnectionWrapper(net2SQL);
         p1.execute(server + "/person");
     }
 
-    public static void getKeyword(iNet2SQL net2SQL,int person_id) {
+    public static void getKeywords(iNet2SQL net2SQL, int person_id) {
         ConnectionWrapper p1 = new ConnectionWrapper(net2SQL);
         p1.execute(server + "/person",
                     server + "/keyword/"+person_id);

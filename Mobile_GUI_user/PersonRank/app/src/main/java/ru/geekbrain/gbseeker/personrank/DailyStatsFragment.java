@@ -1,6 +1,5 @@
 package ru.geekbrain.gbseeker.personrank;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,24 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import ru.geekbrain.gbseeker.personrank.entities.DailyStatsDB;
+import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
-
-public class DailyStatsFragment extends Fragment {
-
-    long dateFrom=Calendar.getInstance().getTimeInMillis()-8*3600*24*1000;
-    long dateTo=Calendar.getInstance().getTimeInMillis();
-
+public class DailyStatsFragment extends Fragment implements ReloadFromNet {
     Button butFrom;
     Button butTo;
 
@@ -52,62 +43,35 @@ public class DailyStatsFragment extends Fragment {
         Spinner spinnerPersonOnSite = (Spinner) v.findViewById(R.id.daily_stats_persons);
         spinnerPersonOnSite.setAdapter(dailyStatsDB.getAdapterWithPersonOnSite());
 
-        ListView list= (ListView) v.findViewById(R.id.daily_stats_list);
+        ListView list = (ListView) v.findViewById(R.id.daily_stats_list);
         SimpleCursorAdapter adapterStats = dailyStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager());
         list.setAdapter(adapterStats);
 
-
-
         butFrom = (Button) v.findViewById(R.id.date_from);
-        butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dateFrom)));
+        butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dailyStatsDB.getDateFrom())));
 
         butFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar c=Calendar.getInstance();
-                c.setTimeInMillis(dateFrom);
-
-                DatePickerDialog tpd = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
-                                dateFrom = calendar.getTimeInMillis();
-                                butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dateFrom)));
-                            }
-                        },
-                        c.get(Calendar.YEAR),
-                        c.get(Calendar.MONTH),
-                        c.get(Calendar.DAY_OF_MONTH)
-                );
-                tpd.show();
+                DateDialog dateDialog = DateDialog.getInstance(dailyStatsDB.getDateFrom(),true);
+                Fragment f=getFragmentManager().findFragmentById(R.id.FrameContainer);
+                dateDialog.setTargetFragment(f, 1);
+                dateDialog.show(getFragmentManager(),"date");
             }
         });
 
 
+
         butTo = (Button) v.findViewById(R.id.date_to);
-        butTo.setText("по " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dateTo)));
+        butTo.setText("по " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dailyStatsDB.getDateTo())));
 
         butTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar c=Calendar.getInstance();
-                c.setTimeInMillis(dateTo);
-
-                DatePickerDialog tpd = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
-                                dateTo = calendar.getTimeInMillis();
-                                butTo.setText("по " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dateTo)));
-                            }
-                        },
-                        c.get(Calendar.YEAR),
-                        c.get(Calendar.MONTH),
-                        c.get(Calendar.DAY_OF_MONTH)
-                );
-                tpd.show();
+                DateDialog dateDialog = DateDialog.getInstance(dailyStatsDB.getDateTo(),false);
+                Fragment f=getFragmentManager().findFragmentById(R.id.FrameContainer);
+                dateDialog.setTargetFragment(f, 1);
+                dateDialog.show(getFragmentManager(),"date");
             }
         });
 
@@ -116,8 +80,10 @@ public class DailyStatsFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                dailyStatsDB.setSelectedSitePosition(position);
+                dailyStatsDB.setSelectedSitePosition((String) parent.getItemAtPosition(position));
+                reload();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
@@ -126,20 +92,40 @@ public class DailyStatsFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                dailyStatsDB.setSelectedPersonPosition(position);
+                dailyStatsDB.setSelectedPersonPosition((String) parent.getItemAtPosition(position));
+                reload();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-        dailyStatsDB.setDate(dateFrom,dateTo);
+
+        reload();
+        return v;
+    }
+
+    @Override
+    public void reload() {
         RestAPI.getDailyStats(dailyStatsDB,
                 dailyStatsDB.getSiteID(dailyStatsDB.getSelectedSite()),
                 dailyStatsDB.getPersonID(dailyStatsDB.getSelectedPerson()),
-                dateFrom,dateTo
+                dailyStatsDB.getDateFrom(),dailyStatsDB.getDateTo()
         );
-        return v;
     }
+
+
+    void setDateFrom(long date) {
+        dailyStatsDB.setDateFrom(date);
+        butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(date)));
+        reload();
+    }
+    void setDateTo(long date) {
+        dailyStatsDB.setDateTo(date);
+        butTo.setText("по " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(date)));
+        reload();
+    }
+
 }
 
 

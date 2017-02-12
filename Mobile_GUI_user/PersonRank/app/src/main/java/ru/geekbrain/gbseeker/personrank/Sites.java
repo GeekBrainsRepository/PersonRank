@@ -9,16 +9,17 @@ import android.view.ViewGroup;
 import android.view.View;
 import android.widget.ListView;
 
-import ru.geekbrain.gbseeker.personrank.entities.SiteListDB;
+import ru.geekbrain.gbseeker.personrank.entities.SitesDB;
+import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
-public class SiteList extends Fragment {
-    SiteListDB siteListDB;
+public class Sites extends Fragment implements  ReloadFromNet {
+    SitesDB sitesDB;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        siteListDB = new SiteListDB(getContext());
+        sitesDB = new SitesDB(getContext());
     }
 
     @Nullable
@@ -29,13 +30,19 @@ public class SiteList extends Fragment {
         getActivity().setTitle("Список сайтов");
 
         ListView list = (ListView) v.findViewById(R.id.SiteList);
-        SimpleCursorAdapter scSiteAdapter = siteListDB.getAdapterWithSite(getActivity().getSupportLoaderManager());
+        SimpleCursorAdapter scSiteAdapter = sitesDB.getAdapterWithSites(getActivity().getSupportLoaderManager());
         list.setAdapter(scSiteAdapter);
 
-        RestAPI.getSite(siteListDB);
+        reload();
 
         return v;
     }
+
+    @Override
+    public void reload() {
+        RestAPI.getSites(sitesDB);
+    }
+
 }
 
 
