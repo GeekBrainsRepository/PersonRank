@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.daily_stats_menu) {
             FragmentManager fm = getSupportFragmentManager();
             Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new DailyStatsFragment();
+            fragment = new DailyStats();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();

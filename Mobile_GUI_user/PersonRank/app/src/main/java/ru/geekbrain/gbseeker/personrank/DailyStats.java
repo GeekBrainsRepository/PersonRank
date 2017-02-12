@@ -18,7 +18,7 @@ import ru.geekbrain.gbseeker.personrank.entities.DailyStatsDB;
 import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
-public class DailyStatsFragment extends Fragment implements ReloadFromNet {
+public class DailyStats extends Fragment implements ReloadFromNet {
     Button butFrom;
     Button butTo;
 
@@ -48,7 +48,7 @@ public class DailyStatsFragment extends Fragment implements ReloadFromNet {
         list.setAdapter(adapterStats);
 
         butFrom = (Button) v.findViewById(R.id.date_from);
-        butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dailyStatsDB.getDateFrom())));
+        butFrom.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dailyStatsDB.getDateFrom())));
 
         butFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +63,7 @@ public class DailyStatsFragment extends Fragment implements ReloadFromNet {
 
 
         butTo = (Button) v.findViewById(R.id.date_to);
-        butTo.setText("по " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dailyStatsDB.getDateTo())));
+        butTo.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date(dailyStatsDB.getDateTo())));
 
         butTo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,12 +117,12 @@ public class DailyStatsFragment extends Fragment implements ReloadFromNet {
 
     void setDateFrom(long date) {
         dailyStatsDB.setDateFrom(date);
-        butFrom.setText("c " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(date)));
+        butFrom.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date(date)));
         reload();
     }
     void setDateTo(long date) {
         dailyStatsDB.setDateTo(date);
-        butTo.setText("по " + android.text.format.DateFormat.format("yyyy-MM-dd", new Date(date)));
+        butTo.setText(android.text.format.DateFormat.format("yyyy-MM-dd", new Date(date)));
         reload();
     }
 

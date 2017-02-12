@@ -42,10 +42,10 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
         calendar.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
 
         if(getArguments().getBoolean(KEY_FROM_TO)){
-            ((DailyStatsFragment)getTargetFragment()).setDateFrom(calendar.getTimeInMillis());
+            ((DailyStats)getTargetFragment()).setDateFrom(calendar.getTimeInMillis());
         }
         else{
-            ((DailyStatsFragment)getTargetFragment()).setDateTo(calendar.getTimeInMillis());
+            ((DailyStats)getTargetFragment()).setDateTo(calendar.getTimeInMillis());
         }
 
 
