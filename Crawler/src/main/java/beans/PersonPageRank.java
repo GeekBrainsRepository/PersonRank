@@ -40,4 +40,9 @@ public class PersonPageRank {
     public void setRank(int rank) {
         this.rank = rank;
     }
+
+    @Override
+    public String toString() {
+        return "personId- " + personId + " pageID- " + pageId + " rank- " + rank;
+    }
 }

@@ -2,6 +2,7 @@ import beans.Keywords;
 import beans.Pages;
 import beans.PersonPageRank;
 import beans.Sites;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -12,6 +13,7 @@ import services.PersonPageRankService;
 import services.SitesService;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.List;
  */
 @ContextConfiguration(locations = "/mainContext.xml")
 public class Application {
+    private static final String USER_AGENT =
+            "Chrome";
     @Autowired
     private static SitesService sitesService;
     @Autowired
@@ -44,17 +48,24 @@ public class Application {
         PagesCreater pagesCreater = new PagesCreater();
         PersonPageRank personPageRank = new PersonPageRank();
 
-        for (Sites site : sites) {
-            pagesCreater.parseForLinks(site.getName(),site.getId());
-        }
+        //for (Sites site : sites) {
+        //    pagesCreater.parseForLinks(site.getName(),site.getId());
+        //}
 
         for (Pages page : pagesList) {
             for (Keywords keyword : keywordsList) {
-                personPageRank.setPersonId(keyword.getPersonId());
-                personPageRank.setPageId(page.getId());
-                personPageRank.setRank(Parser.searchWord(keyword.getName(),page.getUrl()));
-                personPageRankService.setInsertPersonPageRank(personPageRank);
-                pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
+                System.out.println("|" + page.getUrl()+"|");
+                System.out.println(InetAddress.getByName("facebook.com") == null);
+                //Connection.Response connection = Jsoup.connect(page.getUrl()).userAgent(USER_AGENT).execute();
+                System.out.println(Jsoup.connect(page.getUrl()).ignoreHttpErrors(true).execute().statusCode());
+                if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) { //todo проверка на доступность страницы, вылетает
+                    personPageRank.setPersonId(keyword.getPersonId());
+                    personPageRank.setPageId(page.getId());
+                    personPageRank.setRank(Parser.searchWord(keyword.getName(), page.getUrl()));
+                    personPageRankService.setInsertPersonPageRank(personPageRank);
+                    System.out.println(personPageRank.toString());
+                    pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
+                }
             }
         }
     }
