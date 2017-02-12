@@ -20,8 +20,6 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 import org.json.JSONObject;
@@ -46,7 +44,7 @@ import ru.personrank.view.Window;
  */
 public class GeneralStatisticOnSiteRepository implements Repository<GeneralStatisticOnSite> {
 
-    private static final long FREQUENCY_OF_UPDATES_REPOSITORY = 10; //в секундах
+    private static final long FREQUENCY_OF_UPDATES_REPOSITORY = 60; //в секундах
     private static final String URL_GET_SITE_MAP = "http://37.194.87.95:30000/site";
     private static final String URL_GET_GENERAL_STATISTIC_ON_SITE = "http://37.194.87.95:30000/common/";
     private static final GeneralStatisticOnSiteRepository INSTANCE = new GeneralStatisticOnSiteRepository();
@@ -58,8 +56,11 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      * Создает новый обьект класса <b>GeneralStatisticOnSiteRepository</b>
      */
     private GeneralStatisticOnSiteRepository() {
-        generalStatisticOnSite = load();
         listenerList = new ArrayList();
+        generalStatisticOnSite = load();
+        if (generalStatisticOnSite.isEmpty()) {
+           generalStatisticOnSite = updateStatistic();
+        }
         new MakerGeneralStatistic();
     }
 
@@ -127,11 +128,11 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     private List<GeneralStatisticOnSite> load() {
         File file = new File("General_statistic.dp");
         if (file.exists()) {
-            
-            if(file.length() == 0) {
+
+            if (file.length() == 0) {
                 return new ArrayList<>();
             }
-            
+
             try (ObjectInputStream objIStr = new ObjectInputStream(new FileInputStream(file))) {
                 List<GeneralStatisticOnSite> list = (List<GeneralStatisticOnSite>) objIStr.readObject();
                 return list;
@@ -158,6 +159,27 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         }
 
         return new ArrayList<>();
+    }
+
+    /**
+     * Собирает обновленный список элементов общей статистики 
+     *
+     * @return список элементов статистики в виде коллекции List
+     */
+    private List<GeneralStatisticOnSite> updateStatistic() {
+        List<GeneralStatisticOnSite> list = new ArrayList<>();
+        // На случай недоступности сервера, раскоментировать тестовые данные!
+        // newStatistic = getNewStatistic();
+        Iterator<Map.Entry<String, Object>> entries = getSiteMap().entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<String, Object> entry = entries.next();
+            list.add(new GeneralStatisticOnSite(
+                    (String) entry.getValue(),
+                    getReviewDate(entry.getKey()),
+                    getPersonsList(entry.getKey()),
+                    getRanksList(entry.getKey())));
+        }
+        return list;
     }
 
     /**
@@ -368,19 +390,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
                 try {
                     Thread.sleep(FREQUENCY_OF_UPDATES_REPOSITORY * 1000);
                     System.out.println("Обновление статистики!");
-                    List<GeneralStatisticOnSite> newStatistic = new ArrayList<>();
-                    // На случай недоступности сервера, тестовые данные!
-                    newStatistic = getNewStatistic();
-                    //
-                    Iterator<Map.Entry<String, Object>> entries = getSiteMap().entrySet().iterator();
-                    while (entries.hasNext()) {
-                        Map.Entry<String, Object> entry = entries.next();
-                        newStatistic.add(new GeneralStatisticOnSite(
-                                (String) entry.getValue(),
-                                getReviewDate(entry.getKey()),
-                                getPersonsList(entry.getKey()),
-                                getRanksList(entry.getKey())));
-                    }
+                    List<GeneralStatisticOnSite> newStatistic = updateStatistic();
                     if (!generalStatisticOnSite.equals(newStatistic) && !newStatistic.isEmpty()) {
                         generalStatisticOnSite = newStatistic;
                         fireUpdatingRepositoryEvent();

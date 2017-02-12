@@ -54,6 +54,7 @@ public class Window extends JFrame {
         reference.add(new JLabel("Сайты"));
         container.add(statistics);
         container.add(reference);
+        reference.setVisible(false);// отключает меню справочников
         return container;
     }
 

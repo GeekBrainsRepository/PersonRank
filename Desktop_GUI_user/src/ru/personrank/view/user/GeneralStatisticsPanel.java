@@ -109,7 +109,7 @@ public class GeneralStatisticsPanel extends JPanel {
         generalTable.setShowHorizontalLines(true);
         generalTable.setShowVerticalLines(true);
         generalTable.setGridColor(TABLE_GRID_COLOR);
-        generalTable.setRowHeight(30);
+        generalTable.setRowHeight(25);
         generalTable.setSelectionBackground(TABLE_SELECTION_BACKGROUND);
         JScrollPane tabTable = new JScrollPane(generalTable);
         tabbedPane.addTab("Таблица", tabTable);
@@ -219,8 +219,8 @@ public class GeneralStatisticsPanel extends JPanel {
                 row.add(personRank.get(i));
                 data.add(row);
             }
-            if (data.size() < 14) {
-                for (int i = 0; i < 14 - data.size(); i++) {
+            if (data.size() < 10) {
+                for (int i = 10 - data.size(); i != 0 ; i--) {
                     row = new ArrayList();
                     row.add("");
                     row.add("");
