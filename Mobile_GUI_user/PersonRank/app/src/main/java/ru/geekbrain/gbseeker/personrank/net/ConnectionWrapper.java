@@ -93,7 +93,7 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
         return null;
     }
     private String getContentPOST(String path) throws IOException {
-        BufferedReader reader = null;
+    /*    BufferedReader reader = null;
         try {
             URL url = new URL(path);
             HttpURLConnection c = (HttpURLConnection) url.openConnection();
@@ -119,7 +119,7 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             if (reader != null) {
                 reader.close();
             }
-        }
+        }*/
         return null;
     }
 

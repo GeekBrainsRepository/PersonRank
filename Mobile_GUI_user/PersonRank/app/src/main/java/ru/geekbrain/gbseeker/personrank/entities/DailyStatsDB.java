@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
@@ -27,7 +28,7 @@ public class DailyStatsDB  implements iNet2SQL {
     ArrayList<String> siteList = new ArrayList<>();
     ArrayList<String> personList = new ArrayList<>();
     ArrayAdapter<String> personAdapter;
-    ArrayAdapter<String> adapterSite;
+    ArrayAdapter<String> siteAdapter;
     String selectedSite = "";
     String selectedPerson = "";
     String saveSelectedSite = "";
@@ -83,6 +84,12 @@ public class DailyStatsDB  implements iNet2SQL {
 
     @Override
     public void updateUI() {
+        getSiteList();
+        getPersonList();
+        siteAdapter.notifyDataSetChanged();
+        personAdapter.notifyDataSetChanged();
+        setSelectedSitePosition( saveSelectedSite );
+        setSelectedPersonPosition( saveSelectedPerson );
     }
 
     @Override
@@ -134,6 +141,7 @@ public class DailyStatsDB  implements iNet2SQL {
                 JSONArray result = dataJsonObj.getJSONArray("result");
                 for (int i = 0; i < result.length(); i++) {
                     long time = saveDateFrom + i * DAY_MILLISEC;
+                    Date d=new Date(time);
                     int v = result.getInt(i);
                     DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
                             saveSelectedSite,
@@ -155,7 +163,7 @@ public class DailyStatsDB  implements iNet2SQL {
         return siteList;
     }
     public ArrayAdapter<String> getAdapterWithSite() {
-        adapterSite = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSiteList());
+        siteAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSiteList());
         if (siteList.size() > 0) {
             if (selectedSite.equals("") || siteList.indexOf(selectedSite) < 0) {
                 selectedSite = siteList.get(0);
@@ -164,8 +172,8 @@ public class DailyStatsDB  implements iNet2SQL {
             selectedSite = "";
         }
 
-        adapterSite.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapterSite;
+        siteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return siteAdapter;
     }
 
     public ArrayList<String> getPersonList() {
@@ -198,7 +206,7 @@ public class DailyStatsDB  implements iNet2SQL {
         else
             selectedSite = "";
 
-        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite, selectedPerson));
+        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite, selectedPerson,dateFrom,dateTo));
         scAdapter.notifyDataSetChanged();
     }
     public void setSelectedPersonPosition(String person) {
@@ -207,7 +215,7 @@ public class DailyStatsDB  implements iNet2SQL {
         else
             selectedPerson="";
 
-        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite,selectedPerson));
+        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite,selectedPerson,dateFrom,dateTo));
         scAdapter.notifyDataSetChanged();
     }
 
@@ -217,7 +225,7 @@ public class DailyStatsDB  implements iNet2SQL {
 
         scAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_DAILY_STATS.ordinal(), null,
-                new DailyStatsCursorLoaderManager(context, scAdapter,selectedSite,selectedPerson)
+                new DailyStatsCursorLoaderManager(context, scAdapter,selectedSite,selectedPerson,dateFrom,dateTo)
         );
         return scAdapter;
 
@@ -231,17 +239,18 @@ class DailyStatsCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cur
     SimpleCursorAdapter scAdapter;
     String person;
     String site;
-
-    public DailyStatsCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter, String site, String person) {
+    long from,to;
+    public DailyStatsCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter, String site, String person,long from,long to) {
         this.context = context;
         this.scAdapter = scAdapter;
         this.person = person;
         this.site = site;
-    }
+        this.from=from;
+        this.to=to;    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new DailyStatsCursorLoader(context,site,person);
+        return new DailyStatsCursorLoader(context,site,person, from, to);
 
     }
 
@@ -261,15 +270,18 @@ class DailyStatsCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cur
 class DailyStatsCursorLoader extends CursorLoader {
     String site;
     String person;
-    public DailyStatsCursorLoader(Context context,String site,String person) {
+    long from,to;
+    public DailyStatsCursorLoader(Context context,String site,String person,long from,long to) {
         super(context);
         this.site=site;
         this.person=person;
+        this.from=from;
+        this.to=to;
     }
 
     @Override
     public Cursor loadInBackground() {
-        return DBHelper.getInstance().getCursorOfDailyStatsWithSite(site,person);
+        return DBHelper.getInstance().getCursorOfDailyStatsWithSite(site,person,from,to);
     }
 }
 

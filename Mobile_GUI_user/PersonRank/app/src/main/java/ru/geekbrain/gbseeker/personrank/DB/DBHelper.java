@@ -413,11 +413,47 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
     }
-    public Cursor getCursorOfDailyStatsWithSite(String site,String person) {
+    public Cursor getCursorOfDailyStatsWithSite(String site,String person,long from,long to) {
         dumpTableDailyStats();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date f=new Date(from);
+        Date t=new Date(to);
+
         return DBHelper.getInstance().getDB().query(DB.TABLES.DAILY, null,
-                DB.COLUMNS.DAILY.PERSON+"='"+person+"' AND "+DB.COLUMNS.DAILY.SITE+"='"+site+"'",
-                null, null, null, null);
+                DB.COLUMNS.DAILY.PERSON+"='"+person+"' AND "+DB.COLUMNS.DAILY.SITE+"='"+site+"'"
+                        +" AND strftime('%Y-%m-%d',"+DB.COLUMNS.DAILY.DATE +") >= '"+format.format(f)+"'"
+                        +" AND strftime('%Y-%m-%d',"+DB.COLUMNS.DAILY.DATE +") <= '"+format.format(t)+"'",
+                null, null, null, DB.COLUMNS.DAILY.DATE +" ASC");
+    }
+    public void check(long from,long to) {
+        dumpTableDailyStats();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        Cursor cursor = null;
+        try {
+            Date f=new Date(from);
+            Date t=new Date(to);
+            cursor = getDB().query(DB.TABLES.DAILY, null,
+                    "strftime('%Y-%m-%d',"+DB.COLUMNS.DAILY.DATE +") > '2017-02-12'",
+                    null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getColumnIndex("_id");
+                    int indexStats = cursor.getColumnIndex(DB.COLUMNS.DAILY.STATS);
+                    int indexPersonRef = cursor.getColumnIndex(DB.COLUMNS.DAILY.PERSON);
+                    int indexSiteRef = cursor.getColumnIndex(DB.COLUMNS.DAILY.SITE);
+                    int indexDate = cursor.getColumnIndex(DB.COLUMNS.DAILY.DATE);
+                    Log.d(TAG, "_id="+cursor.getInt(id)+ ":date=" + cursor.getString(indexDate)+
+                            ":stat=" + cursor.getInt(indexStats)+
+                            ":per_ref=" + cursor.getString(indexPersonRef)+ ":site_ref=" + cursor.getString(indexSiteRef));
+
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+        }
     }
 
     public void fillByFakeData() {
