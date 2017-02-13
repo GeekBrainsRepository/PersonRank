@@ -1,31 +1,9 @@
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 
 public class Parser {
 
-    private static String getPlainText(String url){
+    private static String getPlainText(Document document){
         StringBuffer result = new StringBuffer();
-        Document document = null;
-        try{
-            document = Jsoup.connect(url).get(); //todo рефактор, продумать не загружать заново страницу при разных кейвордах
-        } catch (SocketTimeoutException socketTimeoutException) {
-            System.out.println("timeout read");
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        } catch (ConnectException connectException){
-            System.out.println("connection FAILED");
-        } catch (IOException e){
-            e.printStackTrace();
-            System.out.println("Возникла ошибка при соединении: " + url);//todo логгер
-        }
-
         String titles = document.select("title").text();
         String paragraphText = document.select("p").text();
         String headerH1 = document.select("h1").text();
@@ -36,9 +14,9 @@ public class Parser {
     }
 
     //Поиск как нескольких слов связанных с персоной, так и только самой персоны
-    public static int searchWord(String phrase, String url){
+    public static int searchWord(String phrase, Document document){
         int rank = 0;
-        String text = getPlainText(url);
+        String text = getPlainText(document);
         //Проверка на количество слов в поисковом запросе
         /*if(phrase.contains(" ")){
                 for(int i = 0 ; i < text.length(); i++){

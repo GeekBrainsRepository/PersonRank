@@ -3,6 +3,7 @@ import beans.Pages;
 import beans.PersonPageRank;
 import beans.Sites;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -57,23 +58,24 @@ public class Application {
         //System.out.println("clear table personPageRank");
         for (Pages page : pagesList) {
             if(page.getLastScanDate() == null) {
-                for (Keywords keyword : keywordsList) {
-                    try {
-                        if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) {
+                try {
+                    if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) {
+                        Document document = Jsoup.connect(page.getUrl()).get();
+                        for (Keywords keyword : keywordsList) {
                             personPageRank.setPersonId(keyword.getPersonId());
                             personPageRank.setPageId(page.getId());
-                            personPageRank.setRank(Parser.searchWord(keyword.getName(), page.getUrl()));//todo передавать в метод в каестве параметра document = Jsoup.connect(url).get(), поменять структуру метода
+                            personPageRank.setRank(Parser.searchWord(keyword.getName(), document));
                             personPageRankService.setInsertPersonPageRank(personPageRank);
                             System.out.println(personPageRank.toString() + " " + page.getUrl());
                             pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
                         }
-                    } catch (SocketTimeoutException socketTimeoutException) {
-                        System.out.println("timeout is long");
-                    } catch (UnknownHostException u) {
-                        System.out.println("host problem -" + page.getUrl());
-                    } catch (IOException e) {
-                        System.out.println("connect problem - " + page.getUrl() + keyword.getName());
                     }
+                } catch (SocketTimeoutException socketTimeoutException) {
+                    System.out.println("timeout is long");
+                } catch (UnknownHostException u) {
+                    System.out.println("host problem -" + page.getUrl());
+                } catch (IOException e) {
+                    System.out.println("connect problem - " + page.getUrl());
                 }
             }
         }
