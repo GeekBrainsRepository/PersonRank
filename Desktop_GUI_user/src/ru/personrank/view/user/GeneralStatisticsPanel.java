@@ -180,7 +180,11 @@ public class GeneralStatisticsPanel extends JPanel {
 
         @Override
         public Class getColumnClass(int column) {
-            return String.class;
+            switch (column) {
+                case 0:     return String.class;
+                case 1:     return Integer.class;
+                default:    return String.class;
+            }
         }
 
         @Override

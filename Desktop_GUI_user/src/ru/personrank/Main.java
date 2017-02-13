@@ -8,7 +8,11 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.GregorianCalendar;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 
@@ -20,7 +24,7 @@ import ru.personrank.view.Window;
 
 /**
  * Главный класс программы
- * 
+ *
  * @author Мартынов Евгений
  * @author Митков Федор
  * @author Андрей
@@ -31,6 +35,7 @@ public class Main {
 
     /**
      * Точка входа в приложение
+     *
      * @param args - список аргументов
      */
     public static void main(String[] args) {
@@ -59,8 +64,9 @@ public class Main {
 
     /**
      * Устанавливает менеджер отображения для приложения
+     *
      * @param name - название менеджера
-     */ 
+     */
     private static void setLookAndFeel(String name) {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -82,6 +88,7 @@ public class Main {
 
     /**
      * Устанавливает стандартный шрифт для приложения
+     *
      * @param fontFileName - имя файла шрифта
      * @param fontSize - размер шрифта
      */
@@ -90,7 +97,7 @@ public class Main {
             FontUIResource newFont = new FontUIResource(
                     Font.createFont(Font.TRUETYPE_FONT,
                             Main.class.getResourceAsStream("/ru/resources/fonts/" + fontFileName))
-                            .deriveFont(Font.PLAIN, fontSize));
+                    .deriveFont(Font.PLAIN, fontSize));
             Enumeration<Object> keys = UIManager.getDefaults().keys();
             while (keys.hasMoreElements()) {
                 Object key = keys.nextElement();
@@ -129,7 +136,13 @@ public class Main {
             return chechUserLogin(name, String.valueOf(password));
         }
 
-        private boolean chechUserLogin(String user, String login) {
+        private boolean chechUserLogin(String user, String login) {             
+            
+            //Вход в систему минуя авторизацию на сервере для тестирования            
+            if(user.equals("test")&& login.equals("")){
+                return true;
+            }
+            
             URL url = null;
             BufferedReader in = null;
             try {
@@ -159,20 +172,21 @@ public class Main {
     }
 
     /**
-     * Класс слушатель панели авторизации, реализует логику работы при 
-     * прохождении авторизации 
+     * Класс слушатель панели авторизации, реализует логику работы при
+     * прохождении авторизации
      */
     static class MyLoginListener extends LoginAdapter {
 
         /**
          * Действия при удачном прохождении авторизациии
-         * @param source 
+         *
+         * @param source
          */
         @Override
         public void loginSucceeded(LoginEvent source) {
             Window.getInstance().setVisible(true);
         }
-
+   
     }
 
 }

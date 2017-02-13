@@ -253,3 +253,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+/Desktop_GUI_user/build.xml
+/Desktop_GUI_user/manifest.mf
+/Desktop_GUI_user/images/
+/Desktop_GUI_user/fonts/
+/Desktop_GUI_user/nbproject/
+/Desktop_GUI_user/test/

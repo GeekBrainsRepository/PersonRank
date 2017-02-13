@@ -3,13 +3,14 @@
  */
 package ru.personrank.data.dailystatistic;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
 /**
  * 
  */
-public class DailyStatisticOnSite {
+public class DailyStatisticOnSite implements Serializable {
     
     private String siteName;
     private List<Person> persons;
@@ -27,7 +28,7 @@ public class DailyStatisticOnSite {
         return persons;
     }
 
-    public static class Person {
+    public static class Person implements Serializable {
         private String name;
         private List<Calendar> scanDate;
         private List<Integer> numNewPages;

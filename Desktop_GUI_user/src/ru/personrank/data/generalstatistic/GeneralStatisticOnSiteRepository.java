@@ -44,9 +44,9 @@ import ru.personrank.view.Window;
  */
 public class GeneralStatisticOnSiteRepository implements Repository<GeneralStatisticOnSite> {
 
-    private static final long FREQUENCY_OF_UPDATES_REPOSITORY = 60; //в секундах
-    private static final String URL_GET_SITE_MAP = "http://37.194.87.95:30000/site";
-    private static final String URL_GET_GENERAL_STATISTIC_ON_SITE = "http://37.194.87.95:30000/common/";
+    private static final long FREQUENCY_UPDATES = 60; //в секундах
+    private static final String URL_SITE = "http://37.194.87.95:30000/site";
+    private static final String URL_GENERAL_STATISTIC = "http://37.194.87.95:30000/common/";
     private static final GeneralStatisticOnSiteRepository INSTANCE = new GeneralStatisticOnSiteRepository();
 
     private List listenerList;
@@ -121,7 +121,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     * Загружает список сайтов из файла.
+     * Загружает сохраненную статистику из файла.
      *
      * @return список элементов статистики в виде коллекции List
      */
@@ -169,7 +169,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     private List<GeneralStatisticOnSite> updateStatistic() {
         List<GeneralStatisticOnSite> list = new ArrayList<>();
         // На случай недоступности сервера, раскоментировать тестовые данные!
-        // newStatistic = getNewStatistic();
+        // newStatistic = getTestStatistic();
         Iterator<Map.Entry<String, Object>> entries = getSiteMap().entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<String, Object> entry = entries.next();
@@ -178,6 +178,13 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
                     getReviewDate(entry.getKey()),
                     getPersonsList(entry.getKey()),
                     getRanksList(entry.getKey())));
+        }
+        if(list.isEmpty()) {
+            JOptionPane.showMessageDialog(Window.getInstance(), 
+                    "<html>Не удалось получить общую статистику "
+                    + "от сервера!<br>Повторный запрос будет отправлен через "
+                    + FREQUENCY_UPDATES + " сек.", "Сервер не "
+                    + "доступен", JOptionPane.ERROR_MESSAGE);
         }
         return list;
     }
@@ -202,17 +209,8 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
             //System.out.println(sb.);
             json = new JSONObject(sb.toString());
             in.close();
-        } catch (MalformedURLException ex) {
-            ex.printStackTrace();
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(Window.getInstance(), "Не удалось получить информацию "
-                    + "от сервера! Повторный запрос будет отправлен через "
-                    + FREQUENCY_OF_UPDATES_REPOSITORY + " сек.", "Сервер не "
-                    + "доступен", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
-        if (json == null) {
-            return new JSONObject();
+            json = new JSONObject();
         }
         return json;
     }
@@ -223,7 +221,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      * @return карта сайтов в виде пар ключ - значения колекции Map
      */
     private static Map<String, Object> getSiteMap() {
-        JSONObject json = getJSON(URL_GET_SITE_MAP);
+        JSONObject json = getJSON(URL_SITE);
         return json.toMap();
     }
 
@@ -234,7 +232,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      * @return дата в виде обьекта <b>Calendar</b>
      */
     private static Calendar getReviewDate(String siteID) {
-        JSONObject json = getJSON(URL_GET_GENERAL_STATISTIC_ON_SITE + siteID);
+        JSONObject json = getJSON(URL_GENERAL_STATISTIC + siteID);
         GregorianCalendar date = new GregorianCalendar();
         date.setTimeInMillis(json.getLong("date"));
         return date;
@@ -248,7 +246,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      */
     private static List<String> getPersonsList(String siteID) {
         List<String> persons = new ArrayList<>();
-        JSONObject json = getJSON(URL_GET_GENERAL_STATISTIC_ON_SITE + siteID);
+        JSONObject json = getJSON(URL_GENERAL_STATISTIC + siteID);
         JSONObject jsonResult = (JSONObject) json.get("result");
         for (Map.Entry<String, Object> entry : jsonResult.toMap().entrySet()) {
             persons.add((String) entry.getKey());
@@ -263,7 +261,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      */
     private static List<Integer> getRanksList(String siteID) {
         List<Integer> ranks = new ArrayList<>();
-        JSONObject json = getJSON(URL_GET_GENERAL_STATISTIC_ON_SITE + siteID);
+        JSONObject json = getJSON(URL_GENERAL_STATISTIC + siteID);
         JSONObject jsonResult = (JSONObject) json.get("result");
         for (Map.Entry<String, Object> entry : jsonResult.toMap().entrySet()) {
             ranks.add((Integer) entry.getValue());
@@ -307,7 +305,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     /**
      * Тестовый метод для заполнения списка тестовыми данными.
      */
-    private static List<GeneralStatisticOnSite> getNewStatistic() {
+    private static List<GeneralStatisticOnSite> getTestStatistic() {
         List<GeneralStatisticOnSite> newStatistic = new ArrayList<>();
         String siteName1 = "lenta.ru";
         ArrayList<String> persons1 = new ArrayList<>();
@@ -388,7 +386,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         public void run() {
             while (true) {
                 try {
-                    Thread.sleep(FREQUENCY_OF_UPDATES_REPOSITORY * 1000);
+                    Thread.sleep(FREQUENCY_UPDATES * 1000);
                     System.out.println("Обновление статистики!");
                     List<GeneralStatisticOnSite> newStatistic = updateStatistic();
                     if (!generalStatisticOnSite.equals(newStatistic) && !newStatistic.isEmpty()) {
