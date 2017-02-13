@@ -24,12 +24,21 @@ public class Parser {
         return result.toString();
     }
 
-    public static int searchWord(String word, String url){
-        int rank = 0; //todo предусмотреть что ищем на одной странице по одной персоне несколько ключевых слов
-        String regex = word + "*";
+    //Поиск как нескольких слов связанных с персоной, так и только самой персоны
+    public static int searchWord(String phrase, String url){
+        int rank = 0;
         String text = getPlainText(url);
+        //Проверка на количество слов в поисковом запросе
+        if(phrase.contains(" ")){
+                for(int i = 0 ; i < text.length(); i++){
+                    if(text.regionMatches(true,i,phrase,0,phrase.length())){
+                        rank++;
+                    }
+                }
+        }
+        String regex = phrase + "*";
         for(int i = 0 ; i < text.length(); i++){
-            if(text.regionMatches(true,i,regex,0,word.length())){
+            if(text.regionMatches(true,i,regex,0,phrase.length())){
                 rank++;
             }
         }

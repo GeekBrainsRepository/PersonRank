@@ -52,13 +52,14 @@ public class Application {
         //    pagesCreater.parseForLinks(site.getName(),site.getId());
         //}
 
+
         for (Pages page : pagesList) {
             for (Keywords keyword : keywordsList) {
                 System.out.println("|" + page.getUrl()+"|");
                 System.out.println(InetAddress.getByName("facebook.com") == null);
                 //Connection.Response connection = Jsoup.connect(page.getUrl()).userAgent(USER_AGENT).execute();
                 System.out.println(Jsoup.connect(page.getUrl()).ignoreHttpErrors(true).execute().statusCode());
-                if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) { //todo проверка на доступность страницы, вылетает
+                if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) {
                     personPageRank.setPersonId(keyword.getPersonId());
                     personPageRank.setPageId(page.getId());
                     personPageRank.setRank(Parser.searchWord(keyword.getName(), page.getUrl()));

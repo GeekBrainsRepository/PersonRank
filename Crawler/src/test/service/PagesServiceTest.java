@@ -21,7 +21,7 @@ public class PagesServiceTest {
     @Test
     public void insertPage() {
         Pages pages = new Pages();
-        pages.setUrl("kuku.ru/robots.txt");
+        pages.setUrl("bookflow.ru/robots.txt");
         pages.setSiteId(1);
         pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
         pages.setLastScanDate(null);
