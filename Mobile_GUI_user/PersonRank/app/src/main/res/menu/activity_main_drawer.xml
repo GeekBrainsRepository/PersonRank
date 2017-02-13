@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/common_stats_menu"
+            android:title="@string/navigation_common_stat" />
+        <item
+            android:id="@+id/daily_stats_menu"
+            android:title="@string/navigation_daily_stat"/>
+    </group>
+
+    <item android:title="@string/navigation_dictionaries">
+        <menu>
+            <item
+                android:id="@+id/nav_persons"
+                android:title="@string/navigation_dict_persons" />
+            <item
+                android:id="@+id/nav_keys"
+                android:title="@string/navigation_dict_keys" />
+            <item
+                android:id="@+id/nav_sites"
+                android:title="@string/navigation_dict_sites" />
+        </menu>
+    </item>
+
+</menu>
