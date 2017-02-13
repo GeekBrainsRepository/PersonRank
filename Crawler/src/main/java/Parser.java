@@ -2,6 +2,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 public class Parser {
@@ -10,7 +11,7 @@ public class Parser {
         StringBuffer result = new StringBuffer();
         Document document = null;
         try{
-            document = Jsoup.connect(url).get(); //todo рефактор
+            document = Jsoup.connect(url).get(); //todo рефактор, продумать не загружать заново страницу при разных кейвордах
         } catch (SocketTimeoutException socketTimeoutException) {
             System.out.println("timeout read");
             try {
@@ -18,7 +19,9 @@ public class Parser {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        } catch(IOException e){
+        } catch (ConnectException connectException){
+            System.out.println("connection FAILED");
+        } catch (IOException e){
             e.printStackTrace();
             System.out.println("Возникла ошибка при соединении: " + url);//todo логгер
         }
@@ -37,13 +40,13 @@ public class Parser {
         int rank = 0;
         String text = getPlainText(url);
         //Проверка на количество слов в поисковом запросе
-        if(phrase.contains(" ")){
+        /*if(phrase.contains(" ")){
                 for(int i = 0 ; i < text.length(); i++){
                     if(text.regionMatches(true,i,phrase,0,phrase.length())){
                         rank++;
                     }
                 }
-        }
+        }*/
         String regex = phrase + "*";
         for(int i = 0 ; i < text.length(); i++){
             if(text.regionMatches(true,i,regex,0,phrase.length())){

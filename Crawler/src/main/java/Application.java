@@ -33,6 +33,8 @@ public class Application {
     @Autowired
     private static PagesService pagesService;
 
+
+
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
         sitesService = (SitesService) context.getBean("sitesService");
@@ -43,6 +45,7 @@ public class Application {
         List<Sites> sites = sitesService.getSites();
         List<Keywords> keywordsList = keywordsService.getKeywords();
         List<Pages> pagesList = pagesService.getPages();
+
         //todo вынести в отдельный класс инициализацию для предварительной проверки
         PagesCreater pagesCreater = new PagesCreater();
         PersonPageRank personPageRank = new PersonPageRank();
@@ -61,7 +64,7 @@ public class Application {
                             personPageRank.setPageId(page.getId());
                             personPageRank.setRank(Parser.searchWord(keyword.getName(), page.getUrl()));
                             personPageRankService.setInsertPersonPageRank(personPageRank);
-                            System.out.println(personPageRank.toString());
+                            System.out.println(personPageRank.toString() + " " + page.getUrl());
                             pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
                         }
                     } catch (SocketTimeoutException socketTimeoutException) {
