@@ -16,6 +16,7 @@ public interface IPersonPageRankMapper {
             "VALUES (#{personId},#{pageId},#{rank})";
     String UPDATE_PERSON_PAGE_RANK = "UPDATE PersonPageRank SET Rank = #{rank} WHERE " +
             "PersonID = #{personId} AND PageID = #{pageId}";
+    String DELETE_ALL = "DELETE FROM PersonPageRank";
 
     @Select(SELECT_PERSON_PAGE_RANK)
     List<PersonPageRank> getPersonPageRank();
@@ -26,4 +27,7 @@ public interface IPersonPageRankMapper {
 
     @Update(UPDATE_PERSON_PAGE_RANK)
     void setUpdatePersonPageRank(@Param("rank") int rank, @Param("personId") int personId, @Param("pageId") int pageId);
+
+    @Delete(DELETE_ALL)
+    void deleteAll();
 }

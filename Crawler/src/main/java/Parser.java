@@ -2,6 +2,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 public class Parser {
 
@@ -10,6 +11,13 @@ public class Parser {
         Document document = null;
         try{
             document = Jsoup.connect(url).get(); //todo рефактор
+        } catch (SocketTimeoutException socketTimeoutException) {
+            System.out.println("timeout read");
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } catch(IOException e){
             e.printStackTrace();
             System.out.println("Возникла ошибка при соединении: " + url);//todo логгер

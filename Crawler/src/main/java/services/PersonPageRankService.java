@@ -29,4 +29,9 @@ public class PersonPageRankService implements IPersonPageRankMapper {
     public void setUpdatePersonPageRank(int rank, int personId, int pageId) {
         this.iPersonPageRankMapper.setUpdatePersonPageRank(rank, personId, pageId);
     }
+
+    @Override
+    public void deleteAll() {
+        iPersonPageRankMapper.deleteAll();
+    }
 }
