@@ -4,6 +4,7 @@
 *.idea/
 *.iml
 *.class
+*out/
 *.MF
 *.dp
 
