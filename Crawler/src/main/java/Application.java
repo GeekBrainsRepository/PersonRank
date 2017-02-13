@@ -62,7 +62,7 @@ public class Application {
                         if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) {
                             personPageRank.setPersonId(keyword.getPersonId());
                             personPageRank.setPageId(page.getId());
-                            personPageRank.setRank(Parser.searchWord(keyword.getName(), page.getUrl()));
+                            personPageRank.setRank(Parser.searchWord(keyword.getName(), page.getUrl()));//todo передавать в метод в каестве параметра document = Jsoup.connect(url).get(), поменять структуру метода
                             personPageRankService.setInsertPersonPageRank(personPageRank);
                             System.out.println(personPageRank.toString() + " " + page.getUrl());
                             pagesService.setUpdateLastScanDate(page.getId(), new Date(Calendar.getInstance().getTime().getTime()));
