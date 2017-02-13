@@ -1,39 +1,18 @@
 package ru.personrank.view;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.PopupMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-import javax.swing.plaf.FontUIResource;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Класс реализует альтернативный вариант ContentPane для JFrame с новым
  * оформлением
  *
  * @author
- *
  */
 class ContentPane extends JComponent {
 
@@ -70,7 +49,7 @@ class ContentPane extends JComponent {
         headerPanel = new JPanel();
 
         try {
-            Font fontTitle = Font.createFont(Font.TRUETYPE_FONT, 
+            Font fontTitle = Font.createFont(Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/ru/resources/fonts/Renfrew.ttf"))
                     .deriveFont(Font.PLAIN, 26);
 //            Font fontTitle = Font.createFont(Font.TRUETYPE_FONT,
@@ -204,7 +183,7 @@ class ContentPane extends JComponent {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (Window.getInstance().getExtendedState() == Window.MAXIMIZED_BOTH) {
-                 Window.getInstance().setExtendedState(Window.NORMAL);
+                Window.getInstance().setExtendedState(Window.NORMAL);
             } else {
                 Window.getInstance().setExtendedState(Window.MAXIMIZED_BOTH);
             }

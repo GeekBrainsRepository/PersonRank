@@ -8,10 +8,10 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * 
+ *
  */
 public class DailyStatisticOnSite implements Serializable {
-    
+
     private String siteName;
     private List<Person> persons;
 
@@ -50,7 +50,7 @@ public class DailyStatisticOnSite implements Serializable {
         public List<Integer> getNewPages() {
             return numNewPages;
         }
-                
+
     }
-        
+
 }

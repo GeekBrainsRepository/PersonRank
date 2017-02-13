@@ -3,25 +3,6 @@
  */
 package ru.personrank.data.generalstatistic;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import javax.swing.JOptionPane;
-
 import org.json.JSONObject;
 import ru.personrank.data.Repository;
 import ru.personrank.data.Specification;
@@ -29,10 +10,15 @@ import ru.personrank.data.UpdatingRepositoryEvent;
 import ru.personrank.data.UpdatingRepositoryListener;
 import ru.personrank.view.Window;
 
+import javax.swing.*;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
+
 /**
  * Класс служит для хранения данных таблицы "Общая статистика" получаемых от
  * сервера.
- *
+ * <p>
  * Класс реализует паттерн "Репозиторий". Хранит обьекты класса
  * <b>GeneralStatisticOnSite</b> в виде списка. Делает переодические запросы к
  * веб-сервису для обновления данных, при удачном запросе обнавляет данные в
@@ -59,7 +45,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         listenerList = new ArrayList();
         generalStatisticOnSite = load();
         if (generalStatisticOnSite.isEmpty()) {
-           generalStatisticOnSite = updateStatistic();
+            generalStatisticOnSite = updateStatistic();
         }
         new MakerGeneralStatistic();
     }
@@ -105,7 +91,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Сохраняет список обьектов <b>GeneralStatisticOnSite</b> в файл.
-     *
+     * <p>
      * Сохраняет список сайтов, переданный в качестве аргумента, в файл.
      *
      * @param statistic - список элементов статистики в виде коллекции List
@@ -162,7 +148,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     * Собирает обновленный список элементов общей статистики 
+     * Собирает обновленный список элементов общей статистики
      *
      * @return список элементов статистики в виде коллекции List
      */
@@ -179,12 +165,12 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
                     getPersonsList(entry.getKey()),
                     getRanksList(entry.getKey())));
         }
-        if(list.isEmpty()) {
-            JOptionPane.showMessageDialog(Window.getInstance(), 
+        if (list.isEmpty()) {
+            JOptionPane.showMessageDialog(Window.getInstance(),
                     "<html>Не удалось получить общую статистику "
-                    + "от сервера!<br>Повторный запрос будет отправлен через "
-                    + FREQUENCY_UPDATES + " сек.", "Сервер не "
-                    + "доступен", JOptionPane.ERROR_MESSAGE);
+                            + "от сервера!<br>Повторный запрос будет отправлен через "
+                            + FREQUENCY_UPDATES + " сек.", "Сервер не "
+                            + "доступен", JOptionPane.ERROR_MESSAGE);
         }
         return list;
     }
@@ -255,7 +241,6 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     *
      * @param siteID - ключ обозначающий определенный сайт
      * @return список в виде коллекции List с рейтингом персон
      */
@@ -367,7 +352,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Класс служит для обновления статистики по сайтам, и записи оной в файл.
-     *
+     * <p>
      * Подкласс GeneralStatisticOnSiteRepository. Переодически опрашивает
      * сервис, при возврате данных обновляет список статистики сайтов и
      * переписывает данные в файле на новые.

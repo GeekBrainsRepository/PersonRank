@@ -1,26 +1,12 @@
 package ru.personrank;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.GregorianCalendar;
-import java.util.List;
+import ru.personrank.view.Authorization;
+
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
-
-import org.jdesktop.swingx.JXLoginPane;
-import org.jdesktop.swingx.auth.LoginAdapter;
-import org.jdesktop.swingx.auth.LoginEvent;
-import org.jdesktop.swingx.auth.LoginService;
-import ru.personrank.view.Window;
+import java.awt.*;
+import java.io.IOException;
+import java.util.Enumeration;
 
 /**
  * Главный класс программы
@@ -31,8 +17,6 @@ import ru.personrank.view.Window;
  */
 public class Main {
 
-    private static final String URL_GET_AUTH = "http://37.194.87.95:30000/authentication/";
-
     /**
      * Точка входа в приложение
      *
@@ -41,25 +25,11 @@ public class Main {
     public static void main(String[] args) {
         setLookAndFeel("Nimbus");
         setDefaultUIFont("Tahoma.ttf", 12);
-        setLocalLoginPane();
-
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                showLoginWindow();
+                Authorization.getInstance();
             }
         });
-    }
-
-    /**
-     * Отображает окно авторизации
-     */
-    private static void showLoginWindow() {
-        LoginService loginServise = new MyLoginService();
-        loginServise.addLoginListener(new MyLoginListener());
-        JXLoginPane loginPane = new JXLoginPane(loginServise);
-        JFrame loginFrame = JXLoginPane.showLoginFrame(loginPane);
-        loginFrame.setTitle("Авторизация");
-        loginFrame.setVisible(true);
     }
 
     /**
@@ -90,14 +60,14 @@ public class Main {
      * Устанавливает стандартный шрифт для приложения
      *
      * @param fontFileName - имя файла шрифта
-     * @param fontSize - размер шрифта
+     * @param fontSize     - размер шрифта
      */
     private static void setDefaultUIFont(String fontFileName, int fontSize) {
         try {
             FontUIResource newFont = new FontUIResource(
                     Font.createFont(Font.TRUETYPE_FONT,
                             Main.class.getResourceAsStream("/ru/resources/fonts/" + fontFileName))
-                    .deriveFont(Font.PLAIN, fontSize));
+                            .deriveFont(Font.PLAIN, fontSize));
             Enumeration<Object> keys = UIManager.getDefaults().keys();
             while (keys.hasMoreElements()) {
                 Object key = keys.nextElement();
@@ -112,81 +82,4 @@ public class Main {
             ex.printStackTrace();
         }
     }
-
-    /**
-     *
-     */
-    private static void setLocalLoginPane() {
-        UIManager.put("JXLoginPane.bannerString", "Person Rank");
-        UIManager.put("JXLoginPane.nameString", "Имя пользователя:");
-        UIManager.put("JXLoginPane.passwordString", "Пароль:");
-        UIManager.put("JXLoginPane.loginString", "Ок");
-        UIManager.put("JXLoginPane.cancelString", "Отмена");
-        UIManager.put("JXLoginPane.errorMessage", "Неправильный логин или пароль");
-    }
-
-    /**
-     *
-     */
-    static class MyLoginService extends LoginService {
-
-        @Override
-        public boolean authenticate(String name, char[] password,
-                String server) throws Exception {
-            return chechUserLogin(name, String.valueOf(password));
-        }
-
-        private boolean chechUserLogin(String user, String login) {             
-            
-            //Вход в систему минуя авторизацию на сервере для тестирования            
-            if(user.equals("test")&& login.equals("")){
-                return true;
-            }
-            
-            URL url = null;
-            BufferedReader in = null;
-            try {
-                url = new URL(URL_GET_AUTH + user + "/" + login);
-                URLConnection urlConnection = url.openConnection();
-                in = new BufferedReader(new InputStreamReader(
-                        urlConnection.getInputStream()));
-                String inputLine;
-                inputLine = in.readLine();
-                if (inputLine.equals("true")) {
-                    return true;
-                }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Класс слушатель панели авторизации, реализует логику работы при
-     * прохождении авторизации
-     */
-    static class MyLoginListener extends LoginAdapter {
-
-        /**
-         * Действия при удачном прохождении авторизациии
-         *
-         * @param source
-         */
-        @Override
-        public void loginSucceeded(LoginEvent source) {
-            Window.getInstance().setVisible(true);
-        }
-   
-    }
-
 }

@@ -62,31 +62,32 @@ public class SitesPanel extends JPanel {
     private static void filltable() {
 
         columnNames = new String[]{
-            "Наименование"
+                "Наименование"
         };
 
         data = new String[][]{
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},
-            {"Lenta.ru"},
-            {"komersant.ru"},};
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},
+                {"Lenta.ru"},
+                {"komersant.ru"},};
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

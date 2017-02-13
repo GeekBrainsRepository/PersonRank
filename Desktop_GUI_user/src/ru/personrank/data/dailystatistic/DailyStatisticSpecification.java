@@ -10,8 +10,9 @@ import ru.personrank.data.Specification;
  */
 public class DailyStatisticSpecification {
 
-    private DailyStatisticSpecification() {}
-    
+    private DailyStatisticSpecification() {
+    }
+
     public static Specification<DailyStatisticOnSite> getAllStatisticSite() {
         return new Specification<DailyStatisticOnSite>() {
             @Override

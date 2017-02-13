@@ -74,15 +74,16 @@ public class KeywordsPanel extends JPanel {
     private static void filltable() {
 
         columnNames = new String[]{
-            "Наименование"
+                "Наименование"
         };
 
         data = new String[][]{
-            {"Медведев"},
-            {"Медведевом"},
-            {"Медведевым"},
-            {"Медведеву"},};
+                {"Медведев"},
+                {"Медведевом"},
+                {"Медведевым"},
+                {"Медведеву"},};
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

@@ -1,15 +1,13 @@
 package ru.personrank.view;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import javax.swing.*;
-
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
 import ru.personrank.view.user.DailyStatisticsPanel;
 import ru.personrank.view.user.GeneralStatisticsPanel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class Window extends JFrame {
 

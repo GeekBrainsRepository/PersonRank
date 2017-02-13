@@ -5,14 +5,13 @@
  */
 package ru.personrank.view;
 
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import javax.swing.JFrame;
 
 /**
- *
  * @author Администратор
  */
 public class WindowDragger extends MouseAdapter implements MouseMotionListener {

@@ -1,23 +1,5 @@
 package ru.personrank.view.user;
 
-import ru.personrank.data.generalstatistic.GeneralStatisticOnSite;
-import ru.personrank.data.generalstatistic.GeneralStatisticOnSiteRepository;
-import ru.personrank.data.generalstatistic.GeneralStatisticSpecification;
-
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -26,6 +8,20 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import ru.personrank.data.UpdatingRepositoryEvent;
 import ru.personrank.data.UpdatingRepositoryListener;
+import ru.personrank.data.generalstatistic.GeneralStatisticOnSite;
+import ru.personrank.data.generalstatistic.GeneralStatisticOnSiteRepository;
+import ru.personrank.data.generalstatistic.GeneralStatisticSpecification;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class GeneralStatisticsPanel extends JPanel {
 
@@ -181,9 +177,12 @@ public class GeneralStatisticsPanel extends JPanel {
         @Override
         public Class getColumnClass(int column) {
             switch (column) {
-                case 0:     return String.class;
-                case 1:     return Integer.class;
-                default:    return String.class;
+                case 0:
+                    return String.class;
+                case 1:
+                    return Integer.class;
+                default:
+                    return String.class;
             }
         }
 
@@ -224,7 +223,7 @@ public class GeneralStatisticsPanel extends JPanel {
                 data.add(row);
             }
             if (data.size() < 10) {
-                for (int i = 10 - data.size(); i != 0 ; i--) {
+                for (int i = 10 - data.size(); i != 0; i--) {
                     row = new ArrayList();
                     row.add("");
                     row.add("");

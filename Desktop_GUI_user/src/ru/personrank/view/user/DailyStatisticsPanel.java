@@ -1,28 +1,6 @@
 package ru.personrank.view.user;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import org.jdesktop.swingx.JXDatePicker;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.*;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.table.AbstractTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -32,10 +10,20 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import ru.personrank.data.UpdatingRepositoryEvent;
 import ru.personrank.data.UpdatingRepositoryListener;
-
 import ru.personrank.data.dailystatistic.DailyStatisticOnSite;
 import ru.personrank.data.dailystatistic.DailyStatisticOnSiteRepository;
 import ru.personrank.data.dailystatistic.DailyStatisticSpecification;
+
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
 
 public class DailyStatisticsPanel extends JPanel {
 
@@ -184,27 +172,27 @@ public class DailyStatisticsPanel extends JPanel {
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
-                .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(comboSite, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(saitLabel))
-                                .addGroup(layout.createSequentialGroup()
-                                        .addGap(32, 32, 32)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup()
                                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                .addComponent(personLabel)
-                                                .addComponent(comboPerson, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelPeriod)
-                                .addComponent(formattedTextFieldData1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(buttonSend, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(labelPo)
-                                .addComponent(formattedTextFieldData2, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(contentTabbedPane, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                        .addGap(6, 6, 6))
+                                                .addComponent(comboSite, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(saitLabel))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(32, 32, 32)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(personLabel)
+                                                        .addComponent(comboPerson, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(labelPeriod)
+                                        .addComponent(formattedTextFieldData1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(buttonSend, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(labelPo)
+                                        .addComponent(formattedTextFieldData2, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(contentTabbedPane, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                                .addGap(6, 6, 6))
         );
     }
 
@@ -268,9 +256,12 @@ public class DailyStatisticsPanel extends JPanel {
         @Override
         public Class getColumnClass(int column) {
             switch (column) {
-                case 0:     return String.class;
-                case 1:     return Integer.class;
-                default:    return String.class;
+                case 0:
+                    return String.class;
+                case 1:
+                    return Integer.class;
+                default:
+                    return String.class;
             }
         }
 

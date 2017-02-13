@@ -8,10 +8,9 @@ package ru.personrank.data;
 import java.util.EventListener;
 
 /**
- *
  * @author KIP&A
  */
 public interface UpdatingRepositoryListener extends EventListener {
-    
+
     void repositoryUpdated(UpdatingRepositoryEvent event);
 }
