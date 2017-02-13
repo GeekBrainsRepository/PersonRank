@@ -32,24 +32,32 @@ public class PagesCreater {
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
         pagesService = (PagesService) context.getBean("pagesService");
         try {
-            Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);// todo сделать try с ресурсами, будет проще
+            Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);
             htmlDocument = connection.get();
-            if(connection.response().statusCode() == 200){ //todo проверка ничего не дает, страницы все равно получаются
-                log.info("\n Посещаем страницу: " + url);
-            }
+
             if(! connection.response().contentType().contains("text/html")){
                 log.error("Тип документа не является HTML");
             }
             linksOnPage = htmlDocument.select("a[href]");
 
             log.info("Найдено (" + linksOnPage.size() + ") ссылок");
-            for(Element link : linksOnPage){ //todo сделать проверку на наличие уже добавленных страниц с одним именем
-                pages.setSiteId(siteId);
-                pages.setUrl(link.absUrl("href"));
-                pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
-                pagesService.insertPage(pages);
-                links.add(link.absUrl("href"));
-                print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));
+            for(Element link : linksOnPage){
+
+                for(Pages page:pagesService.getPages()){
+                    String pageIsChecked = link.absUrl("href");
+                    //Проверка статуса страницы, чтобы исключить добавление "сломанных ссылок".
+                    if(Jsoup.connect(page.getUrl()).execute().statusCode() == 200){
+                        //Исключаем дубликаты в pages.
+                        if(!pageIsChecked.equals(pages.getUrl())){
+                            pages.setSiteId(siteId);
+                            pages.setUrl(link.absUrl("href"));
+                            pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
+                            pagesService.insertPage(pages);
+                            links.add(link.absUrl("href"));
+                            print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));
+                        }
+                    }
+                }
             }
         } catch(IOException e){
             e.printStackTrace();
