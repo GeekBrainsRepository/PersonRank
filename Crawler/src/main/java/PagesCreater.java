@@ -34,7 +34,8 @@ public class PagesCreater {
         try {
             Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);
             htmlDocument = connection.get();
-
+            //todo обработать все возможные расширения согласно спецификации
+            // в том числе xml
             if(! connection.response().contentType().contains("text/html")){
                 log.error("Тип документа не является HTML");
             }

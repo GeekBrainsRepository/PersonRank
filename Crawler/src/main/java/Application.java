@@ -51,13 +51,13 @@ public class Application {
         PagesCreater pagesCreater = new PagesCreater();
         PersonPageRank personPageRank = new PersonPageRank();
 
-        //for (Sites site : sites) {
-        //    pagesCreater.parseForLinks(site.getName(),site.getId());
-        //}
+        for (Sites site : sites) {
+            pagesCreater.parseForLinks(site.getName(),site.getId()); //todo проверять трлько те, кому не соответствует ни одной записи в pages
+        }
         //personPageRankService.deleteAll();
         //System.out.println("clear table personPageRank");
         for (Pages page : pagesList) {
-            if(page.getLastScanDate() == null) {
+            //if(page.getLastScanDate() == null) {
                 try {
                     if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) {
                         Document document = Jsoup.connect(page.getUrl()).get();
@@ -77,7 +77,7 @@ public class Application {
                 } catch (IOException e) {
                     System.out.println("connect problem - " + page.getUrl());
                 }
-            }
+            //}
         }
     }
 }
