@@ -2,10 +2,8 @@ package ru.geekbrain.gbseeker.personrank.entities;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 
@@ -14,13 +12,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ru.geekbrain.gbseeker.personrank.DB.CursorLoaderManager;
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
 public class SitesDB implements iNet2SQL {
     private static final String TAG="SitesDB";
 
-    Context context;
+    final Context context;
     SimpleCursorAdapter scSitesAdapter;
 
     public SitesDB(Context context) {
@@ -33,8 +32,9 @@ public class SitesDB implements iNet2SQL {
         int[] to = new int[]{android.R.id.text1};
 
         scSitesAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
-        loaderManager.initLoader(LOADER_IDS.LOADER_SITES.ordinal(), null,
-                new SiteListCursorLoaderManager(context, scSitesAdapter));
+        loaderManager.initLoader(LOADER_IDS.LOADER_SITES.ordinal(),
+                null,
+                new CursorLoaderManager(context, scSitesAdapter,new SiteListCursorLoader(context)));
 
         return scSitesAdapter;
     }
@@ -79,34 +79,12 @@ public class SitesDB implements iNet2SQL {
 }
 
 
-class SiteListCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor> {
-    Context context;
-    SimpleCursorAdapter scAdapter;
 
-    SiteListCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter){
-        this.context=context;
-        this.scAdapter=scAdapter;
-    }
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        return new SiteListCursorLoader(context);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
-
-}
 
 
 class SiteListCursorLoader extends CursorLoader {
 
-    public SiteListCursorLoader(Context context) {
+    SiteListCursorLoader(final Context context) {
         super(context);
     }
 
@@ -115,9 +93,5 @@ class SiteListCursorLoader extends CursorLoader {
         return DBHelper.getInstance().getCursorWithSites();
     }
 }
-
-
-
-
 
 

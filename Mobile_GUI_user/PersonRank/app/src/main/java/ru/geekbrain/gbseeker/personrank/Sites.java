@@ -27,7 +27,7 @@ public class Sites extends Fragment implements  ReloadFromNet {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.site_list, container, false);
 
-        getActivity().setTitle("Список сайтов");
+        getActivity().setTitle(R.string.site_list);
 
         ListView list = (ListView) v.findViewById(R.id.SiteList);
         SimpleCursorAdapter scSiteAdapter = sitesDB.getAdapterWithSites(getActivity().getSupportLoaderManager());
