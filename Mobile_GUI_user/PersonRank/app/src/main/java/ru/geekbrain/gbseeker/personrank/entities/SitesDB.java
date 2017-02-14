@@ -88,7 +88,7 @@ class SiteListCursorLoaderManager implements LoaderManager.LoaderCallbacks<Curso
         this.scAdapter=scAdapter;
     }
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         return new SiteListCursorLoader(context);
     }
 

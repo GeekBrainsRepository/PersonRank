@@ -3,6 +3,7 @@ package ru.geekbrain.gbseeker.personrank;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 
@@ -13,7 +14,7 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
     final static String KEY_DATE="DATE";
     final static String KEY_FROM_TO="DATE_FROM_TO";
 
-    public static final DateDialog getInstance(long date,boolean isDateFrom) {
+    public static DateDialog getInstance(long date,boolean isDateFrom) {
         Bundle data=new Bundle();
         data.putLong(KEY_DATE,date);
         data.putBoolean(KEY_FROM_TO,isDateFrom);
@@ -21,6 +22,8 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
         fragment.setArguments(data);
         return fragment;
     }
+
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 

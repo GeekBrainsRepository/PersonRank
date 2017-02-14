@@ -93,40 +93,31 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentManager fm = getSupportFragmentManager();
 
         if (id == R.id.common_stats_menu) {
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new CommonStats();
+            Fragment fragment = new CommonStats();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();
         } else if (id == R.id.daily_stats_menu) {
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new DailyStats();
+            Fragment fragment = new DailyStats();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();
         } else if (id == R.id.nav_persons) {
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new Persons();
+            Fragment fragment = new Persons();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();
         } else if (id == R.id.nav_keys) {
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new Keywords();
+            Fragment fragment = new Keywords();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();
 
         } else if (id == R.id.nav_sites) {
-            FragmentManager fm = getSupportFragmentManager();
-            Fragment fragment = fm.findFragmentById(R.id.FrameContainer);
-            fragment = new Sites();
+            Fragment fragment = new Sites();
             fm.beginTransaction()
                     .replace(R.id.FrameContainer, fragment)
                     .commit();

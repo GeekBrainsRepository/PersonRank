@@ -161,7 +161,7 @@ class CommonStatsCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cu
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         return new CommonStatsCursorLoader(context,site);
 
     }

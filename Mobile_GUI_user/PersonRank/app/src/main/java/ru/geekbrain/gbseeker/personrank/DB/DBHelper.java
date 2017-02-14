@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -153,8 +154,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor = getDB().query(DB.TABLES.PERSON, null,
                     DB.COLUMNS.PERSON.PERSON + "='" + person + "' AND " + DB.COLUMNS.PERSON.ID + "=" + id,
                     null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-            } else {
+            if (!cursor.moveToFirst()) {
                 addPerson(id, person);
             }
         } finally {
@@ -235,8 +235,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor = getDB().query(DB.TABLES.SITE, null,
                     DB.COLUMNS.SITE.SITE + "='" + site + "' AND " + DB.COLUMNS.SITE.ID + "=" + id,
                     null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-            } else {
+            if (!cursor.moveToFirst()) {
                 addSiteDB(id, site);
             }
         } finally {
@@ -301,8 +300,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor = getDB().query(DB.TABLES.KEYWORD, null,
                     DB.COLUMNS.KEYWORD.KEYWORD + "='" + keyword + "' AND " + DB.COLUMNS.KEYWORD.PERSON + "='" + person+"'",
                     null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-            } else {
+            if (!cursor.moveToFirst()) {
                 addKeyword(person, keyword);
             }
         } finally {
@@ -376,7 +374,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(DB.COLUMNS.DAILY.PERSON, person);
         cv.put(DB.COLUMNS.DAILY.SITE, site);
         cv.put(DB.COLUMNS.DAILY.STATS, stats);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         cv.put(DB.COLUMNS.DAILY.DATE, format.format(date));
         getDB().insert(DB.TABLES.DAILY, null, cv);
     }
@@ -389,7 +387,7 @@ public class DBHelper extends SQLiteOpenHelper {
         getDB().update(DB.TABLES.DAILY, cv,"_id="+_id,null);
     }
     public void addOrUpdateDailyStatsWithCheck(String site,String person,long  date,int stats) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
         Cursor cursor = null;
         try {
@@ -416,7 +414,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getCursorOfDailyStatsWithSite(String site,String person,long from,long to) {
         dumpTableDailyStats();
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Date f=new Date(from);
         Date t=new Date(to);
 
@@ -429,13 +427,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void check(long from,long to) {
         dumpTableDailyStats();
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
         Cursor cursor = null;
         try {
-            Date f=new Date(from);
-            Date t=new Date(to);
-            cursor = getDB().query(DB.TABLES.DAILY, null,
+             cursor = getDB().query(DB.TABLES.DAILY, null,
                     "strftime('%Y-%m-%d',"+DB.COLUMNS.DAILY.DATE +") > '2017-02-12'",
                     null, null, null, null, null);
             if (cursor.moveToFirst()) {

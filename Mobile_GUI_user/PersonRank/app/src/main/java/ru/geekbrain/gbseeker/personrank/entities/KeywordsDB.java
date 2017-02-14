@@ -79,18 +79,18 @@ public class KeywordsDB implements iNet2SQL {
                 DBHelper.getInstance().cleanKeywordDB();
                 DBHelper.getInstance().dumpTableKeyword();
             }
-            else if (param.contains("/keyword")) { //keywrods
-                ArrayList<String> usedKeywods=new ArrayList<>();
+            else if (param.contains("/keyword")) { //keywords
+                ArrayList<String> usedKeywords=new ArrayList<>();
                 while (iter.hasNext()) {
                     String k = iter.next();
 
                     String keyword = dataJsonObj.getString(k);
                     DBHelper.getInstance().addKeywordWithCheck(saveSelectedPerson, keyword);
 
-                    usedKeywods.add(keyword);
+                    usedKeywords.add(keyword);
                     Log.d(TAG, k + ":" + keyword);
                 }
-                DBHelper.getInstance().cleanKeywordDB(saveSelectedPerson,usedKeywods);
+                DBHelper.getInstance().cleanKeywordDB(saveSelectedPerson,usedKeywords);
                 DBHelper.getInstance().dumpTableKeyword();
             }
         } catch (Exception e) {
@@ -146,7 +146,7 @@ class KeywordCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         return new KeywordListCursorLoader(context,person);
 
     }

@@ -16,9 +16,9 @@ import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
 public class AuthorizationActivity extends AppCompatActivity {
     EditText loginText;
-    EditText passwdText;
+    EditText passworddText;
     Button enterButton;
-    Button regisrationButton;
+    Button registrationButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,9 +26,9 @@ public class AuthorizationActivity extends AppCompatActivity {
         setContentView(R.layout.authorisation_activity);
 
         loginText = (EditText) findViewById(R.id.login);
-        passwdText = (EditText) findViewById(R.id.password);
+        passworddText = (EditText) findViewById(R.id.password);
         enterButton = (Button) findViewById(R.id.enter);
-        //regisrationButton = (Button) findViewById(R.id.registration);
+        //registrationButton = (Button) findViewById(R.id.registration);
 
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +36,7 @@ public class AuthorizationActivity extends AppCompatActivity {
                 runAuthentication();
             }
         });
-        /*regisrationButton.setOnClickListener(new View.OnClickListener() {
+        /*registrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 runRegistration();
@@ -46,17 +46,17 @@ public class AuthorizationActivity extends AppCompatActivity {
 
     public void runAuthentication() {
         String login = loginText.getText().toString();
-        String pass = passwdText.getText().toString();
+        String pass = passworddText.getText().toString();
         RestAPI.authentication(new Authorization(this), login, pass);
     }
     public void runRegistration() {
         String login = loginText.getText().toString();
-        String pass = passwdText.getText().toString();
+        String pass = passworddText.getText().toString();
         RestAPI.registration(new Authorization(this), login, pass);
     }
     public void clean() {
         loginText.setText("");
-        passwdText.setText("");
+        passworddText.setText("");
     }
 
     public void successfulEnter(){

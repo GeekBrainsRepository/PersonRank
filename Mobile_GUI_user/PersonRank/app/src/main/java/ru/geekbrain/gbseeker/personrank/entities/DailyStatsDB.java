@@ -37,7 +37,7 @@ public class DailyStatsDB  implements iNet2SQL {
     long dateFrom, dateTo;
     long saveDateFrom, saveDateTo;
 
-    private final long DAY_MILLISEC = 3600 * 24 * 1000;
+    private final static long DAY_MILLISEC = 3600 * 24 * 1000;
     SimpleCursorAdapter scAdapter;
 
     public long getDateFrom() {
@@ -141,7 +141,6 @@ public class DailyStatsDB  implements iNet2SQL {
                 JSONArray result = dataJsonObj.getJSONArray("result");
                 for (int i = 0; i < result.length(); i++) {
                     long time = saveDateFrom + i * DAY_MILLISEC;
-                    Date d=new Date(time);
                     int v = result.getInt(i);
                     DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
                             saveSelectedSite,
@@ -249,7 +248,7 @@ class DailyStatsCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cur
         this.to=to;    }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         return new DailyStatsCursorLoader(context,site,person, from, to);
 
     }

@@ -88,7 +88,7 @@ class PersonListCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cur
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         return new PersonListCursorLoader(context);
     }
 

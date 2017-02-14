@@ -1,21 +1,13 @@
 package ru.geekbrain.gbseeker.personrank.net;
 
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.util.Log;
-import android.util.TimeUtils;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 
 public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
     final String TAG="ConnectionWrapper";
@@ -78,7 +70,7 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             }
             reader = new BufferedReader(new InputStreamReader(c.getInputStream()));
             StringBuilder buf = new StringBuilder();
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 buf.append(line);
             }
@@ -123,7 +115,7 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
         return null;
     }
 
-    private String getFakeContent(String path) throws IOException {
+   /* private String getFakeContent(String path) throws IOException {
         count++;
         if(path.contains("site")) {
             if(true) return getContent(path);
@@ -160,7 +152,7 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             return getContent(path);
         }
         return "";
-    }
+    }*/
 }
 
 
