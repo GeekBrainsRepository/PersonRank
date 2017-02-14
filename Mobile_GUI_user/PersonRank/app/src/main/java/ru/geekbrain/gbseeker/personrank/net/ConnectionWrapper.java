@@ -70,7 +70,7 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             URL url = new URL(path);
             HttpURLConnection c = (HttpURLConnection) url.openConnection();
             c.setRequestMethod("GET");
-            c.setReadTimeout(100);
+            c.setReadTimeout(5000);
             c.connect();
             int status = c.getResponseCode();
             if(status!=200){
