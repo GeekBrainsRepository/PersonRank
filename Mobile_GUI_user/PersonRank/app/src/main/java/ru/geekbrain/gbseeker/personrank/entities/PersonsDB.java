@@ -14,13 +14,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ru.geekbrain.gbseeker.personrank.DB.CursorLoaderManager;
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
 public class PersonsDB implements iNet2SQL {
     private static final String TAG="PersonsDB";
 
-    Context context;
+    final Context context;
     SimpleCursorAdapter scPersonsAdapter;
 
     public PersonsDB(Context context) {
@@ -34,7 +35,7 @@ public class PersonsDB implements iNet2SQL {
 
         scPersonsAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_PERSONS.ordinal(), null,
-                new PersonListCursorLoaderManager(context, scPersonsAdapter));
+                new CursorLoaderManager(scPersonsAdapter, new PersonListCursorLoader(context)));
 
         return scPersonsAdapter;
     }

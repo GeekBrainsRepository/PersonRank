@@ -65,6 +65,7 @@ public class ConnectionWrapper  extends AsyncTask<String, Void, String> {
             c.setReadTimeout(5000);
             c.connect();
             int status = c.getResponseCode();
+            Log.d(TAG,"status="+status);
             if(status!=200){
 
             }

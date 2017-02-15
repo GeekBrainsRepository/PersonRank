@@ -1,6 +1,5 @@
 package ru.geekbrain.gbseeker.personrank.DB;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -10,12 +9,10 @@ import android.support.v4.widget.SimpleCursorAdapter;
 
 
 public class CursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor> {
-    final private Context context;
     final private SimpleCursorAdapter scAdapter;
     final private CursorLoader loader;
 
-    public CursorLoaderManager(final Context context, final SimpleCursorAdapter scAdapter, CursorLoader loader) {
-        this.context = context;
+    public CursorLoaderManager(final SimpleCursorAdapter scAdapter, CursorLoader loader) {
         this.scAdapter = scAdapter;
         this.loader = loader;
     }

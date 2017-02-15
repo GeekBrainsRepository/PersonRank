@@ -17,7 +17,7 @@ import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
 public class SitesDB implements iNet2SQL {
-    private static final String TAG="SitesDB";
+    private static final String TAG = "SitesDB";
 
     final Context context;
     SimpleCursorAdapter scSitesAdapter;
@@ -34,7 +34,7 @@ public class SitesDB implements iNet2SQL {
         scSitesAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_SITES.ordinal(),
                 null,
-                new CursorLoaderManager(context, scSitesAdapter,new SiteListCursorLoader(context)));
+                new CursorLoaderManager(scSitesAdapter, new SiteListCursorLoader(context)));
 
         return scSitesAdapter;
     }
@@ -49,36 +49,38 @@ public class SitesDB implements iNet2SQL {
         return TAG;
     }
 
-    public void updateDB(String json,String param) {
-        ArrayList<Integer> usedIds=new ArrayList<>();
-        try {
-            JSONObject dataJsonObj = new JSONObject(json);
-            Iterator<String> iter=dataJsonObj.keys();
-            while(iter.hasNext()){
-                String k=iter.next();
-
-                int id=Integer.parseInt(k);
-                String site=dataJsonObj.getString(k);
-                DBHelper.getInstance().addSiteDBWithCheck(id,site);
-
-                usedIds.add(id);
-                Log.d(TAG,k+":"+site);
-            }
-            DBHelper.getInstance().cleanSiteDB(usedIds);
-            DBHelper.getInstance().dumpTableSite();
-        }
-        catch(Exception e){
-            Log.d(TAG,e.getMessage());
-        }
-
+    public void updateDB(String json, String param) {
+        parseJSONforSites(json);
     }
-    public void updateUI(){
+
+    public void updateUI() {
         scSitesAdapter.swapCursor(DBHelper.getInstance().getCursorWithSites());
         scSitesAdapter.notifyDataSetChanged();
     }
+
+    static public synchronized void parseJSONforSites(String json) {
+        ArrayList<Integer> usedIds = new ArrayList<>();
+        try {
+            JSONObject dataJsonObj = new JSONObject(json);
+            Iterator<String> iter = dataJsonObj.keys();
+            while (iter.hasNext()) {
+                String k = iter.next();
+
+                int id = Integer.parseInt(k);
+                String site = dataJsonObj.getString(k);
+                DBHelper.getInstance().addSiteDBWithCheck(id, site);
+
+                usedIds.add(id);
+                Log.d(TAG, k + ":" + site);
+            }
+            DBHelper.getInstance().cleanSiteDB(usedIds);
+            DBHelper.getInstance().dumpTableSite();
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+    }
+
 }
-
-
 
 
 

@@ -28,7 +28,7 @@ public class Persons extends Fragment implements ReloadFromNet {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.person_list, container, false);
 
-        getActivity().setTitle("Список персон");
+        getActivity().setTitle(R.string.person_list);
 
         ListView list = (ListView) v.findViewById(R.id.PersonList);
         SimpleCursorAdapter scAdapter = personsDB.getAdapterWithPerson(getActivity().getSupportLoaderManager());
