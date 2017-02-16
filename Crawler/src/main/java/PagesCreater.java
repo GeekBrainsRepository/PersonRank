@@ -27,18 +27,36 @@ public class PagesCreater {
     private Document htmlDocument;
     private static Elements linksOnPage;
     private static final Logger log = Logger.getLogger(PagesCreater.class);
+    private String contentType;
 
     public synchronized void parseForLinks(String url, int siteId)  {
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
         pagesService = (PagesService) context.getBean("pagesService");
+
         try {
             Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);
             htmlDocument = connection.get();
+
             //todo обработать все возможные расширения согласно спецификации
             // в том числе xml
-            if(! connection.response().contentType().contains("text/html")){
-                log.error("Тип документа не является HTML");
+            if(!connection.response().contentType().contains(contentType)){
+                switch(contentType) {
+                    case "text/html":
+                        log.error("Тип документа не является HTML");
+                        break;
+                    case "text/xml":
+                        log.error("Тип документа не является XML");
+                        break;
+                    case  "application/xml":
+                        log.error("Тип документа не является XML");
+                        break;
+
+                    default: break;
+                }
+
+
             }
+
             linksOnPage = htmlDocument.select("a[href]");
 
             log.info("Найдено (" + linksOnPage.size() + ") ссылок");
@@ -80,5 +98,21 @@ public class PagesCreater {
         } else {
             return s;
         }
+    }
+
+    //возвращает ссылки на сайтмэпы с robots.txt
+
+    public  ArrayList<String> getSitemapLinks(String link) throws IOException{
+        //Вытаскивает ссылку с роботс тхт
+        ArrayList sitemaps = new ArrayList();
+        Document doc = Jsoup.connect(link).get();
+        Elements el = doc.getElementsContainingOwnText("Sitemap");
+        String[] ss = el.text().split(" ");
+        for(String g:ss){
+            if(g.contains("sitemap")){
+                sitemaps.add(g);
+            }
+        }
+       return sitemaps;
     }
 }

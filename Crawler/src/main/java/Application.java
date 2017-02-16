@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import services.KeywordsService;
-import services.PagesService;
-import services.PersonPageRankService;
-import services.SitesService;
+import services.*;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -36,7 +33,10 @@ public class Application {
 
 
 
+
+
     public static void main(String[] args) {
+
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
         sitesService = (SitesService) context.getBean("sitesService");
         keywordsService = (KeywordsService) context.getBean("keywordsService");
@@ -47,12 +47,19 @@ public class Application {
         List<Keywords> keywordsList = keywordsService.getKeywords();
         List<Pages> pagesList = pagesService.getPages();
 
-        //todo вынести в отдельный класс инициализацию для предварительной проверки
+
         PagesCreater pagesCreater = new PagesCreater();
+
         PersonPageRank personPageRank = new PersonPageRank();
 
         for (Sites site : sites) {
-            pagesCreater.parseForLinks(site.getName(),site.getId()); //todo проверять трлько те, кому не соответствует ни одной записи в pages
+            for(Pages pages: pagesService.getPages()){
+                if(site.getId() != pages.getSiteId()){
+                    pagesCreater.parseForLinks(site.getName(),site.getId()); //todo проверять трлько те, кому не соответствует ни одной записи в pages
+                }
+            }
+
+
         }
         //personPageRankService.deleteAll();
         //System.out.println("clear table personPageRank");
