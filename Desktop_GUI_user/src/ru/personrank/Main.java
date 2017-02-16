@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 /**
- * Главный класс программы
+ * Главный класс программы.
  *
  * @author Мартынов Евгений
  * @author Митков Федор
- * @author Андрей
+ * @author Андрей Кучеров
  */
 public class Main {
 
@@ -24,6 +24,7 @@ public class Main {
      */
     public static void main(String[] args) {
         setLookAndFeel("Nimbus");
+        setLocaleAuthorization();
         setDefaultUIFont("Tahoma.ttf", 12);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -33,7 +34,7 @@ public class Main {
     }
 
     /**
-     * Устанавливает менеджер отображения для приложения
+     * Устанавливает менеджер отображения для приложения.
      *
      * @param name - название менеджера
      */
@@ -57,7 +58,7 @@ public class Main {
     }
 
     /**
-     * Устанавливает стандартный шрифт для приложения
+     * Устанавливает стандартный шрифт для приложения.
      *
      * @param fontFileName - имя файла шрифта
      * @param fontSize     - размер шрифта
@@ -81,5 +82,17 @@ public class Main {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Логкализация окна авторизации.
+     */
+    private static void setLocaleAuthorization() {
+        UIManager.put("JXLoginPane.bannerString", "Person Rank");
+        UIManager.put("JXLoginPane.nameString", "Имя пользователя:");
+        UIManager.put("JXLoginPane.passwordString", "Пароль:");
+        UIManager.put("JXLoginPane.loginString", "Ок");
+        UIManager.put("JXLoginPane.cancelString", "Отмена");
+        UIManager.put("JXLoginPane.errorMessage", "Неправильный логин или пароль");
     }
 }

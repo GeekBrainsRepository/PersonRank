@@ -1,12 +1,10 @@
-/*
- *
- */
+
 package ru.personrank.data;
 
 import java.util.List;
 
 /**
- *
+ *  
  */
 public interface Repository<T> {
     void add(T entry);

@@ -15,7 +15,9 @@ import java.net.URLConnection;
 
 
 /**
- * Created by Fyodor on 13/02/2017.
+ * Класс реализует окно авторизации приложении
+ * 
+ * @author Митков Федор
  */
 public class Authorization {
 
@@ -29,12 +31,6 @@ public class Authorization {
         loginServise.addLoginListener(new Authorization.MyLoginListener());
         JXLoginPane loginPane = new JXLoginPane(loginServise);
         JFrame loginFrame = JXLoginPane.showLoginFrame(loginPane);
-        UIManager.put("JXLoginPane.bannerString", "Person Rank");
-        UIManager.put("JXLoginPane.nameString", "Имя пользователя:");
-        UIManager.put("JXLoginPane.passwordString", "Пароль:");
-        UIManager.put("JXLoginPane.loginString", "Ок");
-        UIManager.put("JXLoginPane.cancelString", "Отмена");
-        UIManager.put("JXLoginPane.errorMessage", "Неправильный логин или пароль");
         loginFrame.setTitle("Авторизация");
         loginFrame.setVisible(true);
     }
@@ -57,7 +53,7 @@ public class Authorization {
 
         private boolean chechUserLogin(String user, String login) {
 
-            //Вход в систему минуя авторизацию на сервере для тестирования
+            //Вход в систему минуя авторизацию на сервере, для тестирования.
             if (user.equals("test") && login.equals("")) {
                 return true;
             }

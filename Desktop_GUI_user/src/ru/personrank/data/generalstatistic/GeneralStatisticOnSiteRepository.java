@@ -155,7 +155,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     private List<GeneralStatisticOnSite> updateStatistic() {
         List<GeneralStatisticOnSite> list = new ArrayList<>();
         // На случай недоступности сервера, раскоментировать тестовые данные!
-        // newStatistic = getTestStatistic();
+        list = getTestStatistic();
         Iterator<Map.Entry<String, Object>> entries = getSiteMap().entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<String, Object> entry = entries.next();
