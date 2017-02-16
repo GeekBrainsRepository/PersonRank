@@ -74,26 +74,6 @@ public class PagesCreater {
                     if(Jsoup.connect(page.getUrl()).execute().statusCode() == 200){
                         //Исключаем дубликаты в pages.
                         if(!pageIsChecked.equals(pages.getUrl())){
-
-                            //Получение списка ссылок из сайтмэпов todo придумать как лучше организовать добавление ссылок из сайтмэпа
-
-                            if(pageIsChecked.contains("robots.txt")){
-                                getSitemapLinks(pageIsChecked);
-                                    for(String sitemapLink: sitemapLinks){
-                                        getLinksFromSitemaps(sitemapLink);
-                                    }
-                            }
-                            //Проверка ссылок из сайтмэпа и добавление их в качестве страниц
-                            for(String sitemapLink: sitemapLinks){
-                                if(!sitemapLink.equals(pages.getUrl())){
-                                    pages.setSiteId(siteId);
-                                    pages.setUrl(sitemapLink);
-                                    pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
-                                    pagesService.insertPage(pages);
-                                    links.add(sitemapLink);
-                                }
-                            }
-
                             pages.setSiteId(siteId);
                             pages.setUrl(link.absUrl("href"));
                             pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
@@ -103,6 +83,28 @@ public class PagesCreater {
                         }
                     }
                 }
+            }
+            //Парсинг сайтмэпа
+            for(Pages page: pagesService.getPages()){
+                String pageIsChecked = page.getUrl();
+                if(pageIsChecked.contains("robots.txt")){
+                    getSitemapLinks(pageIsChecked);
+                    for(String sitemapLink: sitemapLinks){
+                        getLinksFromSitemaps(sitemapLink);
+                    }
+                }
+                //Проверка ссылок из сайтмэпа и добавление их в качестве страниц
+                for(String sitemapLink: sitemapLinks){
+                    if(!sitemapLink.equals(pageIsChecked)){
+                        pages.setSiteId(siteId);
+                        pages.setUrl(sitemapLink);
+                        pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
+                        pagesService.insertPage(pages);
+                        links.add(sitemapLink);
+                    }
+                }
+
+
             }
         } catch(IOException e){
             e.printStackTrace();
