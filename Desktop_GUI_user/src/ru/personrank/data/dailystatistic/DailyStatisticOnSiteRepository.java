@@ -229,25 +229,26 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
      */
     private List<DailyStatisticOnSite> updateStatistic() {
         List<DailyStatisticOnSite> list = new ArrayList<>();
-        // На случай недоступности сервера, раскоментировать тестовые данные!
-        // newStatistic = getTetsStatistic();
-        Iterator<Map.Entry<String, Object>> entriesSite = getSiteMap().entrySet().iterator();
-        List<DailyStatisticOnSite.Person> persons = null;
-        List<Calendar> scanDateList = getScanDateList();
-        while (entriesSite.hasNext()) {
-            Map.Entry<String, Object> entrySite = entriesSite.next();
-            persons = new ArrayList<>();
-            Iterator<Map.Entry<String, Object>> entriesPerson = getPersonMap().entrySet().iterator();
-            while (entriesPerson.hasNext()) {
-                Map.Entry<String, Object> entryPerson = entriesPerson.next();
-                persons.add(new DailyStatisticOnSite.Person(
-                        (String) entryPerson.getValue(),
-                        scanDateList,
-                        getNumNewPages(entrySite.getKey(), entryPerson.getKey(), scanDateList)
-                ));
-            }
-            list.add(new DailyStatisticOnSite((String) entrySite.getValue(), persons));
-        }
+//        На случай недоступности сервера, раскоментировать тестовые данные!
+        list = getTestStatistic();
+//        Раскоментировать при доступном сервере
+//        Iterator<Map.Entry<String, Object>> entriesSite = getSiteMap().entrySet().iterator();
+//        List<DailyStatisticOnSite.Person> persons = null;
+//        List<Calendar> scanDateList = getScanDateList();
+//        while (entriesSite.hasNext()) {
+//            Map.Entry<String, Object> entrySite = entriesSite.next();
+//            persons = new ArrayList<>();
+//            Iterator<Map.Entry<String, Object>> entriesPerson = getPersonMap().entrySet().iterator();
+//            while (entriesPerson.hasNext()) {
+//                Map.Entry<String, Object> entryPerson = entriesPerson.next();
+//                persons.add(new DailyStatisticOnSite.Person(
+//                        (String) entryPerson.getValue(),
+//                        scanDateList,
+//                        getNumNewPages(entrySite.getKey(), entryPerson.getKey(), scanDateList)
+//                ));
+//            }
+//            list.add(new DailyStatisticOnSite((String) entrySite.getValue(), persons));
+//        }
         if (list.isEmpty()) {
             JOptionPane.showMessageDialog(Window.getInstance(),
                     "<html>Не удалось получить ежедневную статистику "

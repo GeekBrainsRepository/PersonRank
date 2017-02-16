@@ -1,6 +1,4 @@
-/*
- *  
- */
+
 package ru.personrank.data.generalstatistic;
 
 import org.json.JSONObject;
@@ -154,17 +152,18 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      */
     private List<GeneralStatisticOnSite> updateStatistic() {
         List<GeneralStatisticOnSite> list = new ArrayList<>();
-        // На случай недоступности сервера, раскоментировать тестовые данные!
+//        На случай недоступности сервера, раскоментировать тестовые данные!
         list = getTestStatistic();
-        Iterator<Map.Entry<String, Object>> entries = getSiteMap().entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<String, Object> entry = entries.next();
-            list.add(new GeneralStatisticOnSite(
-                    (String) entry.getValue(),
-                    getReviewDate(entry.getKey()),
-                    getPersonsList(entry.getKey()),
-                    getRanksList(entry.getKey())));
-        }
+//        Раскоментировать при доступном сервере
+//        Iterator<Map.Entry<String, Object>> entries = getSiteMap().entrySet().iterator();
+//        while (entries.hasNext()) {
+//            Map.Entry<String, Object> entry = entries.next();
+//            list.add(new GeneralStatisticOnSite(
+//                    (String) entry.getValue(),
+//                    getReviewDate(entry.getKey()),
+//                    getPersonsList(entry.getKey()),
+//                    getRanksList(entry.getKey())));
+//        }
         if (list.isEmpty()) {
             JOptionPane.showMessageDialog(Window.getInstance(),
                     "<html>Не удалось получить общую статистику "

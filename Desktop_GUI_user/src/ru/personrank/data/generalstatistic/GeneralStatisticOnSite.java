@@ -1,6 +1,4 @@
-/*
- *  
- */
+
 package ru.personrank.data.generalstatistic;
 
 import java.io.Serializable;
