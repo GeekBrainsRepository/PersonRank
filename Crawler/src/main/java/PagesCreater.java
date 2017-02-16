@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+
 @ContextConfiguration(locations = "/mainContext.xml")
 public class PagesCreater {
     @Autowired
@@ -22,12 +25,14 @@ public class PagesCreater {
 
     private static Pages pages = new Pages();
     private static ArrayList<String> links = new ArrayList<>();
+
     private static final String USER_AGENT =
             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
     private Document htmlDocument;
     private static Elements linksOnPage;
     private static final Logger log = Logger.getLogger(PagesCreater.class);
     private String contentType;
+    private static Set<String> linksFromSitemaps = new HashSet<>();
 
     public synchronized void parseForLinks(String url, int siteId)  {
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
@@ -100,9 +105,9 @@ public class PagesCreater {
         }
     }
 
-    //возвращает ссылки на сайтмэпы с robots.txt
+    //возвращает ссылки на сайтмэпы с robots.txt в виде листа
 
-    public  ArrayList<String> getSitemapLinks(String link) throws IOException{
+    public static   ArrayList<String> getSitemapLinks(String link) throws IOException{
         //Вытаскивает ссылку с роботс тхт
         ArrayList sitemaps = new ArrayList();
         Document doc = Jsoup.connect(link).get();
@@ -115,4 +120,22 @@ public class PagesCreater {
         }
        return sitemaps;
     }
+
+    //вытаскивает рекурсивно ссылки из сайтмэпов и записывает их в коллекцию Set
+    public static void getLinksFromSitemaps(String sitemapLink) throws IOException {
+
+        Document doc = Jsoup.connect(sitemapLink).get();
+        Elements els = doc.getElementsContainingOwnText("http");
+        String [] links = els.text().split(" ");
+        for(String l: links){
+            if(l.contains("sitemap")){
+                getLinksFromSitemaps(l);
+            } else{
+                linksFromSitemaps.add(l);
+            }
+        }
+
+    }
+
+
 }

@@ -18,6 +18,7 @@ public interface IPagesMapper {
             "(#{url},#{siteId},#{foundDateTime},#{lastScanDate})";
     String UPDATE_LAST_SCAN_DATE = "UPDATE Pages SET LastScanDate = #{lastScanDate}" +
             "WHERE ID = #{id}";
+    String SELECT_PAGES_USING_SITE_ID = SELECT_PAGES + "WHERE SiteID = #{siteId}";
 
     @Select(SELECT_PAGES)
     List<Pages> getPages();
@@ -25,10 +26,14 @@ public interface IPagesMapper {
     @Select(SELECT_PAGES_WITH_LAST_SCAN_DATE_NULL)
     List<Pages> getPagesWhithLastScanNull();
 
+    @Select(SELECT_PAGES_USING_SITE_ID)
+    List<Pages> getPagesUsingSiteId(int siteId);
+
     @Insert(INSERT_PAGE)
     @Options(useGeneratedKeys = true, keyProperty = "ID")
     void insertPage(Pages page);
 
     @Update(UPDATE_LAST_SCAN_DATE)
     void setUpdateLastScanDate(@Param("id") int id, @Param("lastScanDate")final Date lastScanDate);
+
 }
