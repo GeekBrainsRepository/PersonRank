@@ -33,6 +33,7 @@ public class PagesCreater {
     private static final Logger log = Logger.getLogger(PagesCreater.class);
     private String contentType;
     private static Set<String> linksFromSitemaps = new HashSet<>();
+    private static ArrayList<String> sitemapLinks = new ArrayList<>();
 
     public synchronized void parseForLinks(String url, int siteId)  {
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
@@ -73,6 +74,26 @@ public class PagesCreater {
                     if(Jsoup.connect(page.getUrl()).execute().statusCode() == 200){
                         //Исключаем дубликаты в pages.
                         if(!pageIsChecked.equals(pages.getUrl())){
+
+                            //Получение списка ссылок из сайтмэпов todo придумать как лучше организовать добавление ссылок из сайтмэпа
+
+                            if(pageIsChecked.contains("robots.txt")){
+                                getSitemapLinks(pageIsChecked);
+                                    for(String sitemapLink: sitemapLinks){
+                                        getLinksFromSitemaps(sitemapLink);
+                                    }
+                            }
+                            //Проверка ссылок из сайтмэпа и добавление их в качестве страниц
+                            for(String sitemapLink: sitemapLinks){
+                                if(!sitemapLink.equals(pages.getUrl())){
+                                    pages.setSiteId(siteId);
+                                    pages.setUrl(sitemapLink);
+                                    pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
+                                    pagesService.insertPage(pages);
+                                    links.add(sitemapLink);
+                                }
+                            }
+
                             pages.setSiteId(siteId);
                             pages.setUrl(link.absUrl("href"));
                             pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
@@ -107,23 +128,21 @@ public class PagesCreater {
 
     //возвращает ссылки на сайтмэпы с robots.txt в виде листа
 
-    public static   ArrayList<String> getSitemapLinks(String link) throws IOException{
+    public static void getSitemapLinks(String link) throws IOException{
         //Вытаскивает ссылку с роботс тхт
-        ArrayList sitemaps = new ArrayList();
         Document doc = Jsoup.connect(link).get();
         Elements el = doc.getElementsContainingOwnText("Sitemap");
         String[] ss = el.text().split(" ");
         for(String g:ss){
             if(g.contains("sitemap")){
-                sitemaps.add(g);
+                sitemapLinks.add(g);
             }
         }
-       return sitemaps;
     }
 
     //вытаскивает рекурсивно ссылки из сайтмэпов и записывает их в коллекцию Set
-    public static void getLinksFromSitemaps(String sitemapLink) throws IOException {
 
+    public static void getLinksFromSitemaps(String sitemapLink) throws IOException {
         Document doc = Jsoup.connect(sitemapLink).get();
         Elements els = doc.getElementsContainingOwnText("http");
         String [] links = els.text().split(" ");
@@ -134,8 +153,6 @@ public class PagesCreater {
                 linksFromSitemaps.add(l);
             }
         }
-
     }
-
 
 }
