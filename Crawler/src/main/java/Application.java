@@ -31,10 +31,6 @@ public class Application {
     @Autowired
     private static PagesService pagesService;
 
-
-
-
-
     public static void main(String[] args) {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("mainContext.xml");
@@ -53,18 +49,14 @@ public class Application {
         PersonPageRank personPageRank = new PersonPageRank();
 
         for (Sites site : sites) {
-            for(Pages pages: pagesService.getPages()){
-                if(site.getId() != pages.getSiteId()){
-                    pagesCreater.parseForLinks(site.getName(),site.getId()); //todo проверять трлько те, кому не соответствует ни одной записи в pages
-                }
+            if(pagesService.getPagesBySiteId(site.getId()).isEmpty()){
+                pagesCreater.parseForLinks(site.getName(),site.getId());
             }
-
-
         }
         //personPageRankService.deleteAll();
         //System.out.println("clear table personPageRank");
         for (Pages page : pagesList) {
-            //if(page.getLastScanDate() == null) {
+            if(page.getLastScanDate() == null) {
                 try {
                     if (Jsoup.connect(page.getUrl()).execute().statusCode() == 200) {
                         Document document = Jsoup.connect(page.getUrl()).get();
@@ -84,7 +76,7 @@ public class Application {
                 } catch (IOException e) {
                     System.out.println("connect problem - " + page.getUrl());
                 }
-            //}
+            }
         }
     }
 }

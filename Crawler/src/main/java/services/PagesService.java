@@ -36,7 +36,7 @@ public class PagesService implements IPagesMapper {
         this.iPagesMapper.setUpdateLastScanDate(id, lastScanDate);
     }
     @Override
-    public List<Pages>getPagesUsingSiteId(int siteId){
-        return iPagesMapper.getPagesUsingSiteId(siteId);
+    public List<Pages> getPagesBySiteId(int siteId){
+        return iPagesMapper.getPagesBySiteId(siteId);
     }
 }
