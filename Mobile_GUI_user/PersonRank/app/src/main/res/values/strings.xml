@@ -15,4 +15,6 @@
 
     <string name="site_list">Список сайтов</string>
     <string name="person_list">Список персон</string>
+    <string name="keyword_list">Ключевые слова</string>
+    <string name="common_stats">Общая статистика</string>
 </resources>

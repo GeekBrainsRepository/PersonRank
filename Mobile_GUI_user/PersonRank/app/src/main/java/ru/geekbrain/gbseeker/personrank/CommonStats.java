@@ -29,14 +29,14 @@ public class CommonStats extends Fragment  implements ReloadFromNet {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.common_stats,container,false);
+        View v = inflater.inflate(R.layout.common_stats, container, false);
 
-        getActivity().setTitle("Общая статистика");
+        getActivity().setTitle(R.string.common_stats);
 
         Spinner spinner = (Spinner) v.findViewById(R.id.common_stats_sites);
         spinner.setAdapter(commonStatsDB.getAdapterWithSite());
 
-        ListView list= (ListView) v.findViewById(R.id.common_stats_list);
+        ListView list = (ListView) v.findViewById(R.id.common_stats_list);
         SimpleCursorAdapter adapterStats = commonStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager(),
                 commonStatsDB.getSelectedSite());
         list.setAdapter(adapterStats);
@@ -48,6 +48,7 @@ public class CommonStats extends Fragment  implements ReloadFromNet {
                 commonStatsDB.setSelectedSitePosition((String) parent.getItemAtPosition(position));
                 reload();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }

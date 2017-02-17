@@ -30,7 +30,7 @@ public class Keywords extends Fragment implements ReloadFromNet {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.keyword_list,container,false);
 
-        getActivity().setTitle("Ключевые слова");
+        getActivity().setTitle(R.string.keyword_list);
 
         Spinner spinnerPerson = (Spinner) v.findViewById(R.id.keyword_person);
         spinnerPerson.setAdapter(keywordsDB.getAdapterWithPerson());

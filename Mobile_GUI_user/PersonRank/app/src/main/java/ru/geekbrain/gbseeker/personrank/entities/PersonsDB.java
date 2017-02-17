@@ -49,61 +49,39 @@ public class PersonsDB implements iNet2SQL {
         return TAG;
     }
 
+    @Override
     public void updateDB(String json,String param) {
-        ArrayList<Integer> usedIds=new ArrayList<>();
+        parseJSONforPerson(json);
+    }
+
+    static public synchronized void parseJSONforPerson(String json) {
+
+        ArrayList<Integer> usedIds = new ArrayList<>();
         try {
             JSONObject dataJsonObj = new JSONObject(json);
-            Iterator<String> iter=dataJsonObj.keys();
-            while(iter.hasNext()){
-                String k=iter.next();
+            Iterator<String> iter = dataJsonObj.keys();
+            while (iter.hasNext()) {
+                String k = iter.next();
 
-                int id =Integer.parseInt(k);
-                String person=dataJsonObj.getString(k);
-                DBHelper.getInstance().addPersonWithCheck(id,person);
+                int id = Integer.parseInt(k);
+                String person = dataJsonObj.getString(k);
+                DBHelper.getInstance().addPersonWithCheck(id, person);
 
                 usedIds.add(id);
-                Log.d(TAG,id+":"+person);
+                Log.d(TAG, id + ":" + person);
             }
             DBHelper.getInstance().cleanPersonDB(usedIds);
             DBHelper.getInstance().dumpTablePerson();
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
         }
-        catch(Exception e){
-            Log.d(TAG,e.getMessage());
-        }
-
     }
-
     public void updateUI(){
         scPersonsAdapter.swapCursor(DBHelper.getInstance().getCursorWithPersons());
         scPersonsAdapter.notifyDataSetChanged();
     }
 }
 
-class PersonListCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>{
-    Context context;
-    SimpleCursorAdapter scAdapter;
-
-    public PersonListCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter) {
-        this.context = context;
-        this.scAdapter = scAdapter;
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        return new PersonListCursorLoader(context);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
-
-
-}
 
 
 class PersonListCursorLoader extends CursorLoader {

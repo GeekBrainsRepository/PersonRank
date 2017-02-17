@@ -2,10 +2,8 @@ package ru.geekbrain.gbseeker.personrank.entities;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -15,42 +13,44 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ru.geekbrain.gbseeker.personrank.DB.CursorLoaderManager;
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
 public class KeywordsDB implements iNet2SQL {
-    private static final String TAG="KeywordsDB";
+    private static final String TAG = "KeywordsDB";
 
-    Context context;
-    ArrayList<String> personList = new ArrayList<>();
-    String selectedPerson = "";
-    ArrayAdapter<String> personListAdapter;
+    final private Context context;
 
-    SimpleCursorAdapter scKeywordAdapter;
+    final private ArrayList<String> personList = new ArrayList<>();
+    private String selectedPerson = "";
+    private String saveSelectedPerson = "";
+    private ArrayAdapter<String> personListAdapter;
 
-    String saveSelectedPerson = "";
+    private SimpleCursorAdapter scKeywordAdapter;
+
 
     public KeywordsDB(Context context) {
         this.context = context;
     }
 
-    public ArrayList<String> getPersonList() {
+    private ArrayList<String> getPersonList() {
         DBHelper.getInstance().getPersonList(personList);
         return personList;
     }
+
     public String getSelectedPerson() {
         return selectedPerson;
     }
 
     public ArrayAdapter<String> getAdapterWithPerson() {
         personListAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonList());
-        if(personList.size()>0){
-            if(selectedPerson.equals("") || personList.indexOf(selectedPerson)<0){
-                selectedPerson=personList.get(0);
+        if (personList.size() > 0) {
+            if (selectedPerson.equals("") || personList.indexOf(selectedPerson) < 0) {
+                selectedPerson = personList.get(0);
             }
-        }
-        else{
-            selectedPerson="";
+        } else {
+            selectedPerson = "";
         }
         personListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return personListAdapter;
@@ -58,47 +58,41 @@ public class KeywordsDB implements iNet2SQL {
 
     @Override
     public void init() {
-        saveSelectedPerson=selectedPerson;
+        saveSelectedPerson = selectedPerson;
     }
 
     @Override
     public void updateDB(String json, String param) {
+        if (param.contains("/person")) { //persons
+            PersonsDB.parseJSONforPerson(json);
+        } else if (param.contains("/keyword")) { //keywords
+            parseJSONforKeyword(json);
+        }
+    }
+
+    public synchronized void parseJSONforKeyword(String json) {
         try {
             JSONObject dataJsonObj = new JSONObject(json);
             Iterator<String> iter = dataJsonObj.keys();
-            if (param.contains("/person")) { //persons
-                while (iter.hasNext()) {
-                    String k = iter.next();
+            ArrayList<String> usedKeywords = new ArrayList<>();
+            while (iter.hasNext()) {
+                String k = iter.next();
 
-                    int id = Integer.parseInt(k);
-                    String person = dataJsonObj.getString(k);
+                String keyword = dataJsonObj.getString(k);
+                DBHelper.getInstance().addKeywordWithCheck(saveSelectedPerson, keyword);
 
-                    DBHelper.getInstance().addPersonWithCheck(id, person);
-                    Log.d(TAG, id + ":" + person);
-                }
-                DBHelper.getInstance().cleanKeywordDB();
-                DBHelper.getInstance().dumpTableKeyword();
+                usedKeywords.add(keyword);
+                Log.d(TAG, k + ":" + keyword);
             }
-            else if (param.contains("/keyword")) { //keywords
-                ArrayList<String> usedKeywords=new ArrayList<>();
-                while (iter.hasNext()) {
-                    String k = iter.next();
 
-                    String keyword = dataJsonObj.getString(k);
-                    DBHelper.getInstance().addKeywordWithCheck(saveSelectedPerson, keyword);
-
-                    usedKeywords.add(keyword);
-                    Log.d(TAG, k + ":" + keyword);
-                }
-                DBHelper.getInstance().cleanKeywordDB(saveSelectedPerson,usedKeywords);
-                DBHelper.getInstance().dumpTableKeyword();
-            }
-        } catch (Exception e) {
+            DBHelper.getInstance().cleanKeywordDB(saveSelectedPerson, usedKeywords);
+            DBHelper.getInstance().dumpTableKeyword();
+        }
+        catch (Exception e){
             Log.d(TAG, e.getMessage());
         }
 
     }
-
     @Override
     public String getInfo() {
         return TAG;
@@ -127,46 +121,18 @@ public class KeywordsDB implements iNet2SQL {
 
         scKeywordAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_KEYWORDS.ordinal(), null,
-                new KeywordCursorLoaderManager(context, scKeywordAdapter,selectedPerson));
+                new CursorLoaderManager(scKeywordAdapter,new KeywordListCursorLoader(context,selectedPerson)));
 
         return scKeywordAdapter;
     }
 
 }
 
-class KeywordCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>{
-    Context context;
-    SimpleCursorAdapter scAdapter;
-    String person;
-
-    public KeywordCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter,String person) {
-        this.context = context;
-        this.scAdapter = scAdapter;
-        this.person=person;
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        return new KeywordListCursorLoader(context,person);
-
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
-
-
-}
-
 
 class KeywordListCursorLoader extends CursorLoader {
-    String person;
-    public KeywordListCursorLoader(Context context,String person) {
+    final private String person;
+
+    KeywordListCursorLoader(Context context,String person) {
         super(context);
         this.person=person;
     }
