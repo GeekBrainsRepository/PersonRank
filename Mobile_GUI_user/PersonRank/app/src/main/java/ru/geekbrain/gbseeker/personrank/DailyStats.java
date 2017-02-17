@@ -35,7 +35,7 @@ public class DailyStats extends Fragment implements ReloadFromNet {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.daily_stats, container, false);
 
-        getActivity().setTitle("Ежедневная статистика");
+        getActivity().setTitle(R.string.daily_stats);
 
         Spinner spinnerSite = (Spinner) v.findViewById(R.id.daily_stats_sites);
         spinnerSite.setAdapter(dailyStatsDB.getAdapterWithSite());

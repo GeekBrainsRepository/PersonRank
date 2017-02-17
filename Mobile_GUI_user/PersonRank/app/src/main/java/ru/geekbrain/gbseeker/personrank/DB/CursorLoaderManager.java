@@ -12,7 +12,7 @@ public class CursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor
     final private SimpleCursorAdapter scAdapter;
     final private CursorLoader loader;
 
-    public CursorLoaderManager(final SimpleCursorAdapter scAdapter, CursorLoader loader) {
+    public CursorLoaderManager(final SimpleCursorAdapter scAdapter, final CursorLoader loader) {
         this.scAdapter = scAdapter;
         this.loader = loader;
     }

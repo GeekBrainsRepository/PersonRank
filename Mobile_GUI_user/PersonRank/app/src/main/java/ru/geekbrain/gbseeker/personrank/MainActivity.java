@@ -129,6 +129,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DBHelper.getInstance().close();
+    }
 }
 
 

@@ -2,10 +2,8 @@ package ru.geekbrain.gbseeker.personrank.entities;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -15,9 +13,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
+import ru.geekbrain.gbseeker.personrank.DB.CursorLoaderManager;
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
@@ -224,42 +222,10 @@ public class DailyStatsDB  implements iNet2SQL {
 
         scAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_DAILY_STATS.ordinal(), null,
-                new DailyStatsCursorLoaderManager(context, scAdapter,selectedSite,selectedPerson,dateFrom,dateTo)
+                new CursorLoaderManager(scAdapter, new DailyStatsCursorLoader(context,selectedSite,selectedPerson,dateFrom,dateTo))
         );
         return scAdapter;
 
-    }
-
-
-}
-
-class DailyStatsCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor> {
-    Context context;
-    SimpleCursorAdapter scAdapter;
-    String person;
-    String site;
-    long from,to;
-    public DailyStatsCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter, String site, String person,long from,long to) {
-        this.context = context;
-        this.scAdapter = scAdapter;
-        this.person = person;
-        this.site = site;
-        this.from=from;
-        this.to=to;    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        return new DailyStatsCursorLoader(context,site,person, from, to);
-
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
     }
 
 

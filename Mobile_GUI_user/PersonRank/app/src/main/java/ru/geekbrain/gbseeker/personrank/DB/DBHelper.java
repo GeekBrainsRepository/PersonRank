@@ -12,12 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBHelper";
 
-    //DB descriptor
+    //DB description
     public interface DB  {
         String DB_NAME = "personrank";
         int DB_VERSION = 1;
@@ -62,19 +63,24 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /// singleton for DB
-    private SQLiteDatabase db = null;
-    public SQLiteDatabase getDB() {
-        if (db == null) db = getWritableDatabase();
+    private final Object LOCK=new Object();
+    private SQLiteDatabase db;
+    private SQLiteDatabase getDB() {
+        synchronized (LOCK) {
+            if (db == null) db = getWritableDatabase();
+        }
         return db;
     }
+    @Override
     public void close() {
         super.close();
         db = null;
     }
 
+
     //singleton for DBHelper
     private static DBHelper dbhelper = null;
-    public static void createDBHelper(Context context) {
+    public  static void createDBHelper(Context context) {
         if (dbhelper == null) {
             dbhelper = new DBHelper(context);
         }
