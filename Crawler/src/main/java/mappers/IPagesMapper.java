@@ -27,7 +27,7 @@ public interface IPagesMapper {
     List<Pages> getPagesWhithLastScanNull();
 
     @Select(SELECT_PAGES_BY_SITE_ID)
-    List<Pages> getPagesBySiteId(@Param("SiteID") final int siteId);
+    List<Pages> getPagesBySiteId(@Param("siteId") final int siteId);
 
     @Insert(INSERT_PAGE)
     @Options(useGeneratedKeys = true, keyProperty = "ID")
