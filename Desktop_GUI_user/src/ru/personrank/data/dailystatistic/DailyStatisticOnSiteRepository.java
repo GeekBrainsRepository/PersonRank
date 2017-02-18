@@ -15,6 +15,8 @@ import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Класс служит для хранения данных таблицы "Ежедневная статистика" получаемых
@@ -56,7 +58,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         if (dailyStatisticOnSite.isEmpty()) {
             dailyStatisticOnSite = updateStatistic();
         }
-        new MakerDailyStatistic();
+        Window.addThreadInPool(new UpdaterDailyStatistic());
     }
     
     /**
@@ -230,6 +232,10 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
             }
         } else {
             try {
+                File folder = new File("dump");
+                if(!folder.exists()){
+                    folder.mkdir();
+                }
                 file.createNewFile();
                 return new ArrayList<>();
             } catch (IOException ex) {
@@ -378,18 +384,18 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
      * сохранение новых данных в файл.
      * </p>
      */
-    private class MakerDailyStatistic implements Runnable {
-
-        private Thread thread;
+    private class UpdaterDailyStatistic extends Thread {
         
-        public MakerDailyStatistic() {
-            thread = new Thread(this, "Daily statistic");
-            thread.setDaemon(true);
-            thread.start();
+        /**
+         * Создает задачу.
+         */
+        public UpdaterDailyStatistic() {
+            super("UpdaterDailyStatistic");
+            super.setDaemon(true);
         }
 
         /**
-         * Выполняет обновление репозитория
+         * Выполняет обновление репозитория.
          */
         @Override
         public void run() {

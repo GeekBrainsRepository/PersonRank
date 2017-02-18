@@ -8,14 +8,33 @@ import ru.personrank.view.user.GeneralStatisticsPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+/**
+ * Главное окно программы.
+ * <p>
+ * Окно программы содержит левое меню для выбора отображаемых панелей и
+ * панель контентента в которой отображаются панели.
+ * </p>
+ * 
+ * @author Мартынов Евгений
+ * @author Кучеров Андрей
+ * @author Митков Федор
+ * 
+ * @version 1.0
+ */
 public class Window extends JFrame {
 
+    private static final ExecutorService threadPool = Executors.newCachedThreadPool();
     private static final Window INSTANCE = new Window();
-
+    
     private JXTaskPaneContainer menu;
     private JPanel content;
 
+    /**
+     * Создает окно.
+     */
     private Window() {
         setSize(750, 430);
         setUndecorated(true);
@@ -32,12 +51,24 @@ public class Window extends JFrame {
         getContentPane().add(menu, BorderLayout.WEST);
     }
 
-    // Метод возвращающий экземпляр Window
+    /** 
+    * Метод возвращающий главное окно.
+    */
     public static Window getInstance() {
         return INSTANCE;
     }
-
-    // Метод создающий левое меню программы
+    
+    /**
+     * Добавляет новый поток в пул потоков программы.
+     * @param thread - поток исполнения
+     */
+    public static void addThreadInPool (Thread thread) {
+        threadPool.execute(thread);
+    }
+    
+    /**
+     * Создает левое меню. 
+     */
     private JXTaskPaneContainer createMainMenu() {
         JXTaskPaneContainer container = new JXTaskPaneContainer();
         container.setPreferredSize(new Dimension(200, Window.this.getHeight()));
