@@ -13,7 +13,7 @@ import java.util.Enumeration;
  *
  * @author Мартынов Евгений
  * @author Митков Федор
- * @author Андрей Кучеров
+ * @author Кучеров Андрей 
  */
 public class Main {
 

@@ -25,6 +25,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Компонент являющийся специальной панелью <code>JPanel</code>, которая служит
+ * для отображения ежедневной статистики.
+ * 
+ * @author Мартынов Евгений
+ * @author Митков Федор
+ */
 public class DailyStatisticsPanel extends JPanel {
 
     private static final Color TABLE_GRID_COLOR = Color.LIGHT_GRAY;
@@ -48,6 +55,9 @@ public class DailyStatisticsPanel extends JPanel {
     private JTabbedPane contentTabbedPane;
     private JFreeChart lineChart;
 
+    /**
+     * Создает панель.
+     */
     public DailyStatisticsPanel() {
 
         dailyStatisticRepository = DailyStatisticOnSiteRepository.getInstance();
@@ -106,6 +116,9 @@ public class DailyStatisticsPanel extends JPanel {
 
     }
 
+    /**
+     * Возвращает набор данных для графика.
+     */
     private XYDataset createDataset() {
         TimeSeries series = new TimeSeries("");
         if (comboSite.getSelectedItem() != null) {
@@ -129,6 +142,9 @@ public class DailyStatisticsPanel extends JPanel {
         return new TimeSeriesCollection(series);
     }
 
+    /**
+     * Осуществляет расстановку компонентов панели.
+     */
     private void contentPositioning() {
 
         saitLabel.setText("Сайт:");
@@ -195,13 +211,22 @@ public class DailyStatisticsPanel extends JPanel {
                                 .addGap(6, 6, 6))
         );
     }
-
+    
+    /**
+     * Модель данных списка сайтов.
+     */
     private class ComboSiteModel extends DefaultComboBoxModel {
 
+        /**
+         * Создает модель.
+         */
         ComboSiteModel() {
             setDataSource();
         }
 
+        /**
+         * Заполняет модель данными.
+         */
         private void setDataSource() {
             removeAllElements();
             List<DailyStatisticOnSite> list = dailyStatisticRepository.
@@ -212,12 +237,21 @@ public class DailyStatisticsPanel extends JPanel {
         }
     }
 
+    /**
+     * Модель данных списка персон.
+     */
     private class ComboPersonModel extends DefaultComboBoxModel {
 
+        /**
+         * Создает модель.
+         */
         public ComboPersonModel() {
             setDataSource();
         }
 
+        /**
+         * Заполняет модель данными.
+         */
         public void setDataSource() {
             if (comboSite.getSelectedItem() != null) {
                 removeAllElements();
@@ -231,11 +265,17 @@ public class DailyStatisticsPanel extends JPanel {
         }
     }
 
+    /**
+     * Модель данных таблицы.
+     */
     private class StatisticTabelModel extends AbstractTableModel {
 
         private ArrayList columnNames;
         private ArrayList data;
 
+        /**
+         * Создает модель.
+         */
         public StatisticTabelModel() {
             columnNames = new ArrayList();
             columnNames.add("Дата");
@@ -286,6 +326,13 @@ public class DailyStatisticsPanel extends JPanel {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         }
 
+        /**
+         * Заполняет модель данными в соответствии с заданным периодом времени.
+         * 
+         * 
+         * @param startDate - начало периода выборки
+         * @param stopDate  - окончание периода выборки
+         */
         public void setDataSource(Date startDate, Date stopDate) {
             data.clear();
             List<DailyStatisticOnSite> site = null;
@@ -327,8 +374,15 @@ public class DailyStatisticsPanel extends JPanel {
 
     }
 
+    /**
+     * Слушатель списка сайтов.
+     */
     private class ComboSiteItemListener implements ItemListener {
 
+        /**
+         * Действие при изменении выбранного элемента списка.
+         * @param e - событие
+         */
         @Override
         public void itemStateChanged(ItemEvent e) {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -338,23 +392,20 @@ public class DailyStatisticsPanel extends JPanel {
 
     }
 
+    /**
+     * Слушатель кнопки "Применить".
+     */
     private class ButtonSendListener implements ActionListener {
-
+        
+        /**
+         * Действие при нажатии кнопки.
+         * @param e - событие
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             statisticTableModel.setDataSource((Date) formattedTextFieldData1.getDate(), (Date) formattedTextFieldData2.getDate());
             lineChart.getXYPlot().setDataset(createDataset());
         }
 
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g.create();
-        g2d.setComposite(AlphaComposite.SrcOver.derive(0.25f));// прозрачность редактировать здесь
-        g2d.setColor(getBackground());
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-        g2d.dispose();
-    }
+    }    
 }
