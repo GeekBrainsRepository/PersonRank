@@ -20,18 +20,24 @@ import java.util.*;
  * Класс служит для хранения данных таблицы "Ежедневная статистика" получаемых
  * от сервера.
  * <p>
- * Класс реализует паттерн "Репозиторий". Хранит обьекты класса
- * <b>GeneralStatisticOnSite</b> в виде списка. Делает переодические запросы к
+ * Класс реализует интерфейс <code>Repository</code>. Хранит обьекты данных 
+ * таблицы <code>GeneralStatisticOnSite</code> в виде списка. Делает запросы к
  * веб-сервису для обновления данных, при удачном запросе обнавляет данные в
  * списке и записывает их файл. Если сервер недоступен при создании обьекта в
- * список загружаются данные из файла.
+ * список загружаются данные из файла.</p>
  *
  * @author Мартынов Евгений
+ * 
+ * @see GeneralStatisticOnSite
+ * @see Repository
+ * 
  * @version 1.0
  */
 public class DailyStatisticOnSiteRepository implements Repository<DailyStatisticOnSite> {
 
+   
     private static final long FREQUENCY_UPDATES = 60; //в секундах
+     private static final String PATH_SAVED_FILE = "dump/Daily_statistic.dp";
     private static final String URL_SITE = "http://37.194.87.95:30000/site";
     private static final String URL_PERSON = "http://37.194.87.95:30000/person";
     private static final String URL_DAILY_STATISTIC = "http://37.194.87.95:30000/daily/";
@@ -42,7 +48,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
     List<DailyStatisticOnSite> dailyStatisticOnSite;
 
     /**
-     * Создает новый обьект класса <b>DailyStatisticOnSiteRepository</b>
+     * Создает новый репозиторий.
      */
     private DailyStatisticOnSiteRepository() {
         listenerList = new ArrayList();
@@ -52,31 +58,34 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         }
         new MakerDailyStatistic();
     }
-
+    
+    /**
+     * Возвращает обьект репозитория. 
+     */
     public static DailyStatisticOnSiteRepository getInstance() {
         return INSTANCE;
     }
 
     /**
-     * Добавляет одного слушателя репозитория.
+     * Добавляет одного слушателя события - "обновление репозитория".
      *
-     * @param listener
+     * @param listener - слушатель события
      */
     public void addUpdatingRepositoryListener(UpdatingRepositoryListener listener) {
         listenerList.add(listener);
     }
 
     /**
-     * Удаляет одного слушателя репозитория.
+     * Удаляет одного слушателя события - "обновление репозитория".
      *
-     * @param listener
+     * @param listener - слушатель события
      */
     public void removeUpdatingRepositoryListener(UpdatingRepositoryListener listener) {
         listenerList.remove(listener);
     }
 
     /**
-     * Оповещает всех лушателей о происшествии события
+     * Оповещает всех лушателей о происшествии события.
      */
     private void fireUpdatingRepositoryEvent() {
         UpdatingRepositoryEvent event = new UpdatingRepositoryEvent(INSTANCE);
@@ -88,7 +97,8 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
     }
 
     /**
-     * Возвращает тестовые данные
+     * Возвращает тестовые данные.
+     * Метод нужен исключительно для тестирования репозитория. 
      *
      * @return - список элементов статистики в колекции List
      */
@@ -156,6 +166,13 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Запрашивает список элементов репозитория удовлетворяющих условиям 
+     * заданным в спецификации.
+     * 
+     * @param specification - обьект спецификации
+     * @return список элементов репозитория в виде коллекции List
+     */
     @Override
     public List<DailyStatisticOnSite> query(Specification specification) {
         List<DailyStatisticOnSite> newList = new ArrayList<>();
@@ -168,15 +185,15 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
     }
 
     /**
-     * Сохраняет список обьектов <b>DailyStatisticOnSite</b> в файл.
+     * Сохраняет список обьектs спецификации в файл.
      * <p>
      * Сохраняет список сайтов, переданный в качестве аргумента, в файл.
-     *
+     * </p>
      * @param statistic - список элементов статистики в виде коллекции List
      */
     private void save(List<DailyStatisticOnSite> statistic) {
         try (ObjectOutputStream objOStrm = new ObjectOutputStream(
-                new FileOutputStream("Daily_statistic.dp"))) {
+                new FileOutputStream(PATH_SAVED_FILE))) {
             objOStrm.writeObject(statistic);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -190,7 +207,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
      * @return список элементов статистики в виде коллекции List
      */
     private List<DailyStatisticOnSite> load() {
-        File file = new File("Daily_statistic.dp");
+        File file = new File(PATH_SAVED_FILE);
         if (file.exists()) {
             if (file.length() == 0) {
                 return new ArrayList<>();
@@ -287,7 +304,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
     /**
      * Возвращает карту сайтов.
      *
-     * @return карта сайтов в виде пар ключ - значения колекции Map
+     * @return карта сайтов в виде пар ключ-значение колекции Map
      */
     private static Map<String, Object> getSiteMap() {
         JSONObject json = getJSON(URL_SITE);
@@ -297,7 +314,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
     /**
      * Возвращает карту персон.
      *
-     * @return карта сайтов в виде пар ключ - значения колекции Map
+     * @return карта сайтов в виде пар ключ-значение колекции Map
      */
     private static Map<String, Object> getPersonMap() {
         JSONObject json = getJSON(URL_PERSON);
@@ -305,7 +322,9 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
     }
 
     /**
-     *
+     * Возвращает список дат.
+     * 
+     * @return даты в виде колекции List
      */
     private static List<Calendar> getScanDateList() {
         List<Calendar> dateList = new ArrayList<>();
@@ -324,6 +343,15 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         return dateList;
     }
 
+    /**
+     * Возвращает количество страниц сайта с на которых упоминается личность за
+     * определенную дату.
+     * 
+     * @param siteID - идентификатор сайта
+     * @param personID - идентификатор личности
+     * @param scanDateList - список дат
+     * @return количество страниц в виде списка List
+     */
     private List<Integer> getNumNewPages(String siteID, String personID, List<Calendar> scanDateList) {
         List<Integer> numPages = new ArrayList();
         JSONObject json = getJSON(URL_DAILY_STATISTIC +
@@ -339,17 +367,30 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         return numPages;
     }
 
-
+    /**
+     * Создает задачу, которая обнавляет репозиторий ежедневной статистики.
+     * 
+     * <p>
+     * Отправляет запрос на сервер. Если новые данные не отличаются от текущих
+     * то задача переходит в режим ожидания до истечения времени таймера. Если 
+     * данные отличаются, то новые замещают старые, затем оповещаются все
+     * слушатели о том что произошло обновление репозитория и происходит 
+     * сохранение новых данных в файл.
+     * </p>
+     */
     private class MakerDailyStatistic implements Runnable {
 
         private Thread thread;
-
+        
         public MakerDailyStatistic() {
             thread = new Thread(this, "Daily statistic");
             thread.setDaemon(true);
             thread.start();
         }
 
+        /**
+         * Выполняет обновление репозитория
+         */
         @Override
         public void run() {
             while (true) {
