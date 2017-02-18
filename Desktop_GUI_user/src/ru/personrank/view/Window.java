@@ -87,7 +87,9 @@ public class Window extends JFrame {
         return container;
     }
 
-    //Метод создающий контейнер для отображения панелей
+    /**
+     * Создает контейнер для отображения панелей.
+     */ 
     private JPanel createContentContainer() {
         JPanel container = new JPanel();
         CardLayout layout = new CardLayout();
@@ -105,18 +107,33 @@ public class Window extends JFrame {
 
     }
 
+    /**
+     * Устанавливает иконку для приложения.
+     * @param imageIcon - изображение
+     */
     private void setIconImage(ImageIcon imageIcon) {
         super.setIconImage(imageIcon.getImage());
         ContentPane pane = (ContentPane) getContentPane();
         pane.setTitleIcon(imageIcon);
     }
 
+    /**
+     * Команда для метки "Общая" в левом меню.
+     */
     private class ActionGeneral extends AbstractAction {
 
+        /**
+         * Создает команду.
+         */
         public ActionGeneral() {
             putValue(Action.NAME, "Общая");
         }
 
+        /**
+         * Действия при выполнении команды.
+         * 
+         * @param e - событие 
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             CardLayout layout = (CardLayout) content.getLayout();
@@ -124,12 +141,23 @@ public class Window extends JFrame {
         }
     }
 
+    /**
+     * Команда для метки "Ежедневная" в левом меню.
+     */
     private class ActionDaily extends AbstractAction {
 
+        /**
+         * Создает команду.
+         */
         public ActionDaily() {
             putValue(Action.NAME, "Ежедневная");
         }
 
+        /**
+         * Действия при выполнении команды.
+         * 
+         * @param e - событие 
+         */ 
         @Override
         public void actionPerformed(ActionEvent e) {
             CardLayout layout = (CardLayout) content.getLayout();
