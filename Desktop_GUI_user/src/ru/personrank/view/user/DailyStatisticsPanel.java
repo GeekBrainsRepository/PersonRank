@@ -99,7 +99,7 @@ public class DailyStatisticsPanel extends JPanel {
         dailyTable.setShowHorizontalLines(true);
         dailyTable.setShowVerticalLines(true);
         dailyTable.setGridColor(TABLE_GRID_COLOR);
-        dailyTable.setRowHeight(30);
+        dailyTable.setRowHeight(25);
         dailyTable.setSelectionBackground(TABLE_SELECTION_BACKGROUND);
         scrollPane = new JScrollPane(dailyTable);
         contentTabbedPane.addTab("Таблица", scrollPane);
@@ -352,17 +352,20 @@ public class DailyStatisticsPanel extends JPanel {
                 for (int i = 0; i < person.getScanDate().size(); i++) {
                     Date date = person.getScanDate().get(i).getTime();
                     if (date.compareTo(startDate) >= 0 && date.compareTo(stopDate) <= 0) {
-                        row = new ArrayList();
-                        row.add(dateFormat.format(date));
-                        row.add(person.getNewPages().get(i));
-                        data.add(row);
+                        int numPages = person.getNewPages().get(i);
+                        if(numPages != 0){
+                            row = new ArrayList();
+                            row.add(dateFormat.format(date));
+                            row.add(numPages);
+                            data.add(row);
+                        }                       
                     }
                 }
             } else {
                 site = new ArrayList<>();
             }
-            if (data.size() < 14) {
-                for (int i = 0; i < 14 - data.size(); i++) {
+            if (data.size() < 7) {
+                for (int i = 7 - data.size(); i != 0; i--) {
                     row = new ArrayList();
                     row.add("");
                     row.add("");

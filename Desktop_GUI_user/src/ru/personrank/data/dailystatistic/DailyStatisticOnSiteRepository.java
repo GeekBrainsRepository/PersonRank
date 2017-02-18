@@ -337,7 +337,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
                         new GregorianCalendar(2017, Calendar.JANUARY, 26),
                         new GregorianCalendar(2017, Calendar.JANUARY, 27),
                         new GregorianCalendar(2017, Calendar.JANUARY, 29)}),
-                Arrays.asList(new Integer[]{4, 2, 1, 3, 5, 8, 6, 7, 1, 9}));
+                Arrays.asList(new Integer[]{4, 0, 0, 3, 5, 8, 5, 0, 0, 0}));
         DailyStatisticOnSite.Person p2 = new DailyStatisticOnSite.Person("Трамп",
                 Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 18),
                         new GregorianCalendar(2017, Calendar.JANUARY, 20),
