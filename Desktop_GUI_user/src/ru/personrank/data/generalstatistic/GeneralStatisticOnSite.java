@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ * Используется для хранения данных таблицы "Общая статистика"
+ * 
+ * @author Мартынов Евгений
  */
 public class GeneralStatisticOnSite implements Serializable {
 
@@ -16,6 +18,15 @@ public class GeneralStatisticOnSite implements Serializable {
     private List<String> personNames;
     private List<Integer> allPersonRanks;
 
+    /**
+     * Создает объект данных таблицы с названием сайта, датой последнего
+     * обновления статистики, списком личностей и списком рейтинга.
+     * 
+     * @param siteName - имя сайта
+     * @param reviewDate - дата обновления статистики
+     * @param personNames - список личностей в виде коллекции List
+     * @param allPersonRanks - список рейтингов в виде коллекции List
+     */
     public GeneralStatisticOnSite(String siteName, Calendar reviewDate, List<String> personNames, List<Integer> allPersonRanks) {
         this.siteName = siteName;
         this.reviewDate = reviewDate;
@@ -23,18 +34,30 @@ public class GeneralStatisticOnSite implements Serializable {
         this.allPersonRanks = allPersonRanks;
     }
 
+    /**
+     * Возвращает имя сайта. 
+     */
     public String getSiteName() {
         return siteName;
     }
 
+    /**
+     * Возвращает дату последнего обновления статистики. 
+     */
     public Calendar getReviewDate() {
         return reviewDate;
     }
 
+    /**
+     * Возвращает список личностей. 
+     */
     public List<String> getPersonNames() {
         return personNames;
     }
 
+    /**
+     * Возвращает список рейтингов. 
+     */
     public List<Integer> getAllPersonRanks() {
         return allPersonRanks;
     }

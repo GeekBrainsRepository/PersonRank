@@ -24,6 +24,10 @@ import java.util.*;
  * список загружаются данные из файла.
  *
  * @author Мартынов Евгений
+ * 
+ * @see GeneralStatisticOnSite
+ * @see Repository
+ * 
  * @version 1.0
  */
 public class GeneralStatisticOnSiteRepository implements Repository<GeneralStatisticOnSite> {
@@ -37,7 +41,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     private List<GeneralStatisticOnSite> generalStatisticOnSite;
 
     /**
-     * Создает новый обьект класса <b>GeneralStatisticOnSiteRepository</b>
+     * Создает новый репозиторий.
      */
     private GeneralStatisticOnSiteRepository() {
         listenerList = new ArrayList();
@@ -45,11 +49,11 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         if (generalStatisticOnSite.isEmpty()) {
             generalStatisticOnSite = updateStatistic();
         }
-        new MakerGeneralStatistic();
+        Window.addThreadInPool(new UpdaterGeneralStatistic());
     }
 
     /**
-     * Возвращает обьект класса.
+     * Возвращает обьект репозитория.
      *
      * @return обьект GeneralStatisticOnSiteRepository
      */
@@ -58,25 +62,25 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     * Добавляет одного слушателя репозитория.
+     * Добавляет одного слушателя события - "обновление репозитория".
      *
-     * @param listener
+     * @param listener - слушатель события
      */
     public void addUpdatingRepositoryListener(UpdatingRepositoryListener listener) {
         listenerList.add(listener);
     }
 
     /**
-     * Удаляет одного слушателя репозитория.
+     * Удаляет одного слушателя события - "обновление репозитория".
      *
-     * @param listener
+     * @param listener - слушатель события
      */
     public void removeUpdatingRepositoryListener(UpdatingRepositoryListener listener) {
         listenerList.remove(listener);
     }
 
     /**
-     * Оповещает всех лушателей о происшествии события
+     * Оповещает всех лушателей о происшествии события.
      */
     private void fireUpdatingRepositoryEvent() {
         UpdatingRepositoryEvent event = new UpdatingRepositoryEvent(INSTANCE);
@@ -240,6 +244,8 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
+     * Возвращает список рейтингов.
+     * 
      * @param siteID - ключ обозначающий определенный сайт
      * @return список в виде коллекции List с рейтингом персон
      */
@@ -269,11 +275,11 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     * Делает выборку необходимых сайтов по параметрам переданным в виде класса
-     * <b>Specification</b>.
-     *
-     * @param specification - условия для выборки
-     * @return список элементов статистики в виде коллекции List
+     * Запрашивает список элементов репозитория удовлетворяющих условиям 
+     * заданным в спецификации.
+     * 
+     * @param specification - обьект спецификации
+     * @return список элементов репозитория в виде коллекции List
      */
     @Override
     public List<GeneralStatisticOnSite> query(Specification specification) {
@@ -286,8 +292,11 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         return newList;
     }
 
-    /**
-     * Тестовый метод для заполнения списка тестовыми данными.
+     /**
+     * Возвращает тестовые данные.
+     * Метод нужен исключительно для тестирования репозитория. 
+     *
+     * @return - список элементов статистики в колекции List
      */
     private static List<GeneralStatisticOnSite> getTestStatistic() {
         List<GeneralStatisticOnSite> newStatistic = new ArrayList<>();
@@ -350,22 +359,29 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     * Класс служит для обновления статистики по сайтам, и записи оной в файл.
+     * Создает задачу, которая обнавляет репозиторий общей статистики.
+     * 
      * <p>
-     * Подкласс GeneralStatisticOnSiteRepository. Переодически опрашивает
-     * сервис, при возврате данных обновляет список статистики сайтов и
-     * переписывает данные в файле на новые.
+     * Отправляет запрос на сервер. Если новые данные не отличаются от текущих
+     * то задача переходит в режим ожидания до истечения времени таймера. Если 
+     * данные отличаются, то новые замещают старые, затем оповещаются все
+     * слушатели о том что произошло обновление репозитория и происходит 
+     * сохранение новых данных в файл.
+     * </p>
      */
-    private class MakerGeneralStatistic implements Runnable {
+    private class UpdaterGeneralStatistic extends Thread {
 
-        private Thread thread;
-
-        public MakerGeneralStatistic() {
-            thread = new Thread(this, "Maker general statistic");
-            thread.setDaemon(true);
-            thread.start();
+       /**
+        * Создает задачу.
+        */
+        public UpdaterGeneralStatistic() {
+            super("UpdaterGeneralStatistic");
+            super.setDaemon(true);
         }
 
+        /**
+         * Выполняет обновление статистики.
+         */
         @Override
         public void run() {
             while (true) {

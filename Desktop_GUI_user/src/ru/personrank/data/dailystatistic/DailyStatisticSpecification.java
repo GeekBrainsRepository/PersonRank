@@ -7,7 +7,7 @@ import ru.personrank.data.Specification;
  * Генерирует условия для запросов к репозиторию.
  * 
  * <p>
- * Статический класс генерации. Создает анонимные классы <code>Specification>
+ * Статический класс генерации. Создает анонимные классы <code>Specification
  * </code> для передачи в качестве аргумента в запросы <b>"query"</b> репозитория 
  * </p>
  * 
@@ -24,7 +24,7 @@ public final class DailyStatisticSpecification {
     private DailyStatisticSpecification() {}
 
     /**
-     * Возвращает все элементы таблицы общей статистики.
+     * Возвращает все элементы таблицы ежедневной статистики.
      * @return - обьект спецификации
      */
     public static Specification<DailyStatisticOnSite> getAllStatisticSite() {

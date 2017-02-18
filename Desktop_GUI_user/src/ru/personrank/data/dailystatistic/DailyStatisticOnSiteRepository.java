@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
  * от сервера.
  * <p>
  * Класс реализует интерфейс <code>Repository</code>. Хранит обьекты данных 
- * таблицы <code>GeneralStatisticOnSite</code> в виде списка. Делает запросы к
+ * таблицы <code>DailyStatisticOnSite</code> в виде списка. Делает запросы к
  * веб-сервису для обновления данных, при удачном запросе обнавляет данные в
  * списке и записывает их файл. Если сервер недоступен при создании обьекта в
  * список загружаются данные из файла.</p>
@@ -96,61 +96,6 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
                 ((UpdatingRepositoryListener) listener).repositoryUpdated(event);
             }
         }
-    }
-
-    /**
-     * Возвращает тестовые данные.
-     * Метод нужен исключительно для тестирования репозитория. 
-     *
-     * @return - список элементов статистики в колекции List
-     */
-    private List<DailyStatisticOnSite> getTestStatistic() {
-        List<DailyStatisticOnSite> testStatistic = new ArrayList<>();
-        DailyStatisticOnSite.Person p1 = new DailyStatisticOnSite.Person("Путин",
-                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 19),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 22),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 23),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 24),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 25),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 26),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 27),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 29)}),
-                Arrays.asList(new Integer[]{4, 2, 1, 3, 5, 8, 6, 7, 1, 9}));
-        DailyStatisticOnSite.Person p2 = new DailyStatisticOnSite.Person("Трамп",
-                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 18),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 22),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 23),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 24),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 25),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 26),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 27),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 28)}),
-                Arrays.asList(new Integer[]{2, 1, 3, 7, 5, 9, 7, 2, 1, 4}));
-        DailyStatisticOnSite site1 = new DailyStatisticOnSite("lenta.ru", Arrays.asList(new DailyStatisticOnSite.Person[]{p1, p2}));
-        testStatistic.add(site1);
-
-        DailyStatisticOnSite.Person p3 = new DailyStatisticOnSite.Person("Путин",
-                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
-                Arrays.asList(new Integer[]{1, 4, 2}));
-        DailyStatisticOnSite.Person p4 = new DailyStatisticOnSite.Person("Трамп",
-                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 19),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
-                Arrays.asList(new Integer[]{5, 2, 1}));
-        DailyStatisticOnSite.Person p5 = new DailyStatisticOnSite.Person("Обама",
-                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 19),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
-                Arrays.asList(new Integer[]{4, 8, 2}));
-        DailyStatisticOnSite site2 = new DailyStatisticOnSite("komersant.ru", Arrays.asList(new DailyStatisticOnSite.Person[]{p3, p4, p5}));
-        testStatistic.add(site2);
-        return testStatistic;
     }
 
     @Override
@@ -373,6 +318,61 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         return numPages;
     }
 
+     /**
+     * Возвращает тестовые данные.
+     * Метод нужен исключительно для тестирования репозитория. 
+     *
+     * @return - список элементов статистики в колекции List
+     */
+    private List<DailyStatisticOnSite> getTestStatistic() {
+        List<DailyStatisticOnSite> testStatistic = new ArrayList<>();
+        DailyStatisticOnSite.Person p1 = new DailyStatisticOnSite.Person("Путин",
+                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 19),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 21),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 22),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 23),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 24),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 25),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 26),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 27),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 29)}),
+                Arrays.asList(new Integer[]{4, 2, 1, 3, 5, 8, 6, 7, 1, 9}));
+        DailyStatisticOnSite.Person p2 = new DailyStatisticOnSite.Person("Трамп",
+                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 18),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 21),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 22),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 23),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 24),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 25),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 26),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 27),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 28)}),
+                Arrays.asList(new Integer[]{2, 1, 3, 7, 5, 9, 7, 2, 1, 4}));
+        DailyStatisticOnSite site1 = new DailyStatisticOnSite("lenta.ru", Arrays.asList(new DailyStatisticOnSite.Person[]{p1, p2}));
+        testStatistic.add(site1);
+
+        DailyStatisticOnSite.Person p3 = new DailyStatisticOnSite.Person("Путин",
+                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
+                Arrays.asList(new Integer[]{1, 4, 2}));
+        DailyStatisticOnSite.Person p4 = new DailyStatisticOnSite.Person("Трамп",
+                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 19),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
+                Arrays.asList(new Integer[]{5, 2, 1}));
+        DailyStatisticOnSite.Person p5 = new DailyStatisticOnSite.Person("Обама",
+                Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 19),
+                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
+                Arrays.asList(new Integer[]{4, 8, 2}));
+        DailyStatisticOnSite site2 = new DailyStatisticOnSite("komersant.ru", Arrays.asList(new DailyStatisticOnSite.Person[]{p3, p4, p5}));
+        testStatistic.add(site2);
+        return testStatistic;
+    }
+    
     /**
      * Создает задачу, которая обнавляет репозиторий ежедневной статистики.
      * 
@@ -395,7 +395,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         }
 
         /**
-         * Выполняет обновление репозитория.
+         * Выполняет обновление статистики.
          */
         @Override
         public void run() {
