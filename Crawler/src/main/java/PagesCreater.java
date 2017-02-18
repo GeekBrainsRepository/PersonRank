@@ -31,7 +31,7 @@ public class PagesCreater {
     private Document htmlDocument;
     private static Elements linksOnPage;
     private static final Logger log = Logger.getLogger(PagesCreater.class);
-    private String contentType;
+    private String contentType = null;
     private static Set<String> linksFromSitemaps = new HashSet<>();
     private static ArrayList<String> sitemapLinks = new ArrayList<>();
 
@@ -45,41 +45,42 @@ public class PagesCreater {
 
             //todo обработать все возможные расширения согласно спецификации
             // в том числе xml
-            if(!connection.response().contentType().contains(contentType)){
-                switch(contentType) {
-                    case "text/html":
-                        log.error("Тип документа не является HTML");
-                        break;
-                    case "text/xml":
-                        log.error("Тип документа не является XML");
-                        break;
-                    case  "application/xml":
-                        log.error("Тип документа не является XML");
-                        break;
-
-                    default: break;
-                }
-
-
-            }
+//            if(!connection.response().contentType().contains(contentType)){
+//                switch(contentType) {
+//                    case "text/html":
+//                        log.error("Тип документа не является HTML");
+//                        break;
+//                    case "text/xml":
+//                        log.error("Тип документа не является XML");
+//                        break;
+//                    case  "application/xml":
+//                        log.error("Тип документа не является XML");
+//                        break;
+//
+//                    default: break;
+//                }
+//
+//
+//            }
 
             linksOnPage = htmlDocument.select("a[href]");
 
             log.info("Найдено (" + linksOnPage.size() + ") ссылок");
-            for(Element link : linksOnPage){
 
-                for(Pages page:pagesService.getPages()){
-                    String pageIsChecked = link.absUrl("href");
-                    //Проверка статуса страницы, чтобы исключить добавление "сломанных ссылок".
+            for(Element link : linksOnPage){
+//            //  todo Проверка на идентичные ссылки
+                String pageIsChecked = link.absUrl("href");
+                for(Pages page : pagesService.getPages()){
+//                    Проверка статуса страницы, чтобы исключить добавление "сломанных ссылок".
                     if(Jsoup.connect(page.getUrl()).execute().statusCode() == 200){
                         //Исключаем дубликаты в pages.
-                        if(!pageIsChecked.equals(pages.getUrl())){
+                        if(! pageIsChecked.equals(pages.getUrl())){
                             pages.setSiteId(siteId);
                             pages.setUrl(link.absUrl("href"));
                             pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
                             pagesService.insertPage(pages);
                             links.add(link.absUrl("href"));
-                            print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));
+//////                            print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));
                         }
                     }
                 }
@@ -90,21 +91,25 @@ public class PagesCreater {
                 if(pageIsChecked.contains("robots.txt")){
                     getSitemapLinks(pageIsChecked);
                     for(String sitemapLink: sitemapLinks){
+                        if(!connection.response().contentType().contains("application/octet-stream"))
                         getLinksFromSitemaps(sitemapLink);
                     }
                 }
-                //Проверка ссылок из сайтмэпа и добавление их в качестве страниц
-                for(String sitemapLink: sitemapLinks){
-                    if(!sitemapLink.equals(pageIsChecked)){
+            }
+            //Проверка ссылок из сайтмэпа и добавление их в качестве страниц
+            for(Pages page:pagesService.getPages()){
+                String pageIsChecked = page.getUrl();
+                for(String linkFromSitemap : linksFromSitemaps){
+                    if(!linkFromSitemap.equals(pageIsChecked)){
                         pages.setSiteId(siteId);
-                        pages.setUrl(sitemapLink);
+                        pages.setUrl(linkFromSitemap);
                         pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
                         pagesService.insertPage(pages);
-                        links.add(sitemapLink);
+                        links.add(linkFromSitemap);
+                    }else{
+                        System.out.println("Such link exists " + linkFromSitemap + "!!!");
                     }
                 }
-
-
             }
         } catch(IOException e){
             e.printStackTrace();
@@ -137,6 +142,7 @@ public class PagesCreater {
         String[] ss = el.text().split(" ");
         for(String g:ss){
             if(g.contains("sitemap")){
+
                 sitemapLinks.add(g);
             }
         }
