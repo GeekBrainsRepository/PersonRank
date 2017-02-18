@@ -1,16 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package ru.personrank.data;
 
 import java.util.EventListener;
 
 /**
- * @author KIP&A
+ * Интерфейс слушателя для получения события "обновление репозитория". 
+ * 
+ * @author Мартынов Евгений
+ * 
+ * @see UpdatingRepositoryEvent
  */
 public interface UpdatingRepositoryListener extends EventListener {
-
+    
+    /**
+     * Вызывается когда происходит изменение содержимого репозитория.
+     * 
+     * @param event - обьект события <b>UpdatingRepositoryEvent</b>
+     */
     void repositoryUpdated(UpdatingRepositoryEvent event);
 }
