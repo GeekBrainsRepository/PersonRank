@@ -1,4 +1,3 @@
-
 package ru.personrank.data.generalstatistic;
 
 import org.json.JSONObject;
@@ -24,10 +23,10 @@ import java.util.*;
  * список загружаются данные из файла.
  *
  * @author Мартынов Евгений
- * 
+ *
  * @see GeneralStatisticOnSite
  * @see Repository
- * 
+ *
  * @version 1.0
  */
 public class GeneralStatisticOnSiteRepository implements Repository<GeneralStatisticOnSite> {
@@ -100,7 +99,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      */
     private void save(List<GeneralStatisticOnSite> statistic) {
         try (ObjectOutputStream objOStrm = new ObjectOutputStream(
-                new FileOutputStream("General_statistic.dp"))) {
+                new FileOutputStream("dump/General_statistic.dp"))) {
             objOStrm.writeObject(statistic);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -114,7 +113,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
      * @return список элементов статистики в виде коллекции List
      */
     private List<GeneralStatisticOnSite> load() {
-        File file = new File("General_statistic.dp");
+        File file = new File("dump/General_statistic.dp");
         if (file.exists()) {
 
             if (file.length() == 0) {
@@ -139,6 +138,10 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
             }
         } else {
             try {
+                File folder = new File("dump");
+                if (!folder.exists()) {
+                    folder.mkdir();
+                }
                 file.createNewFile();
                 return new ArrayList<>();
             } catch (IOException ex) {
@@ -171,9 +174,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         if (list.isEmpty()) {
             JOptionPane.showMessageDialog(Window.getInstance(),
                     "<html>Не удалось получить общую статистику "
-                            + "от сервера!<br>Повторный запрос будет отправлен через "
-                            + FREQUENCY_UPDATES + " сек.", "Сервер не "
-                            + "доступен", JOptionPane.ERROR_MESSAGE);
+                    + "от сервера!<br>Повторный запрос будет отправлен через "
+                    + FREQUENCY_UPDATES + " сек.", "Сервер не "
+                    + "доступен", JOptionPane.ERROR_MESSAGE);
         }
         return list;
     }
@@ -245,7 +248,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Возвращает список рейтингов.
-     * 
+     *
      * @param siteID - ключ обозначающий определенный сайт
      * @return список в виде коллекции List с рейтингом персон
      */
@@ -275,9 +278,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     }
 
     /**
-     * Запрашивает список элементов репозитория удовлетворяющих условиям 
+     * Запрашивает список элементов репозитория удовлетворяющих условиям
      * заданным в спецификации.
-     * 
+     *
      * @param specification - обьект спецификации
      * @return список элементов репозитория в виде коллекции List
      */
@@ -292,9 +295,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
         return newList;
     }
 
-     /**
-     * Возвращает тестовые данные.
-     * Метод нужен исключительно для тестирования репозитория. 
+    /**
+     * Возвращает тестовые данные. Метод нужен исключительно для тестирования
+     * репозитория.
      *
      * @return - список элементов статистики в колекции List
      */
@@ -360,20 +363,20 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 
     /**
      * Создает задачу, которая обнавляет репозиторий общей статистики.
-     * 
+     *
      * <p>
      * Отправляет запрос на сервер. Если новые данные не отличаются от текущих
-     * то задача переходит в режим ожидания до истечения времени таймера. Если 
+     * то задача переходит в режим ожидания до истечения времени таймера. Если
      * данные отличаются, то новые замещают старые, затем оповещаются все
-     * слушатели о том что произошло обновление репозитория и происходит 
+     * слушатели о том что произошло обновление репозитория и происходит
      * сохранение новых данных в файл.
      * </p>
      */
     private class UpdaterGeneralStatistic extends Thread {
 
-       /**
-        * Создает задачу.
-        */
+        /**
+         * Создает задачу.
+         */
         public UpdaterGeneralStatistic() {
             super("UpdaterGeneralStatistic");
             super.setDaemon(true);
