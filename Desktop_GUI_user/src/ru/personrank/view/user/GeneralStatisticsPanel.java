@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * омпонент являющийся специальной панелью <code>JPanel</code>, которая служит
@@ -35,6 +36,8 @@ public class GeneralStatisticsPanel extends JPanel {
     private static final Color TABLE_GRID_COLOR = Color.LIGHT_GRAY;
     private static final Color TABLE_SELECTION_BACKGROUND = new Color(20, 116, 138, 248);
 
+    private static Logger log = Logger.getLogger(GeneralStatisticsPanel.class.getName());
+    
     private GeneralStatisticOnSiteRepository statisticRepository;
     private JComboBox namesSitesComboBox;
     private NamesSitesComboBoxModel namesSitesComboBoxModel;

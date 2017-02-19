@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Реализует компонент ContentPane для JFrame с оригинальным оформлением.
@@ -23,6 +25,8 @@ class ContentPane extends JComponent {
     private static final int HEIGHT_HEADER = 40;
     private static final float WIDTH_BORDER = 5.0f;
 
+    private static Logger log = Logger.getLogger(ContentPane.class.getName());
+    
     private JComponent headerPanel;
     private JLabel title;
     private JButton bnExit;
@@ -59,10 +63,8 @@ class ContentPane extends JComponent {
             title.setVerticalTextPosition(JLabel.BOTTOM);
             title.setFont(fontTitle);
             title.setForeground(TITLE_COLOR);
-        } catch (FontFormatException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (FontFormatException | IOException ex) {
+            log.log(Level.SEVERE, null, ex);
         }
 
         bnExit = new JButton();

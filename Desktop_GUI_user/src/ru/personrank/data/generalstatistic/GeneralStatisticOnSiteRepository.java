@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Класс служит для хранения данных таблицы "Общая статистика" получаемых от
@@ -34,7 +36,10 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
     private static final long FREQUENCY_UPDATES = 60; //в секундах
     private static final String URL_SITE = "http://37.194.87.95:30000/site";
     private static final String URL_GENERAL_STATISTIC = "http://37.194.87.95:30000/common/";
+
     private static final GeneralStatisticOnSiteRepository INSTANCE = new GeneralStatisticOnSiteRepository();
+
+    private static Logger log = Logger.getLogger(GeneralStatisticOnSiteRepository.class.getName());
 
     private List listenerList;
     private List<GeneralStatisticOnSite> generalStatisticOnSite;
@@ -102,7 +107,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
                 new FileOutputStream("dump/General_statistic.dp"))) {
             objOStrm.writeObject(statistic);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.log(Level.SEVERE, null, ex);
         }
 
     }
@@ -124,16 +129,10 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
                 List<GeneralStatisticOnSite> list = (List<GeneralStatisticOnSite>) objIStr.readObject();
                 return list;
             } catch (FileNotFoundException ex) {
-                // Возникновение исключения маловероятно,
-                // потому что предварительно проверяется наличае файла, 
-                // и в случае его отсутствия создается новый.
-                ex.printStackTrace();
+                log.log(Level.SEVERE, null, ex);
                 return new ArrayList<>();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return new ArrayList<>();
-            } catch (ClassNotFoundException ex) {
-                ex.printStackTrace();
+            } catch (IOException | ClassNotFoundException ex) {
+                log.log(Level.SEVERE, null, ex);
                 return new ArrayList<>();
             }
         } else {
@@ -145,7 +144,7 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
                 file.createNewFile();
                 return new ArrayList<>();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                log.log(Level.SEVERE, null, ex);
             }
         }
 
@@ -172,11 +171,9 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
 //                    getRanksList(entry.getKey())));
 //        }
         if (list.isEmpty()) {
-            JOptionPane.showMessageDialog(Window.getInstance(),
-                    "<html>Не удалось получить общую статистику "
+            log.warning("Не удалось получить общую статистику "
                     + "от сервера!<br>Повторный запрос будет отправлен через "
-                    + FREQUENCY_UPDATES + " сек.", "Сервер не "
-                    + "доступен", JOptionPane.ERROR_MESSAGE);
+                    + FREQUENCY_UPDATES + " сек.");
         }
         return list;
     }
@@ -198,10 +195,10 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
             while ((inputLine = in.readLine()) != null) {
                 sb.append(inputLine);
             }
-            //System.out.println(sb.);
             json = new JSONObject(sb.toString());
             in.close();
         } catch (IOException ex) {
+            log.log(Level.SEVERE, null, ex);
             json = new JSONObject();
         }
         return json;
@@ -390,18 +387,15 @@ public class GeneralStatisticOnSiteRepository implements Repository<GeneralStati
             while (true) {
                 try {
                     Thread.sleep(FREQUENCY_UPDATES * 1000);
-                    System.out.println("Обновление статистики!");
                     List<GeneralStatisticOnSite> newStatistic = updateStatistic();
                     if (!generalStatisticOnSite.equals(newStatistic) && !newStatistic.isEmpty()) {
                         generalStatisticOnSite = newStatistic;
                         fireUpdatingRepositoryEvent();
-                        System.out.println("Статистика обновлена!");
+                        log.info("Общая статистика обновлена!");
                         save(newStatistic);
-                    } else {
-                        System.out.println("Нет изменений в базе!");
                     }
                 } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                    log.log(Level.SEVERE, null, ex);
                 }
             }
         }

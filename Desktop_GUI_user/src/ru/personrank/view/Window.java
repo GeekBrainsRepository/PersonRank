@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * Главное окно программы.
@@ -28,6 +29,8 @@ public class Window extends JFrame {
 
     private static final ExecutorService threadPool = Executors.newCachedThreadPool();
     private static final Window INSTANCE = new Window();
+    
+    private static Logger log = Logger.getLogger(Window.class.getName());
     
     private JXTaskPaneContainer menu;
     private JPanel content;

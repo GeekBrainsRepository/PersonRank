@@ -15,36 +15,38 @@ import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import ru.personrank.data.generalstatistic.GeneralStatisticOnSite;
 
 /**
  * Класс служит для хранения данных таблицы "Ежедневная статистика" получаемых
  * от сервера.
  * <p>
- * Класс реализует интерфейс <code>Repository</code>. Хранит обьекты данных 
+ * Класс реализует интерфейс <code>Repository</code>. Хранит обьекты данных
  * таблицы <code>DailyStatisticOnSite</code> в виде списка. Делает запросы к
  * веб-сервису для обновления данных, при удачном запросе обнавляет данные в
  * списке и записывает их файл. Если сервер недоступен при создании обьекта в
  * список загружаются данные из файла.</p>
  *
  * @author Мартынов Евгений
- * 
+ *
  * @see GeneralStatisticOnSite
  * @see Repository
- * 
+ *
  * @version 1.0
  */
 public class DailyStatisticOnSiteRepository implements Repository<DailyStatisticOnSite> {
 
-   
     private static final long FREQUENCY_UPDATES = 60; //в секундах
-     private static final String PATH_SAVED_FILE = "dump/Daily_statistic.dp";
+    private static final String PATH_SAVED_FILE = "dump/Daily_statistic.dp";
     private static final String URL_SITE = "http://37.194.87.95:30000/site";
     private static final String URL_PERSON = "http://37.194.87.95:30000/person";
     private static final String URL_DAILY_STATISTIC = "http://37.194.87.95:30000/daily/";
 
     private static final DailyStatisticOnSiteRepository INSTANCE = new DailyStatisticOnSiteRepository();
+
+    private static Logger log = Logger.getLogger(DailyStatisticOnSiteRepository.class.getName());
 
     List listenerList;
     List<DailyStatisticOnSite> dailyStatisticOnSite;
@@ -60,9 +62,9 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         }
         Window.addThreadInPool(new UpdaterDailyStatistic());
     }
-    
+
     /**
-     * Возвращает обьект репозитория. 
+     * Возвращает обьект репозитория.
      */
     public static DailyStatisticOnSiteRepository getInstance() {
         return INSTANCE;
@@ -114,9 +116,9 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
     }
 
     /**
-     * Запрашивает список элементов репозитория удовлетворяющих условиям 
+     * Запрашивает список элементов репозитория удовлетворяющих условиям
      * заданным в спецификации.
-     * 
+     *
      * @param specification - обьект спецификации
      * @return список элементов репозитория в виде коллекции List
      */
@@ -136,6 +138,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
      * <p>
      * Сохраняет список сайтов, переданный в качестве аргумента, в файл.
      * </p>
+     *
      * @param statistic - список элементов статистики в виде коллекции List
      */
     private void save(List<DailyStatisticOnSite> statistic) {
@@ -143,7 +146,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
                 new FileOutputStream(PATH_SAVED_FILE))) {
             objOStrm.writeObject(statistic);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.log(Level.SEVERE, null, ex);
         }
 
     }
@@ -163,22 +166,16 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
                 List<DailyStatisticOnSite> list = (List<DailyStatisticOnSite>) objIStr.readObject();
                 return list;
             } catch (FileNotFoundException ex) {
-                // Возникновение исключения маловероятно,
-                // потому что предварительно проверяется наличае файла, 
-                // и в случае его отсутствия создается новый.
-                ex.printStackTrace();
+                log.log(Level.SEVERE, null, ex);
                 return new ArrayList<>();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return new ArrayList<>();
-            } catch (ClassNotFoundException ex) {
-                ex.printStackTrace();
+            } catch (IOException | ClassNotFoundException ex) {
+                log.log(Level.SEVERE, null, ex);
                 return new ArrayList<>();
             }
         } else {
             try {
                 File folder = new File("dump");
-                if(!folder.exists()){
+                if (!folder.exists()) {
                     folder.mkdir();
                 }
                 file.createNewFile();
@@ -218,11 +215,9 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
 //            list.add(new DailyStatisticOnSite((String) entrySite.getValue(), persons));
 //        }
         if (list.isEmpty()) {
-            JOptionPane.showMessageDialog(Window.getInstance(),
-                    "<html>Не удалось получить ежедневную статистику "
-                            + "от сервера!<br>Повторный запрос будет отправлен через "
-                            + FREQUENCY_UPDATES + " сек.", "Сервер не "
-                            + "доступен", JOptionPane.ERROR_MESSAGE);
+            log.warning("Не удалось получить ежедневную статистику от сервера!"
+                    + "Повторный запрос будет отправлен через "
+                    + FREQUENCY_UPDATES + " сек.");
         }
         return list;
     }
@@ -247,6 +242,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
             json = new JSONObject(sb.toString());
             in.close();
         } catch (IOException ex) {
+            log.log(Level.SEVERE, null, ex);
             json = new JSONObject();
         }
         return json;
@@ -274,15 +270,15 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
 
     /**
      * Возвращает список дат.
-     * 
+     *
      * @return даты в виде колекции List
      */
     private static List<Calendar> getScanDateList() {
         List<Calendar> dateList = new ArrayList<>();
         Calendar firstDay = new GregorianCalendar(2017, Calendar.JANUARY, 1);
-        Calendar counterDay = null;
+        Calendar counterDay;
         Calendar toDay = new GregorianCalendar();
-        Calendar nextDay = null;
+        Calendar nextDay;
         dateList.add(firstDay);
         counterDay = (Calendar) firstDay.clone();
         while (counterDay.compareTo(toDay) < 0) {
@@ -297,7 +293,7 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
     /**
      * Возвращает количество страниц сайта с на которых упоминается личность за
      * определенную дату.
-     * 
+     *
      * @param siteID - идентификатор сайта
      * @param personID - идентификатор личности
      * @param scanDateList - список дат
@@ -305,11 +301,11 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
      */
     private List<Integer> getNumNewPages(String siteID, String personID, List<Calendar> scanDateList) {
         List<Integer> numPages = new ArrayList();
-        JSONObject json = getJSON(URL_DAILY_STATISTIC +
-                siteID + "/" +
-                personID + "/" +
-                scanDateList.get(0).getTimeInMillis() + "/" +
-                scanDateList.get(scanDateList.size() - 1).getTimeInMillis()
+        JSONObject json = getJSON(URL_DAILY_STATISTIC
+                + siteID + "/"
+                + personID + "/"
+                + scanDateList.get(0).getTimeInMillis() + "/"
+                + scanDateList.get(scanDateList.size() - 1).getTimeInMillis()
         );
         JSONArray arr = (JSONArray) json.get("result");
         for (Object object : arr) {
@@ -318,9 +314,9 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         return numPages;
     }
 
-     /**
-     * Возвращает тестовые данные.
-     * Метод нужен исключительно для тестирования репозитория. 
+    /**
+     * Возвращает тестовые данные. Метод нужен исключительно для тестирования
+     * репозитория.
      *
      * @return - список элементов статистики в колекции List
      */
@@ -328,64 +324,64 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
         List<DailyStatisticOnSite> testStatistic = new ArrayList<>();
         DailyStatisticOnSite.Person p1 = new DailyStatisticOnSite.Person("Путин",
                 Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 19),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 22),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 23),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 24),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 25),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 26),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 27),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 29)}),
+            new GregorianCalendar(2017, Calendar.JANUARY, 19),
+            new GregorianCalendar(2017, Calendar.JANUARY, 21),
+            new GregorianCalendar(2017, Calendar.JANUARY, 22),
+            new GregorianCalendar(2017, Calendar.JANUARY, 23),
+            new GregorianCalendar(2017, Calendar.JANUARY, 24),
+            new GregorianCalendar(2017, Calendar.JANUARY, 25),
+            new GregorianCalendar(2017, Calendar.JANUARY, 26),
+            new GregorianCalendar(2017, Calendar.JANUARY, 27),
+            new GregorianCalendar(2017, Calendar.JANUARY, 29)}),
                 Arrays.asList(new Integer[]{4, 0, 0, 3, 5, 8, 5, 0, 0, 0}));
         DailyStatisticOnSite.Person p2 = new DailyStatisticOnSite.Person("Трамп",
                 Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 18),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 22),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 23),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 24),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 25),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 26),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 27),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 28)}),
+            new GregorianCalendar(2017, Calendar.JANUARY, 20),
+            new GregorianCalendar(2017, Calendar.JANUARY, 21),
+            new GregorianCalendar(2017, Calendar.JANUARY, 22),
+            new GregorianCalendar(2017, Calendar.JANUARY, 23),
+            new GregorianCalendar(2017, Calendar.JANUARY, 24),
+            new GregorianCalendar(2017, Calendar.JANUARY, 25),
+            new GregorianCalendar(2017, Calendar.JANUARY, 26),
+            new GregorianCalendar(2017, Calendar.JANUARY, 27),
+            new GregorianCalendar(2017, Calendar.JANUARY, 28)}),
                 Arrays.asList(new Integer[]{2, 1, 3, 7, 5, 9, 7, 2, 1, 4}));
         DailyStatisticOnSite site1 = new DailyStatisticOnSite("lenta.ru", Arrays.asList(new DailyStatisticOnSite.Person[]{p1, p2}));
         testStatistic.add(site1);
 
         DailyStatisticOnSite.Person p3 = new DailyStatisticOnSite.Person("Путин",
                 Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
+            new GregorianCalendar(2017, Calendar.JANUARY, 20),
+            new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
                 Arrays.asList(new Integer[]{1, 4, 2}));
         DailyStatisticOnSite.Person p4 = new DailyStatisticOnSite.Person("Трамп",
                 Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 19),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 20),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
+            new GregorianCalendar(2017, Calendar.JANUARY, 20),
+            new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
                 Arrays.asList(new Integer[]{5, 2, 1}));
         DailyStatisticOnSite.Person p5 = new DailyStatisticOnSite.Person("Обама",
                 Arrays.asList(new Calendar[]{new GregorianCalendar(2017, Calendar.JANUARY, 17),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 19),
-                        new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
+            new GregorianCalendar(2017, Calendar.JANUARY, 19),
+            new GregorianCalendar(2017, Calendar.JANUARY, 21)}),
                 Arrays.asList(new Integer[]{4, 8, 2}));
         DailyStatisticOnSite site2 = new DailyStatisticOnSite("komersant.ru", Arrays.asList(new DailyStatisticOnSite.Person[]{p3, p4, p5}));
         testStatistic.add(site2);
         return testStatistic;
     }
-    
+
     /**
      * Создает задачу, которая обнавляет репозиторий ежедневной статистики.
-     * 
+     *
      * <p>
      * Отправляет запрос на сервер. Если новые данные не отличаются от текущих
-     * то задача переходит в режим ожидания до истечения времени таймера. Если 
+     * то задача переходит в режим ожидания до истечения времени таймера. Если
      * данные отличаются, то новые замещают старые, затем оповещаются все
-     * слушатели о том что произошло обновление репозитория и происходит 
+     * слушатели о том что произошло обновление репозитория и происходит
      * сохранение новых данных в файл.
      * </p>
      */
     private class UpdaterDailyStatistic extends Thread {
-        
+
         /**
          * Создает задачу.
          */
@@ -402,18 +398,15 @@ public class DailyStatisticOnSiteRepository implements Repository<DailyStatistic
             while (true) {
                 try {
                     Thread.sleep(FREQUENCY_UPDATES * 1000);
-                    System.out.println("Обновление ежедневной статистики!");
                     List<DailyStatisticOnSite> newStatistic = updateStatistic();
                     if (!dailyStatisticOnSite.equals(newStatistic) && !newStatistic.isEmpty()) {
                         dailyStatisticOnSite = newStatistic;
                         fireUpdatingRepositoryEvent();
-                        System.out.println("Ежедневная статистика обновлена!");
+                        log.info("Ежедневная статистика обновлена!");
                         save(newStatistic);
-                    } else {
-                        System.out.println("Нет изменений в базе!");
                     }
                 } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                    log.log(Level.SEVERE, null, ex);
                 }
             }
         }

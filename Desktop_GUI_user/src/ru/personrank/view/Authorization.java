@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -24,6 +26,8 @@ public class Authorization {
 
     private static final String URL_GET_AUTH = "http://37.194.87.95:30000/authentication/";
 
+    private static Logger log = Logger.getLogger(Authorization.class.getName());
+    
     private static final Authorization INSTANCE = new Authorization();
     
     private Authorization() {
@@ -68,6 +72,7 @@ public class Authorization {
 
             //Вход в систему минуя авторизацию на сервере, для тестирования.
             if (user.equals("test") && passw.equals("")) {
+                log.info("Пользователь (" + user + ") авторизировался в системе.");
                 return true;
             }
 
@@ -80,21 +85,16 @@ public class Authorization {
                         urlConnection.getInputStream()));
                 String inputLine;
                 inputLine = in.readLine();
+                in.close();
                 if (inputLine.equals("true")) {
+                    log.info("Пользователь (" + user + ") авторизировался в системе.");
                     return true;
                 }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            } catch (MalformedURLException ex) {
+                log.log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                log.log(Level.SEVERE, null, ex);
+            }    
             return false;
         }
     }
