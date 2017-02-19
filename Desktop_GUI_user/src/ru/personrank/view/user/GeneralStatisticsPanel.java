@@ -22,12 +22,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
+/**
+ * омпонент являющийся специальной панелью <code>JPanel</code>, которая служит
+ * для отображения общей статистики.
+ * 
+ * @author Мартынов Евгений
+ * @author Кучеров Андрей
+ */
 public class GeneralStatisticsPanel extends JPanel {
 
     private static final Color TABLE_GRID_COLOR = Color.LIGHT_GRAY;
     private static final Color TABLE_SELECTION_BACKGROUND = new Color(20, 116, 138, 248);
 
+    private static Logger log = Logger.getLogger(GeneralStatisticsPanel.class.getName());
+    
     private GeneralStatisticOnSiteRepository statisticRepository;
     private JComboBox namesSitesComboBox;
     private NamesSitesComboBoxModel namesSitesComboBoxModel;
@@ -35,6 +45,9 @@ public class GeneralStatisticsPanel extends JPanel {
     private GeneralStaticTabelModel generalTableModel;
     private JFreeChart barChart;
 
+    /**
+     * Создает панель.
+     */
     public GeneralStatisticsPanel() {
         statisticRepository = GeneralStatisticOnSiteRepository.getInstance();
         statisticRepository.addUpdatingRepositoryListener(new UpdatingRepositoryListener() {
@@ -51,6 +64,9 @@ public class GeneralStatisticsPanel extends JPanel {
         add(createContentPanel(), BorderLayout.CENTER);
     }
 
+    /**
+     * Создает контейнер для элементов упарвления.
+     */
     private Box createControlBox() {
         Box box = Box.createHorizontalBox();
         box.setBorder(new EmptyBorder(0, 0, 10, 0));
@@ -77,6 +93,9 @@ public class GeneralStatisticsPanel extends JPanel {
         return box;
     }
 
+    /**
+     * Создает контейнер для панели содержимого. 
+     */
     private JPanel createContentPanel() {
         dateScanSite = new JLabel("");
         dateScanSite.setHorizontalTextPosition(JLabel.RIGHT);
@@ -122,6 +141,9 @@ public class GeneralStatisticsPanel extends JPanel {
         return contentPanel;
     }
 
+    /**
+     * Возвращает набор данных для графика.
+     */
     private CategoryDataset createDatashet() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         if (namesSitesComboBox.getSelectedItem() != null) {
@@ -136,12 +158,21 @@ public class GeneralStatisticsPanel extends JPanel {
         return dataset;
     }
 
+    /**
+     * Модель данных списка сайтов.
+     */
     private class NamesSitesComboBoxModel extends DefaultComboBoxModel {
 
+        /**
+         * Создает модель.
+         */
         NamesSitesComboBoxModel() {
             setDataSource();
         }
-
+        
+        /**
+         * Заполняет модель данными.
+         */
         private void setDataSource() {
             List<GeneralStatisticOnSite> list = GeneralStatisticOnSiteRepository.getInstance().
                     query(GeneralStatisticSpecification.getAllStatisticSite());
@@ -152,11 +183,17 @@ public class GeneralStatisticsPanel extends JPanel {
         }
     }
 
+    /**
+     * Модель данных таблицы.
+     */
     private class GeneralStaticTabelModel extends AbstractTableModel {
 
         private ArrayList columnNames;
         private ArrayList data;
 
+        /**
+         * Создает модель.
+         */
         public GeneralStaticTabelModel() {
             columnNames = new ArrayList();
             columnNames.add("Имя");
@@ -207,6 +244,11 @@ public class GeneralStatisticsPanel extends JPanel {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         }
 
+        /**
+         * Заполняет модель данными в зависимости от выбранного сайта.
+         * 
+         * @param nameSite - имя сайта
+         */
         public void setDataSource(String nameSite) {
             data.clear();
             ArrayList row = null;
@@ -234,8 +276,15 @@ public class GeneralStatisticsPanel extends JPanel {
         }
     }
 
+    /**
+     * Слушатель кнопки "Применить".
+     */
     private class ButtonSendListener implements ActionListener {
 
+        /**
+         * Действие при нажатии кнопки.
+         * @param e - событие
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             if (namesSitesComboBox.getSelectedItem() != null) {
@@ -251,16 +300,4 @@ public class GeneralStatisticsPanel extends JPanel {
             }
         }
     }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g.create();
-        g2d.setComposite(AlphaComposite.SrcOver.derive(0.25f));// прозрачность редактировать здесь
-
-        g2d.setColor(getBackground());
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-        g2d.dispose();
-    }
-
 }

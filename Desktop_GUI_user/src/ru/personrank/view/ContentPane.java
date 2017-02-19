@@ -7,16 +7,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Класс реализует альтернативный вариант ContentPane для JFrame с новым
- * оформлением
+ * Реализует компонент ContentPane для JFrame с оригинальным оформлением.
+ * 
  *
- * @author
+ * @author Мартынов Евгений
  */
 class ContentPane extends JComponent {
 
-    // Константы класса
     private static final Color TITLE_COLOR = new Color(20, 116, 138, 248);
     private static final Color HEADER_COLOR = new Color(170, 170, 170, 255);
     private static final Color CONTENT_GRADIENT_A = new Color(130, 130, 130, 128);
@@ -24,7 +25,8 @@ class ContentPane extends JComponent {
     private static final int HEIGHT_HEADER = 40;
     private static final float WIDTH_BORDER = 5.0f;
 
-    // Компоненты панели
+    private static Logger log = Logger.getLogger(ContentPane.class.getName());
+    
     private JComponent headerPanel;
     private JLabel title;
     private JButton bnExit;
@@ -32,7 +34,9 @@ class ContentPane extends JComponent {
     private JButton bnIconified;
     private JComponent contentPanel;
 
-    // Конструктор класса
+    /**
+     * Создает панель.
+     */
     public ContentPane() {
         super.setLayout(new BorderLayout());
         Border outsideBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED, TITLE_COLOR, new Color(20, 116, 138, 128));
@@ -44,7 +48,9 @@ class ContentPane extends JComponent {
         super.add(contentPanel, BorderLayout.CENTER);
     }
 
-    // Метод инициализирующий панель заголовка
+    /**
+     * Инициализирует панель заголовка
+     */
     private void initHeaderPanel() {
         headerPanel = new JPanel();
 
@@ -52,18 +58,13 @@ class ContentPane extends JComponent {
             Font fontTitle = Font.createFont(Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream("/ru/resources/fonts/Renfrew.ttf"))
                     .deriveFont(Font.PLAIN, 26);
-//            Font fontTitle = Font.createFont(Font.TRUETYPE_FONT,
-//                    new File(System.getProperty("user.dir") + "/fonts/Renfrew.ttf"))
-//                    .deriveFont(Font.PLAIN, 26);
             title = new JLabel();
             title.setAlignmentY(JLabel.TOP_ALIGNMENT);
             title.setVerticalTextPosition(JLabel.BOTTOM);
             title.setFont(fontTitle);
             title.setForeground(TITLE_COLOR);
-        } catch (FontFormatException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (FontFormatException | IOException ex) {
+            log.log(Level.SEVERE, null, ex);
         }
 
         bnExit = new JButton();
@@ -116,7 +117,9 @@ class ContentPane extends JComponent {
         headerPanel.add(bnExit);
     }
 
-    // Метод инициализирующий панель контента
+    /**
+     * Инициализирует панель содержимого.
+     */
     private void initContentPanel() {
         contentPanel.setLayout(new BorderLayout());
         contentPanel.setOpaque(false);
@@ -158,28 +161,48 @@ class ContentPane extends JComponent {
         return contentPanel.add(name, comp);
     }
 
-    // Метод устанавливает надпись в заголовок окна
+    /**
+     * Устанавливает заголовок окна.
+     * 
+     * @param title - текст заголовка
+     */
     void setTitle(String title) {
         this.title.setText(title);
     }
 
-    // Метод устанавливает иконку в заголовок окна
+    /**
+     * Устанавливает иконку в заголовок окна
+     * 
+     * @param imageIcon - иконка заголовка
+     */ 
     void setTitleIcon(ImageIcon imageIcon) {
         title.setIcon(imageIcon);
     }
 
-    // Класс реализующий команду завершения работы приложения
+    /**
+     * Реализующий команду завершения работы приложения.
+     */
     private class ActionExit implements ActionListener {
-
+        
+        /**
+         * Выполняет действи при нажатии кнопки "Выход".
+         * @param e - событие 
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
         }
     }
 
-    // Класс реализующий команду развернуть окно на весь экран
+    /**
+     * Реализующий команду развернуть окно на весь экран.
+     */
     private class ActionExtended implements ActionListener {
 
+        /**
+         * Выполняет действи при нажатии кнопки "На весть экран".
+         * @param e - событие 
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             if (Window.getInstance().getExtendedState() == Window.MAXIMIZED_BOTH) {
@@ -190,9 +213,15 @@ class ContentPane extends JComponent {
         }
     }
 
-    // Класс реализующий каманду свернуть окно
+    /**
+     * Реализующий команду свернуть окно.
+     */
     private class ActionIconified implements ActionListener {
 
+        /**
+         * Выполняет действи при нажатии кнопки "Свернуть/развернуть".
+         * @param e - событие 
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             Window.getInstance().setState(Window.ICONIFIED);

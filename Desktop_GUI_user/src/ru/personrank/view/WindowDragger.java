@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package ru.personrank.view;
 
 import javax.swing.*;
@@ -12,13 +8,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 /**
- * @author Администратор
+ * Реализует перемещение окна приложения по экрану.
+ * 
+ * @author Мартынов Евгений
  */
 public class WindowDragger extends MouseAdapter implements MouseMotionListener {
 
     private JFrame frameToDrag;
     private Point lastDragPosition;
 
+    /**
+     * Создает обьект класса.
+     * @param frameToDrag - окно к которому применяются действия 
+     */
     public WindowDragger(JFrame frameToDrag) {
         this.frameToDrag = frameToDrag;
     }
@@ -43,6 +45,6 @@ public class WindowDragger extends MouseAdapter implements MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        // Не используется
     }
 }
