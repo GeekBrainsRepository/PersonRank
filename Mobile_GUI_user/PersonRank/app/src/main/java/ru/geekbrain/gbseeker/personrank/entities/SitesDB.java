@@ -19,19 +19,19 @@ import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 public class SitesDB implements iNet2SQL {
     private static final String TAG = "SitesDB";
 
-    final Context context;
-    SimpleCursorAdapter scSitesAdapter;
+    private final Context context;
+    private SimpleCursorAdapter scSitesAdapter;
 
-    public SitesDB(Context context) {
+    public SitesDB(final Context context) {
         this.context = context;
     }
 
-    public SimpleCursorAdapter getAdapterWithSites(LoaderManager loaderManager) {
+    public SimpleCursorAdapter getAdapterWithSites(final LoaderManager loaderManager) {
 
-        String[] from = new String[]{DBHelper.DB.COLUMNS.SITE.SITE};
-        int[] to = new int[]{android.R.id.text1};
+        final String[] mapFrom = new String[]{DBHelper.DB.COLUMNS.SITE.SITE};
+        final int[] mapTo = new int[]{android.R.id.text1};
 
-        scSitesAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
+        scSitesAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, mapFrom, mapTo, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_SITES.ordinal(),
                 null,
                 new CursorLoaderManager(scSitesAdapter, new SiteListCursorLoader(context)));

@@ -14,7 +14,7 @@ import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class Persons extends Fragment implements ReloadFromNet {
-    PersonsDB personsDB;
+    private PersonsDB personsDB;
 
 
     @Override

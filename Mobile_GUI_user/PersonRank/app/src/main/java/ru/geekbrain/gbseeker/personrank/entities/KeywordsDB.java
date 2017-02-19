@@ -15,20 +15,21 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ru.geekbrain.gbseeker.personrank.DB.CursorLoaderManager;
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 
 public class KeywordsDB implements iNet2SQL {
     private static final String TAG="KeywordsDB";
 
-    Context context;
-    ArrayList<String> personList = new ArrayList<>();
-    String selectedPerson = "";
-    ArrayAdapter<String> personListAdapter;
+    private Context context;
+    private ArrayList<String> personList = new ArrayList<>();
+    private String selectedPerson = "";
+    private String saveSelectedPerson = "";
+    private ArrayAdapter<String> personListAdapter;
 
-    SimpleCursorAdapter scKeywordAdapter;
+    private SimpleCursorAdapter scKeywordAdapter;
 
-    String saveSelectedPerson = "";
 
     public KeywordsDB(Context context) {
         this.context = context;
@@ -63,40 +64,17 @@ public class KeywordsDB implements iNet2SQL {
 
     @Override
     public void updateDB(String json, String param) {
-        try {
-            JSONObject dataJsonObj = new JSONObject(json);
-            Iterator<String> iter = dataJsonObj.keys();
-            if (param.contains("/person")) { //persons
-                while (iter.hasNext()) {
-                    String k = iter.next();
-
-                    int id = Integer.parseInt(k);
-                    String person = dataJsonObj.getString(k);
-
-                    DBHelper.getInstance().addPersonWithCheck(id, person);
-                    Log.d(TAG, id + ":" + person);
-                }
-                DBHelper.getInstance().cleanKeywordDB();
-                DBHelper.getInstance().dumpTableKeyword();
-            }
-            else if (param.contains("/keyword")) { //keywords
-                ArrayList<String> usedKeywords=new ArrayList<>();
-                while (iter.hasNext()) {
-                    String k = iter.next();
-
-                    String keyword = dataJsonObj.getString(k);
-                    DBHelper.getInstance().addKeywordWithCheck(saveSelectedPerson, keyword);
-
-                    usedKeywords.add(keyword);
-                    Log.d(TAG, k + ":" + keyword);
-                }
-                DBHelper.getInstance().cleanKeywordDB(saveSelectedPerson,usedKeywords);
-                DBHelper.getInstance().dumpTableKeyword();
-            }
-        } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
+        if (param.contains("/person")) { //persons
+            PersonsDB.parseJSONforPerson(json);
+        } else if (param.contains("/keyword")) { //keywords
+            parseJSONforKeyword(json);
         }
-
+    }
+    @Override
+    public void updateUI(){
+        getPersonList();
+        personListAdapter.notifyDataSetChanged();
+        setSelectedPersonPosition(saveSelectedPerson);
     }
 
     @Override
@@ -104,10 +82,26 @@ public class KeywordsDB implements iNet2SQL {
         return TAG;
     }
 
-    public void updateUI(){
-        getPersonList();
-        personListAdapter.notifyDataSetChanged();
-        setSelectedPersonPosition(saveSelectedPerson);
+    public void parseJSONforKeyword(String json) {
+        try {
+            JSONObject dataJsonObj = new JSONObject(json);
+            Iterator<String> iter = dataJsonObj.keys();
+            ArrayList<String> usedKeywords = new ArrayList<>();
+            while (iter.hasNext()) {
+                String k = iter.next();
+
+                String keyword = dataJsonObj.getString(k);
+                DBHelper.getInstance().addKeywordWithCheck(saveSelectedPerson, keyword);
+
+                usedKeywords.add(keyword);
+                Log.d(TAG, k + ":" + keyword);
+            }
+            DBHelper.getInstance().cleanKeywordDB(saveSelectedPerson, usedKeywords);
+            DBHelper.getInstance().dumpTableKeyword();
+
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
     }
 
 
@@ -127,39 +121,10 @@ public class KeywordsDB implements iNet2SQL {
 
         scKeywordAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_KEYWORDS.ordinal(), null,
-                new KeywordCursorLoaderManager(context, scKeywordAdapter,selectedPerson));
+                new CursorLoaderManager(scKeywordAdapter,new KeywordListCursorLoader(context,selectedPerson)));
 
         return scKeywordAdapter;
     }
-
-}
-
-class KeywordCursorLoaderManager implements LoaderManager.LoaderCallbacks<Cursor>{
-    Context context;
-    SimpleCursorAdapter scAdapter;
-    String person;
-
-    public KeywordCursorLoaderManager(Context context, SimpleCursorAdapter scAdapter,String person) {
-        this.context = context;
-        this.scAdapter = scAdapter;
-        this.person=person;
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        return new KeywordListCursorLoader(context,person);
-
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        scAdapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
-
 
 }
 

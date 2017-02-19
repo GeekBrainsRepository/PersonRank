@@ -14,7 +14,7 @@ import ru.geekbrain.gbseeker.personrank.net.ReloadFromNet;
 import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 public class Sites extends Fragment implements  ReloadFromNet {
-    SitesDB sitesDB;
+    private SitesDB sitesDB;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
