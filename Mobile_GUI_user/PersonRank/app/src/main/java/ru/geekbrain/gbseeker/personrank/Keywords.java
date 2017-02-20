@@ -17,7 +17,7 @@ import ru.geekbrain.gbseeker.personrank.net.RestAPI;
 
 
 public class Keywords extends Fragment implements ReloadFromNet {
-    KeywordsDB keywordsDB;
+    private KeywordsDB keywordsDB;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -22,7 +22,7 @@ public class DailyStats extends Fragment implements ReloadFromNet {
     Button butFrom;
     Button butTo;
 
-    DailyStatsDB dailyStatsDB;
+    private DailyStatsDB dailyStatsDB;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class DailyStats extends Fragment implements ReloadFromNet {
         spinnerSite.setAdapter(dailyStatsDB.getAdapterWithSite());
 
         Spinner spinnerPersonOnSite = (Spinner) v.findViewById(R.id.daily_stats_persons);
-        spinnerPersonOnSite.setAdapter(dailyStatsDB.getAdapterWithPersonOnSite());
+        spinnerPersonOnSite.setAdapter(dailyStatsDB.getAdapterWithPerson());
 
         ListView list = (ListView) v.findViewById(R.id.daily_stats_list);
         SimpleCursorAdapter adapterStats = dailyStatsDB.getAdapterWithStats(getActivity().getSupportLoaderManager());

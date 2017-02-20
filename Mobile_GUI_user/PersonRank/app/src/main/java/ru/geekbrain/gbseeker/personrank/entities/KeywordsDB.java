@@ -70,7 +70,21 @@ public class KeywordsDB implements iNet2SQL {
         }
     }
 
-    public synchronized void parseJSONforKeyword(String json) {
+   
+    @Override
+    public void updateUI(){
+        getPersonList();
+        personListAdapter.notifyDataSetChanged();
+        setSelectedPersonPosition(saveSelectedPerson);
+    }
+    @Override
+    public String getInfo() {
+        return TAG;
+    }
+
+   
+
+ public synchronized void parseJSONforKeyword(String json) {
         try {
             JSONObject dataJsonObj = new JSONObject(json);
             Iterator<String> iter = dataJsonObj.keys();
@@ -91,20 +105,7 @@ public class KeywordsDB implements iNet2SQL {
         catch (Exception e){
             Log.d(TAG, e.getMessage());
         }
-
     }
-    @Override
-    public String getInfo() {
-        return TAG;
-    }
-
-    public void updateUI(){
-        getPersonList();
-        personListAdapter.notifyDataSetChanged();
-        setSelectedPersonPosition(saveSelectedPerson);
-    }
-
-
     public void setSelectedPersonPosition(String person) {
         if ( personList.size()>0 && personList.indexOf(person)>=0)
             selectedPerson = person;

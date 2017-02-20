@@ -21,8 +21,8 @@ import ru.geekbrain.gbseeker.personrank.net.iNet2SQL;
 public class PersonsDB implements iNet2SQL {
     private static final String TAG="PersonsDB";
 
-    final Context context;
-    SimpleCursorAdapter scPersonsAdapter;
+    final private Context context;
+    private SimpleCursorAdapter scPersonsAdapter;
 
     public PersonsDB(Context context) {
         this.context = context;
@@ -30,10 +30,10 @@ public class PersonsDB implements iNet2SQL {
 
     public SimpleCursorAdapter getAdapterWithPerson(LoaderManager loaderManager) {
 
-        String[] from = new String[]{DBHelper.DB.COLUMNS.PERSON.PERSON};
-        int[] to = new int[]{android.R.id.text1};
+        String[] mapFrom = new String[]{DBHelper.DB.COLUMNS.PERSON.PERSON};
+        int[] mapTo = new int[]{android.R.id.text1};
 
-        scPersonsAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, from, to, 0);
+        scPersonsAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, null, mapFrom, mapTo, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_PERSONS.ordinal(), null,
                 new CursorLoaderManager(scPersonsAdapter, new PersonListCursorLoader(context)));
 
@@ -54,32 +54,36 @@ public class PersonsDB implements iNet2SQL {
         parseJSONforPerson(json);
     }
 
-    static public synchronized void parseJSONforPerson(String json) {
-
-        ArrayList<Integer> usedIds = new ArrayList<>();
-        try {
-            JSONObject dataJsonObj = new JSONObject(json);
-            Iterator<String> iter = dataJsonObj.keys();
-            while (iter.hasNext()) {
-                String k = iter.next();
-
-                int id = Integer.parseInt(k);
-                String person = dataJsonObj.getString(k);
-                DBHelper.getInstance().addPersonWithCheck(id, person);
-
-                usedIds.add(id);
-                Log.d(TAG, id + ":" + person);
-            }
-            DBHelper.getInstance().cleanPersonDB(usedIds);
-            DBHelper.getInstance().dumpTablePerson();
-        } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
-        }
-    }
+    @Override
     public void updateUI(){
         scPersonsAdapter.swapCursor(DBHelper.getInstance().getCursorWithPersons());
         scPersonsAdapter.notifyDataSetChanged();
     }
+
+
+ public synchronized void parseJSONforPerson(String json) {
+            ArrayList<Integer> usedIds = new ArrayList<>();
+            try {
+                JSONObject dataJsonObj = new JSONObject(json);
+                Iterator<String> iter = dataJsonObj.keys();
+                while (iter.hasNext()) {
+                    String k = iter.next();
+
+                    int id = Integer.parseInt(k);
+                    String person = dataJsonObj.getString(k);
+                    DBHelper.getInstance().addPersonWithCheck(id, person);
+
+                    usedIds.add(id);
+                    Log.d(TAG, id + ":" + person);
+                }
+                DBHelper.getInstance().cleanPersonDB(usedIds);
+                DBHelper.getInstance().dumpTablePerson();
+            } catch (Exception e) {
+                Log.d(TAG, e.getMessage());
+            }
+
+        }
+
 }
 
 

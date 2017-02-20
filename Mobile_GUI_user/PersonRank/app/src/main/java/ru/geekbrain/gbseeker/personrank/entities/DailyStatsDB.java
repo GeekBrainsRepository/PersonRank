@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
+
 import ru.geekbrain.gbseeker.personrank.DB.CursorLoaderManager;
 import ru.geekbrain.gbseeker.personrank.DB.DBHelper;
 import ru.geekbrain.gbseeker.personrank.R;
@@ -86,8 +87,8 @@ public class DailyStatsDB  implements iNet2SQL {
         getPersonList();
         siteAdapter.notifyDataSetChanged();
         personAdapter.notifyDataSetChanged();
-        setSelectedSitePosition( saveSelectedSite );
-        setSelectedPersonPosition( saveSelectedPerson );
+        setSelectedSitePosition(saveSelectedSite);
+        setSelectedPersonPosition(saveSelectedPerson);
     }
 
     @Override
@@ -97,68 +98,41 @@ public class DailyStatsDB  implements iNet2SQL {
 
     @Override
     public void updateDB(String json, String param) {
+        if (param.contains("/site")) {
+            SitesDB.parseJSONforSites(json);
+
+        } else if (param.contains("/person")) {
+            PersonsDB.parseJSONforPerson(json);
+
+        } else if (param.contains("/daily")) {
+            parseJSONforDailyStats(json);
+        }
+    }
+
+    public synchronized void parseJSONforDailyStats(String json) {
         try {
-            if (param.contains("/site")) {
-                ArrayList<Integer> usedIds = new ArrayList<>();
-
-                JSONObject dataJsonObj = new JSONObject(json);
-                Iterator<String> iter = dataJsonObj.keys();
-                while (iter.hasNext()) {
-                    String k = iter.next();
-
-                    int id = Integer.parseInt(k);
-                    String site = dataJsonObj.getString(k);
-                    DBHelper.getInstance().addSiteDBWithCheck(id, site);
-
-                    usedIds.add(id);
-                    Log.d(TAG, k + ":" + site);
-                }
-                DBHelper.getInstance().cleanSiteDB(usedIds);
-                DBHelper.getInstance().dumpTableSite();
-
-            } else if (param.contains("/person")) {
-                ArrayList<Integer> usedIds = new ArrayList<>();
-
-                JSONObject dataJsonObj = new JSONObject(json);
-                Iterator<String> iter = dataJsonObj.keys();
-                while (iter.hasNext()) {
-                    String k = iter.next();
-
-                    int id = Integer.parseInt(k);
-                    String person = dataJsonObj.getString(k);
-                    DBHelper.getInstance().addPersonWithCheck(id, person);
-
-                    usedIds.add(id);
-                    Log.d(TAG, id + ":" + person);
-                }
-                DBHelper.getInstance().cleanPersonDB(usedIds);
-                DBHelper.getInstance().dumpTablePerson();
-
-            } else if (param.contains("/daily")) {
-                JSONObject dataJsonObj = new JSONObject(json);
-                JSONArray result = dataJsonObj.getJSONArray("result");
-                for (int i = 0; i < result.length(); i++) {
-                    long time = saveDateFrom + i * DAY_MILLISEC;
-                    int v = result.getInt(i);
-                    DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
-                            saveSelectedSite,
-                            saveSelectedPerson,
-                            time, v);
-                    Log.d(TAG, i + ":" + v);
-                }
-                DBHelper.getInstance().dumpTableDailyStats();
+            JSONObject dataJsonObj = new JSONObject(json);
+            JSONArray result = dataJsonObj.getJSONArray("result");
+            for (int i = 0; i < result.length(); i++) {
+                long time = saveDateFrom + i * DAY_MILLISEC;
+                int v = result.getInt(i);
+                DBHelper.getInstance().addOrUpdateDailyStatsWithCheck(
+                        saveSelectedSite,
+                        saveSelectedPerson,
+                        time, v);
+                Log.d(TAG, i + ":" + v);
             }
+            DBHelper.getInstance().dumpTableDailyStats();
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
-
     }
-
 
     public ArrayList<String> getSiteList() {
         DBHelper.getInstance().getSiteList(siteList);
         return siteList;
     }
+
     public ArrayAdapter<String> getAdapterWithSite() {
         siteAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSiteList());
         if (siteList.size() > 0) {
@@ -177,14 +151,15 @@ public class DailyStatsDB  implements iNet2SQL {
         DBHelper.getInstance().getPersonList(personList);
         return personList;
     }
-    public ArrayAdapter<String> getAdapterWithPersonOnSite() {
+
+    public ArrayAdapter<String> getAdapterWithPerson() {
         personAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getPersonList());
-        if(personList.size()>0) {
+        if (personList.size() > 0) {
             if (selectedPerson.equals("") || personList.indexOf(selectedPerson) < 0) {
                 selectedPerson = personList.get(0);
             }
-        }else{
-            selectedPerson="";
+        } else {
+            selectedPerson = "";
         }
         personAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return personAdapter;
@@ -193,6 +168,7 @@ public class DailyStatsDB  implements iNet2SQL {
     public String getSelectedSite() {
         return selectedSite;
     }
+
     public String getSelectedPerson() {
         return selectedPerson;
     }
@@ -203,26 +179,27 @@ public class DailyStatsDB  implements iNet2SQL {
         else
             selectedSite = "";
 
-        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite, selectedPerson,dateFrom,dateTo));
+        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite, selectedPerson, dateFrom, dateTo));
         scAdapter.notifyDataSetChanged();
     }
+
     public void setSelectedPersonPosition(String person) {
-        if (personList.size()>0 && personList.indexOf(person)>=0)
+        if (personList.size() > 0 && personList.indexOf(person) >= 0)
             selectedPerson = person;
         else
-            selectedPerson="";
+            selectedPerson = "";
 
-        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite,selectedPerson,dateFrom,dateTo));
+        scAdapter.swapCursor(DBHelper.getInstance().getCursorOfDailyStatsWithSite(selectedSite, selectedPerson, dateFrom, dateTo));
         scAdapter.notifyDataSetChanged();
     }
 
     public SimpleCursorAdapter getAdapterWithStats(LoaderManager loaderManager) {
-        String[] from = new String[]{DBHelper.DB.COLUMNS.DAILY.DATE, DBHelper.DB.COLUMNS.DAILY.STATS,"_id"};
+        String[] from = new String[]{DBHelper.DB.COLUMNS.DAILY.DATE, DBHelper.DB.COLUMNS.DAILY.STATS, "_id"};
         int[] to = new int[]{R.id.text1, R.id.text2};
 
         scAdapter = new SimpleCursorAdapter(context, R.layout.stats_item, null, from, to, 0);
         loaderManager.initLoader(LOADER_IDS.LOADER_DAILY_STATS.ordinal(), null,
-                new CursorLoaderManager(scAdapter, new DailyStatsCursorLoader(context,selectedSite,selectedPerson,dateFrom,dateTo))
+                new CursorLoaderManager(scAdapter, new DailyStatsCursorLoader(context, selectedSite, selectedPerson, dateFrom, dateTo))
         );
         return scAdapter;
 
