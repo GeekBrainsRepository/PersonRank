@@ -62,55 +62,38 @@ public class PagesCreater {
 //
 //
 //            }
+            //Вставка robots.txt
+            if(pagesService.getPages().isEmpty()){
+                insertRobotsTxt(pages, siteId, url);
+            }
 
             linksOnPage = htmlDocument.select("a[href]");
 
             log.info("Найдено (" + linksOnPage.size() + ") ссылок");
-
+//
             for(Element link : linksOnPage){
-//            //  todo Проверка на идентичные ссылки
+            //  todo  Исключить повторное добавление страниц при повторном обходе
                 String pageIsChecked = link.absUrl("href");
                 for(Pages page : pagesService.getPages()){
 //                    Проверка статуса страницы, чтобы исключить добавление "сломанных ссылок".
-                    if(Jsoup.connect(page.getUrl()).execute().statusCode() == 200){
-                        //Исключаем дубликаты в pages.
-                        if(! pageIsChecked.equals(pages.getUrl())){
+//                    if(Jsoup.connect(page.getUrl()).execute().statusCode() == 200){
+//                        Исключаем дубликаты в pages
+                        if(!pageIsChecked.equals(pages.getUrl()) && !isRepeated(pageIsChecked)){
                             pages.setSiteId(siteId);
                             pages.setUrl(link.absUrl("href"));
                             pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
                             pagesService.insertPage(pages);
                             links.add(link.absUrl("href"));
-//////                            print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));
+//                            print(" * a: <%s> (%s)", link.attr("abs:href"), trim(link.text(), 35));
                         }
                     }
                 }
-            }
-            //Парсинг сайтмэпа
-            for(Pages page: pagesService.getPages()){
-                String pageIsChecked = page.getUrl();
-                if(pageIsChecked.contains("robots.txt")){
-                    getSitemapLinks(pageIsChecked);
-                    for(String sitemapLink: sitemapLinks){
-                        if(!connection.response().contentType().contains("application/octet-stream"))
-                        getLinksFromSitemaps(sitemapLink);
-                    }
-                }
-            }
-            //Проверка ссылок из сайтмэпа и добавление их в качестве страниц
-            for(Pages page:pagesService.getPages()){
-                String pageIsChecked = page.getUrl();
-                for(String linkFromSitemap : linksFromSitemaps){
-                    if(!linkFromSitemap.equals(pageIsChecked)){
-                        pages.setSiteId(siteId);
-                        pages.setUrl(linkFromSitemap);
-                        pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
-                        pagesService.insertPage(pages);
-                        links.add(linkFromSitemap);
-                    }else{
-                        System.out.println("Such link exists " + linkFromSitemap + "!!!");
-                    }
-                }
-            }
+//            }
+
+
+        // Обрабатываем сайтмэп
+        handleSitemap(connection,siteId);
+
         } catch(IOException e){
             e.printStackTrace();
                 log.error("Ошибка при посещении адреса " + url);
@@ -133,6 +116,46 @@ public class PagesCreater {
         }
     }
 
+
+
+    public static void insertRobotsTxt(Pages pages, int siteId, String url){
+        pages.setSiteId(siteId);
+        pages.setUrl(url + "/robots.txt");
+        pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
+        pagesService.insertPage(pages);
+        links.add(url + "/robots.txt");
+
+    }
+
+    public static void handleSitemap(Connection connection, int siteId) throws  IOException{
+        //Парсинг сайтмэпа
+        for(Pages page: pagesService.getPages()){
+            String pageIsChecked = page.getUrl();
+            if(pageIsChecked.contains("robots.txt")){
+                getSitemapLinks(pageIsChecked);
+                for(String sitemapLink: sitemapLinks){
+                    if(!connection.response().contentType().contains("application/octet-stream"))
+                        getLinksFromSitemaps(sitemapLink);
+                }
+            }
+        }
+        //Проверка ссылок из сайтмэпа и добавление их в качестве страниц
+        for(Pages page :pagesService.getPages()){
+            String pageIsChecked = page.getUrl();
+            for(String linkFromSitemap : linksFromSitemaps){
+                if(!linkFromSitemap.equals(pageIsChecked) && !isRepeated(linkFromSitemap)){
+                    pages.setSiteId(siteId);
+                    pages.setUrl(linkFromSitemap);
+                    pages.setFoundDateTime(new Date(Calendar.getInstance().getTime().getTime()));
+                    pagesService.insertPage(pages);
+                    links.add(linkFromSitemap);
+                }else{
+                    System.out.println("Such link exists " + linkFromSitemap + "!!!");
+                }
+            }
+        }
+    }
+
     //возвращает ссылки на сайтмэпы с robots.txt в виде листа
 
     public static void getSitemapLinks(String link) throws IOException{
@@ -142,7 +165,6 @@ public class PagesCreater {
         String[] ss = el.text().split(" ");
         for(String g:ss){
             if(g.contains("sitemap")){
-
                 sitemapLinks.add(g);
             }
         }
@@ -157,10 +179,17 @@ public class PagesCreater {
         for(String l: links){
             if(l.contains("sitemap")){
                 getLinksFromSitemaps(l);
-            } else{
+            } else if(!l.equals("")){
                 linksFromSitemaps.add(l);
             }
         }
     }
-
+    //Проверка ссылки из сайтмэпа на наличие в pages
+    public static boolean isRepeated(String link){
+        boolean result = false;
+        for(Pages page:pagesService.getPages()){
+            if(link.equals(page.getUrl())) result = true;
+        }
+        return result;
+    }
 }
