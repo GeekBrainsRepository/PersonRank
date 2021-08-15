@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Антон Владимирович on 21.01.2017.
- */
 @RestController
 public class StatController {
 
